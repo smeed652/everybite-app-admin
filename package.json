@@ -6,10 +6,16 @@
     "doc": "docs"
   },
   "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
     "generate": "graphql-codegen",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
     "test:e2e": "cypress run",
     "test:e2e:open": "cypress open"
   },
