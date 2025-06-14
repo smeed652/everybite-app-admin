@@ -44,7 +44,11 @@ function shouldLog(level: LogLevel): boolean {
 }
 
 function formatArgs(level: LogLevel, args: unknown[]): unknown[] {
-  if (typeof window !== 'undefined' && window.console && console.log) {
+  if (
+    typeof window !== 'undefined' &&
+    typeof window.console !== 'undefined' &&
+    typeof console.log === 'function'
+  ) {
     // Browser: use CSS color styling
     return [`[%c${level.toUpperCase()}%c]`, styles[level], 'color:inherit', ...args];
   }
