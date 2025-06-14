@@ -1,6 +1,11 @@
 import { Toaster } from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
+import { Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
   const [apiStatus, setApiStatus] = useState<'ok' | 'offline'>('offline');
@@ -15,15 +20,19 @@ export default function App() {
     <ErrorBoundary>
       <>
         <header className="p-4 text-xl font-bold">EveryBite Admin Panel</header>
-        <main className="p-4 space-y-2">
-          <p className="text-gray-700">Hello, world!</p>
-          <p className="text-sm text-gray-500">
-            API status: {apiStatus === 'ok' ? (
-              <span className="text-green-600">online</span>
-            ) : (
-              <span className="text-red-600">offline</span>
-            )}
-          </p>
+        <main className="p-4">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/*"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
         </main>
         {/* Toast portal */}
         <Toaster position="bottom-right" />
