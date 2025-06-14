@@ -20,8 +20,8 @@ const levelOrder: LogLevel[] = ['debug', 'info', 'warn', 'error'];
  */
 function resolveEnvLogLevel(): LogLevel {
   // Vite exposes env vars on import.meta.env
-  const viteLevel = (typeof import.meta !== 'undefined' &&
-    (import.meta as any).env?.VITE_LOG_LEVEL) as string | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const viteLevel = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_LOG_LEVEL) as string | undefined;
   const nodeLevel = typeof process !== 'undefined' ? process.env.NODE_LOG_LEVEL : undefined;
   const level = (viteLevel || nodeLevel || 'info').toLowerCase();
   return (['debug', 'info', 'warn', 'error'] as LogLevel[]).includes(level as LogLevel)
