@@ -23,6 +23,7 @@ coverage/
 
 # macOS
 .DS_Store
+Icon?
 
 # Cypress artifacts
 cypress/videos/
