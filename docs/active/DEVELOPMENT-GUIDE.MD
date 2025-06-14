@@ -41,6 +41,7 @@ This document outlines recommended development practices, directory structure, a
         -   **Debugging:** When a unit test is failing, try to run it in isolation until it is fixed to speed up debugging.
         -   **Refactoring:** Run tests after every refactoring to ensure functionality is preserved.
 -   **Holistic Bug Fixing**: When addressing issues, evaluate if related problems or underlying causes can be fixed concurrently to improve overall code health.
+-   **Git Management:** You will be doing the commits so I want you to make sure stage all the files and include a detail commit message. You should let me know when you are ready to commit and push so I have  chance to save the code before the commit.
 
 ### Project-Specific Technical Decisions & Workflows
 
