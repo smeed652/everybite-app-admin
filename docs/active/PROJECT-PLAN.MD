@@ -32,12 +32,28 @@ This roadmap communicates the high-level phases, milestones, and sprint goals fo
 - [ ] Global ErrorBoundary & toast feedback
 - [ ] Service layer (`src/services/`) abstraction
 - [ ] Auth pages (login → dashboard redirect)
+- [ ] Basic user management (invite, enable/disable, reset password, delete)
+  - Implemented minimal UI; full shadcn DataTable + DropdownMenu deferred to future sprint
 - [ ] SmartMenu list (query) + detail (mutation)
 - [ ] Env-controlled logger (`VITE_LOG_LEVEL`)
 - [ ] Husky + lint-staged pre-commit hooks
 - [ ] Dockerfile & `docker-compose.yml` for local parity
 - [ ] CI pipeline → AWS ( stage / prod )
 - [ ] E2E smoke tests in staging
+
+### Configuration
+All runtime secrets live only in `.env.local` (never committed). The sample `.env.example` lists every key a developer must set.
+
+| Env Key | Purpose | Example |
+|---------|---------|---------|
+| VITE_GRAPHQL_URI | SmartMenu GraphQL endpoint | `https://api.everybite.com/graphql` |
+| VITE_AWS_REGION | AWS region used by Cognito | `us-west-1` |
+| VITE_COGNITO_USER_POOL_ID | Cognito User-Pool id | `us-west-1_XXXXXXX` |
+| VITE_COGNITO_APP_CLIENT_ID | Cognito App-client id (no secret) | `abcd1234abcd1234abcd1234` |
+| EVERYBITE_API_KEY | Service key for EveryBite API | `sk_...` |
+| VITE_LOG_LEVEL | Browser log level | `info` |
+
+_Last config update: 2025-06-14_
 
 ### Timeline (single dev)
 | Week | Focus |

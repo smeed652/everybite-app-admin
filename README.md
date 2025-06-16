@@ -6,6 +6,25 @@ This repository includes a React (Vite) frontend, Node/Express backend, and infr
 
 ---
 
+## Local Setup
+
+1. Copy `.env.example` to `.env.local` and fill in values.
+2. Configure AWS credentials locally:
+   ```bash
+   mkdir -p ~/.aws
+   # edit ~/.aws/credentials
+   [everybite-admin]
+   aws_access_key_id = <YOUR_ACCESS_KEY_ID>
+   aws_secret_access_key = <YOUR_SECRET_ACCESS_KEY>
+   region = us-west-1
+   ```
+   Then load the profile when running local dev:
+   ```bash
+   export AWS_SDK_LOAD_CONFIG=1
+   export AWS_PROFILE=everybite-admin
+   vercel dev
+   ```
+
 ## Docker
 
 ### Development

@@ -31,6 +31,27 @@ jobs:
       - name: Build frontend
         run: npm run build
 
+      - name: Cypress smoke tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev:ci
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
+
+        env:
+          VITE_AWS_REGION: ${{ secrets.VITE_AWS_REGION }}
+          VITE_COGNITO_USER_POOL_ID: ${{ secrets.VITE_COGNITO_USER_POOL_ID }}
+          VITE_COGNITO_APP_CLIENT_ID: ${{ secrets.VITE_COGNITO_APP_CLIENT_ID }}
+          CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
+          CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
+
+      - name: Upload Cypress screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+
       - name: Build backend image (compile check)
         run: |
           docker build -f backend/Dockerfile backend
