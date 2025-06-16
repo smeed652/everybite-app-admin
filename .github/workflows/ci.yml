@@ -37,10 +37,17 @@ jobs:
           start: npm run dev:ci
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
-          upload-artifact: true
+
         env:
           CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
           CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
+
+      - name: Upload Cypress screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
 
       - name: Build backend image (compile check)
         run: |
