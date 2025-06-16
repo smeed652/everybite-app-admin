@@ -37,6 +37,7 @@ jobs:
           start: npm run dev:ci
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
+          upload-artifact: true
         env:
           CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
           CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
