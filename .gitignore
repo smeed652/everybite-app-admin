@@ -32,5 +32,4 @@ cypress/screenshots/
 
 # Misc
 *.local
-.vercel
 .aws/

@@ -25,6 +25,8 @@ This repository includes a React (Vite) frontend, Node/Express backend, and infr
    vercel dev
    ```
 
+3. **Project linking**: The `.vercel` directory (which stores the Vercel project/org IDs) is committed to the repo. After cloning, running `vercel dev` should start immediately. If you ever see the interactive "Set up and develop..." prompt, make sure you're in the project root and that the `.vercel` folder is present. If it was removed, recreate it with `vercel link`. 
+
 ## Docker
 
 ### Development
