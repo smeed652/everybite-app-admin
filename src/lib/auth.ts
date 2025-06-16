@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Amplify, ResourcesConfig } from 'aws-amplify';
 import { signIn as amplifySignIn, signOut as amplifySignOut, fetchAuthSession, confirmSignIn } from 'aws-amplify/auth';
 
@@ -8,9 +9,12 @@ import { signIn as amplifySignIn, signOut as amplifySignOut, fetchAuthSession, c
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore – `typeof import.meta` is only valid in ES modules but will be tree-shaken by Vite.
 const metaEnv: any | undefined = typeof import.meta === 'object' && (import.meta as any).env ? (import.meta as any).env : undefined;
-const region = (metaEnv?.VITE_AWS_REGION ?? process.env.VITE_AWS_REGION) as string;
-const userPoolId = (metaEnv?.VITE_COGNITO_USER_POOL_ID ?? process.env.VITE_COGNITO_USER_POOL_ID) as string;
-const userPoolWebClientId = (metaEnv?.VITE_COGNITO_APP_CLIENT_ID ?? process.env.VITE_COGNITO_APP_CLIENT_ID) as string;
+// `process` is undefined in the browser (e.g., Cypress Electron runtime). Guard its usage.
+const nodeEnv = typeof process !== 'undefined' ? (process.env as Record<string, string | undefined>) : undefined;
+
+const region = (metaEnv?.VITE_AWS_REGION ?? nodeEnv?.VITE_AWS_REGION) as string;
+const userPoolId = (metaEnv?.VITE_COGNITO_USER_POOL_ID ?? nodeEnv?.VITE_COGNITO_USER_POOL_ID) as string;
+const userPoolWebClientId = (metaEnv?.VITE_COGNITO_APP_CLIENT_ID ?? nodeEnv?.VITE_COGNITO_APP_CLIENT_ID) as string;
 
 if (!region || !userPoolId || !userPoolWebClientId) {
   // eslint-disable-next-line no-console
