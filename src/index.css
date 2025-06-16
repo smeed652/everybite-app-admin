@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* global dark theme using shadcn palette proxy */
+  html, body, #root {
+    @apply bg-gray-950 text-gray-100 antialiased;
+  }
+}
+
+/* utility to wrap pages that still need dark */
+.dark-surface {
+  @apply bg-gray-950 text-gray-100;
+}

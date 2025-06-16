@@ -3,8 +3,11 @@ import { useEffect, useState } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
 import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
-import Register from './pages/Register';
+import ChangePassword from './pages/ChangePassword';
 import Dashboard from './pages/Dashboard';
+import Users from './pages/Users';
+import Layout from './components/Layout';
+import { ThemeToggle } from './components/ui/ThemeToggle';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
@@ -18,25 +21,33 @@ export default function App() {
   }, []);
   return (
     <ErrorBoundary>
-      <>
-        <header className="p-4 text-xl font-bold">EveryBite Admin Panel</header>
-        <main className="p-4">
+      <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex flex-col">
+        <header className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+          <h1 className="text-xl font-bold">EveryBite Admin Panel</h1>
+          <ThemeToggle />
+        </header>
+        <main className="flex-1">
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/change-password" element={<ChangePassword />} />
+
+            {/* Protected area */}
             <Route
               path="/*"
               element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <Layout />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="users" element={<Users />} />
+            </Route>
           </Routes>
         </main>
         {/* Toast portal */}
         <Toaster position="bottom-right" />
-      </>
+      </div>
     </ErrorBoundary>
   );
 }

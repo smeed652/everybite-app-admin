@@ -31,6 +31,16 @@ jobs:
       - name: Build frontend
         run: npm run build
 
+      - name: Cypress smoke tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
+        env:
+          CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
+          CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
+
       - name: Build backend image (compile check)
         run: |
           docker build -f backend/Dockerfile backend
