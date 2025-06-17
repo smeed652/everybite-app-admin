@@ -13,10 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node 18
+      - name: Set up Node 20
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
 
       - name: Install dependencies
@@ -37,7 +37,7 @@ jobs:
       - name: Cypress smoke tests
         uses: cypress-io/github-action@v6
         with:
-          start: vercel dev --listen 3000 --yes
+          start: vercel dev --listen 3000 --yes --token $VERCEL_TOKEN
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
 
@@ -46,6 +46,7 @@ jobs:
           VITE_COGNITO_USER_POOL_ID: ${{ secrets.VITE_COGNITO_USER_POOL_ID }}
           VITE_COGNITO_APP_CLIENT_ID: ${{ secrets.VITE_COGNITO_APP_CLIENT_ID }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          CYPRESS_BASE_URL: http://localhost:3000
           CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
           CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
 
