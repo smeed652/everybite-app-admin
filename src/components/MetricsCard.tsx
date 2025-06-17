@@ -11,7 +11,7 @@ interface MetricsCardProps {
 
 export function MetricsCard({ title, value, delta, loading }: MetricsCardProps) {
   return (
-    <Card className="p-4 space-y-1">
+    <Card data-testid="metrics-card" className="p-4 space-y-1">
       <p className="text-sm text-muted-foreground font-medium">{title}</p>
       {loading ? (
         <Skeleton className="h-7 w-24" />
