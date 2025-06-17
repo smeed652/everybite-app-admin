@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-explicit-any */
-// @ts-nocheck
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // Provide lightweight logger for Node (serverless functions) to avoid ESM issues
-/* eslint-disable */
 if (typeof window === 'undefined') {
   const nodeLogger = {
     debug: console.debug.bind(console),
@@ -24,21 +22,39 @@ if (typeof window === 'undefined') {
 
 // Dynamically load Sentry only in the browser to avoid ESM/CJS conflicts in serverless functions.
 // This keeps Node (API routes) tree-shaken clean while enabling full telemetry in the React bundle.
-let sentry: any = null;
+// Minimal subset of Sentry API we call
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SentryModule = { captureMessage?: (...args: any[]) => unknown; captureException?: (...args: any[]) => unknown };
+
+let sentry: SentryModule | null = null;
+// Guard `import.meta` usage so TS doesn't error under CommonJS build
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const metaEnv: Partial<Record<string, string>> | undefined = typeof import.meta === 'object' &&
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  (import.meta as { env?: Record<string, string> }).env
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    ? (import.meta as { env?: Record<string, string> }).env
+    : undefined;
+
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async function initSentry() {
   if (typeof window === 'undefined') return; // SSR / API – skip
-  const dsn = (import.meta as any)?.env?.VITE_SENTRY_DSN;
+  const dsn = metaEnv?.VITE_SENTRY_DSN;
   if (!dsn) return;
   try {
     const SentryMod = await import('@sentry/react');
     const { BrowserTracing } = await import('@sentry/tracing');
     SentryMod.init({
       dsn,
-      integrations: [new BrowserTracing() as unknown as any],
+      // BrowserTracing implements Integration but typings may mismatch when imported dynamically
+      integrations: [new BrowserTracing() as unknown as import('@sentry/types').Integration],
       tracesSampleRate: 0.2,
-      release: (import.meta as any)?.env?.VITE_APP_VERSION ?? 'dev',
-      environment: (import.meta as any)?.env?.VITE_ENV ?? 'development',
+      release: metaEnv?.VITE_APP_VERSION ?? 'dev',
+      environment: metaEnv?.VITE_ENV ?? 'development',
     });
     sentry = SentryMod;
   } catch {
@@ -49,7 +65,7 @@ let sentry: any = null;
 // Resolve env vars safely in both ESM (browser) and CommonJS (Jest/node)
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore – typeof import.meta only allowed in ESM, will be tree-shaken by Vite
-const metaEnv: any | undefined = typeof import.meta === 'object' && (import.meta as any).env ? (import.meta as any).env : undefined;
+
 
 /** Available log levels */
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
@@ -94,9 +110,9 @@ function sendRemote(level: LogLevel, args: unknown[]) {
       if (level === 'error') {
         // Treat first arg as possible Error
         const maybeErr = args[0] instanceof Error ? (args[0] as Error) : new Error(String(args[0]));
-        sentry.captureException(maybeErr);
+        sentry.captureException?.(maybeErr);
       } else {
-        sentry.captureMessage(args.map(String).join(' '), level);
+        sentry.captureMessage?.(args.map(String).join(' '), level);
       }
     } catch {
       /* swallow */

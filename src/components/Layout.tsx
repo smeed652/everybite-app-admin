@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { Button } from './ui/Button';
 import { useAuth } from '../context/AuthContext';
 
@@ -7,7 +7,6 @@ interface NavSection { heading: string; items: NavItem[] }
 
 export default function Layout() {
   const { logout } = useAuth();
-  const navigate = useNavigate();
 
   const navSections: NavSection[] = [
     {
@@ -59,7 +58,7 @@ export default function Layout() {
           ))}
         </nav>
         <div className="p-4 border-t border-gray-200 dark:border-gray-800">
-          <Button variant="outline" className="w-full" onClick={logout}>
+          <Button data-cy="logout-btn" variant="outline" className="w-full" onClick={logout}>
             Log out
           </Button>
         </div>

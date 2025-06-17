@@ -7,6 +7,7 @@ import ChangePassword from './pages/ChangePassword';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Forbidden from './pages/Forbidden';
+import NotFound from './pages/NotFound';
 import Layout from './components/Layout';
 import { ThemeToggle } from './components/ui/ThemeToggle';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -45,8 +46,19 @@ export default function App() {
               }
             >
               <Route index element={<Dashboard />} />
-              <Route path="users" element={<Users />} />
+              <Route
+              path="users"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <Users />
+                </ProtectedRoute>
+              }
+            />
+            {/* Nested 404 fallback for any unmatched protected route */}
+            <Route path="*" element={<NotFound />} />
             </Route>
+            {/* 404 fallback */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         {/* Toast portal */}

@@ -4,6 +4,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import React from 'react';
 
 
+
 // Helper to render with router
 const renderWithRouter = (ui: React.ReactElement, initialPath = '/') => {
   return render(
@@ -17,16 +18,13 @@ describe('ProtectedRoute', () => {
     vi.resetModules();
   });
 
-  /* temporarily disabled flaky ADMIN role test
+  
 it('renders children for ADMIN role', async () => {
     // mock Amplify session with ADMIN group
-    vi.mock('aws-amplify/auth', () => ({
-      fetchAuthSession: () =>
-        Promise.resolve({
-          accessToken: {
-            payload: { 'cognito:groups': ['ADMIN'] },
-          },
-        }),
+    vi.doMock('aws-amplify/auth', () => ({
+      fetchAuthSession: () => Promise.resolve({
+        accessToken: { payload: { 'cognito:groups': 'ADMIN' } },
+      }),
     }));
     const ProtectedRouteLocal = (await import('../components/ProtectedRoute')).default;
 
@@ -42,16 +40,13 @@ it('renders children for ADMIN role', async () => {
 
     expect(await screen.findByText('Secret')).toBeInTheDocument();
   });
-*/
+
 
   it('redirects non-admin user to /403', async () => {
-    vi.mock('aws-amplify/auth', () => ({
-      fetchAuthSession: () =>
-        Promise.resolve({
-          accessToken: {
-            payload: { 'cognito:groups': ['USER'] },
-          },
-        }),
+    vi.doMock('aws-amplify/auth', () => ({
+      fetchAuthSession: () => Promise.resolve({
+        accessToken: { payload: { 'cognito:groups': ['USER'] } },
+      }),
     }));
     const ProtectedRouteLocal = (await import('../components/ProtectedRoute')).default;
 
