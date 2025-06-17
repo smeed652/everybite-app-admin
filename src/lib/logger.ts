@@ -1,3 +1,20 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-explicit-any */
+// @ts-nocheck
+// Provide lightweight logger for Node (serverless functions) to avoid ESM issues
+/* eslint-disable */
+if (typeof window === 'undefined') {
+  const nodeLogger = {
+    debug: console.debug.bind(console),
+    info: console.info.bind(console),
+    warn: console.warn.bind(console),
+    error: console.error.bind(console),
+  } as const;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore – CommonJS override
+  module.exports = nodeLogger;
+  // terminate evaluation for Node context
+}
+
 /*
  * Centralized Logger utility
  * Supports log levels: debug, info, warn, error.
@@ -5,8 +22,29 @@
  * Integrated with Sentry for error tracking.
  */
 
-import { Sentry } from './sentry';
-import type { SeverityLevel } from '@sentry/types';
+// Dynamically load Sentry only in the browser to avoid ESM/CJS conflicts in serverless functions.
+// This keeps Node (API routes) tree-shaken clean while enabling full telemetry in the React bundle.
+let sentry: any = null;
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
+(async function initSentry() {
+  if (typeof window === 'undefined') return; // SSR / API – skip
+  const dsn = (import.meta as any)?.env?.VITE_SENTRY_DSN;
+  if (!dsn) return;
+  try {
+    const SentryMod = await import('@sentry/react');
+    const { BrowserTracing } = await import('@sentry/tracing');
+    SentryMod.init({
+      dsn,
+      integrations: [new BrowserTracing() as unknown as any],
+      tracesSampleRate: 0.2,
+      release: (import.meta as any)?.env?.VITE_APP_VERSION ?? 'dev',
+      environment: (import.meta as any)?.env?.VITE_ENV ?? 'development',
+    });
+    sentry = SentryMod;
+  } catch {
+    // swallow – keep logging local only
+  }
+})();
 /* eslint-disable no-console */
 // Resolve env vars safely in both ESM (browser) and CommonJS (Jest/node)
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -51,14 +89,14 @@ const REMOTE_URL =
 
 function sendRemote(level: LogLevel, args: unknown[]) {
   // Forward to Sentry if configured
-  if (Sentry && (Sentry as any).captureMessage) {
+  if (sentry && typeof sentry.captureMessage === 'function') {
     try {
       if (level === 'error') {
         // Treat first arg as possible Error
         const maybeErr = args[0] instanceof Error ? (args[0] as Error) : new Error(String(args[0]));
-        Sentry.captureException(maybeErr);
+        sentry.captureException(maybeErr);
       } else {
-        Sentry.captureMessage(args.map(String).join(' '), level as SeverityLevel);
+        sentry.captureMessage(args.map(String).join(' '), level);
       }
     } catch {
       /* swallow */

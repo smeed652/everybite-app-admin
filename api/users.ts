@@ -4,6 +4,8 @@ if (process.env.NODE_ENV !== 'production') {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   require('dotenv').config({ path: '.env.local' });
 }
+import { checkRole } from './_utils/checkRole';
+
 import {
   CognitoIdentityProviderClient,
   ListUsersCommand,
@@ -31,15 +33,13 @@ import {
  *   }
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (!(await checkRole(req, res, ['ADMIN']))) return;
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const AWS_REGION = process.env.AWS_REGION || process.env.VITE_AWS_REGION;
   const COGNITO_USER_POOL_ID = process.env.COGNITO_USER_POOL_ID || process.env.VITE_COGNITO_USER_POOL_ID;
-  // Debug: print which env vars are being used
-  // eslint-disable-next-line no-console
-  console.log('[api/users] Resolved env', { AWS_REGION, COGNITO_USER_POOL_ID });
   if (!AWS_REGION || !COGNITO_USER_POOL_ID) {
     return res.status(500).json({ error: 'Missing Cognito env vars' });
   }

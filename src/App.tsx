@@ -6,14 +6,17 @@ import Login from './pages/Login';
 import ChangePassword from './pages/ChangePassword';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
+import Forbidden from './pages/Forbidden';
 import Layout from './components/Layout';
 import { ThemeToggle } from './components/ui/ThemeToggle';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [apiStatus, setApiStatus] = useState<'ok' | 'offline'>('offline');
 
   useEffect(() => {
+    // @ts-expect-error import.meta env types missing
     fetch(`${import.meta.env.VITE_API_URL?.replace('/graphql', '') || 'http://localhost:4000'}/health`)
       .then((r) => r.ok ? r.json() : Promise.reject())
       .then(() => setApiStatus('ok'))
@@ -30,6 +33,7 @@ export default function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/change-password" element={<ChangePassword />} />
+            <Route path="/403" element={<Forbidden />} />
 
             {/* Protected area */}
             <Route
