@@ -37,7 +37,7 @@ jobs:
       - name: Cypress smoke tests
         uses: cypress-io/github-action@v6
         with:
-          start: sh -c "vercel dev --listen 3000 --yes --token $VERCEL_TOKEN"
+          start: npx vercel@latest dev --listen 3000 --yes --token ${{ secrets.VERCEL_TOKEN }}
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
 
