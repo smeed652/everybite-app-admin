@@ -1,6 +1,8 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { Button } from './ui/Button';
 import { Separator } from './ui/Separator';
+import { Sheet, SheetTrigger, SheetContent } from './ui/Sheet';
+import { Menu } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useAuth } from '../context/AuthContext';
 
@@ -28,7 +30,61 @@ export default function Layout() {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar */}
+      {/* Mobile sidebar trigger */}
+      <div className="flex md:hidden items-center p-2 border-b">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="sm" className="gap-2">
+              <Menu className="h-4 w-4" />
+              Menu
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0">
+            {/* Reuse the same nav list */}
+            <div className="h-full w-full flex flex-col">
+              <div className="flex h-14 items-center px-4 text-lg font-semibold">EveryBite</div>
+              <Separator />
+              <nav className="flex-1 overflow-y-auto px-3 py-4 text-sm">
+                {navSections.map((section) => (
+                  <div key={section.heading} className="space-y-1">
+                    <p className="mb-2 px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                      {section.heading}
+                    </p>
+                    {section.items.map(({ label, to, disabled }) => (
+                      <NavLink
+                        key={label}
+                        to={to}
+                        end={to === '/'}
+                        className={({ isActive }) =>
+                          cn(
+                            'flex items-center gap-2 rounded-md px-3 py-2 transition-colors',
+                            isActive
+                              ? 'bg-accent text-accent-foreground'
+                              : 'text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground',
+                            disabled && 'opacity-50 pointer-events-none',
+                          )
+                        }
+                      >
+                        <span className="text-lg">•</span>
+                        <span>{label}</span>
+                      </NavLink>
+                    ))}
+                  </div>
+                ))}
+              </nav>
+              <Separator />
+              <div className="p-4">
+                <Button variant="outline" className="w-full" onClick={logout}>
+                  Log out
+                </Button>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+        <h1 className="ml-4 font-semibold">EveryBite Admin</h1>
+      </div>
+
+      {/* Desktop Sidebar */}
       <aside className={cn("hidden md:flex w-64 flex-col border-r bg-muted/40", "shadcn:shadow shadcn:shadow-slate-400/20")}>
         <div className="flex h-14 items-center px-4 text-lg font-semibold">EveryBite</div>
         <Separator />
