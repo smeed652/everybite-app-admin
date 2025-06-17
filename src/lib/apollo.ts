@@ -4,7 +4,7 @@ import { getAccessToken } from '../context/AuthContext';
 import { currentSession } from './auth';
 
 const httpLink = createHttpLink({
-  uri: import.meta.env.VITE_API_URL || 'https://api.everybite.com/graphql',
+  uri: import.meta.env.VITE_GRAPHQL_URI || 'https://api.everybite.com/graphql',
 });
 
 const authLink = setContext(async (_, { headers }) => {

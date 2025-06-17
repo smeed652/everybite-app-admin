@@ -1,5 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { Button } from './ui/Button';
+import { Separator } from './ui/Separator';
+import { cn } from '../lib/utils';
 import { useAuth } from '../context/AuthContext';
 
 interface NavItem { label: string; to: string; disabled?: boolean }
@@ -27,12 +29,13 @@ export default function Layout() {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <aside className="w-60 bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 flex flex-col">
-        <div className="p-4 text-xl font-bold border-b border-gray-200 dark:border-gray-800">EveryBite</div>
-        <nav className="flex-1 space-y-4 px-3 py-2 overflow-y-auto">
+      <aside className={cn("hidden md:flex w-64 flex-col border-r bg-muted/40", "shadcn:shadow shadcn:shadow-slate-400/20")}>
+        <div className="flex h-14 items-center px-4 text-lg font-semibold">EveryBite</div>
+        <Separator />
+        <nav className={cn("flex-1 overflow-y-auto px-3 py-4 text-sm", "shadcn:py-4 shadcn:px-6")}>
           {navSections.map((section) => (
             <div key={section.heading} className="space-y-1">
-              <p className="px-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <p className="mb-2 px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 {section.heading}
               </p>
               {section.items.map((item) => {
@@ -43,9 +46,13 @@ export default function Layout() {
                   to={to}
                   end={to === '/'}
                   className={({ isActive }) =>
-                    `flex items-center gap-2 rounded px-3 py-2 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-800 ${
-                      isActive ? 'bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-white' : 'text-gray-700 dark:text-gray-300'
-                    } ${disabled ? 'opacity-50 pointer-events-none' : ''}`
+                    cn(
+                      'flex items-center gap-2 rounded-md px-3 py-2 transition-colors',
+                      isActive
+                        ? 'bg-accent text-accent-foreground'
+                        : 'text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground',
+                      disabled && 'opacity-50 pointer-events-none',
+                    )
                   }
                 >
                   {/* placeholder icon */}
@@ -57,7 +64,8 @@ export default function Layout() {
             </div>
           ))}
         </nav>
-        <div className="p-4 border-t border-gray-200 dark:border-gray-800">
+        <Separator />
+        <div className="p-4">
           <Button data-cy="logout-btn" variant="outline" className="w-full" onClick={logout}>
             Log out
           </Button>
