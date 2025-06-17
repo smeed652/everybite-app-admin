@@ -3,6 +3,7 @@ import { Button } from './ui/Button';
 import { Separator } from './ui/Separator';
 import { Sheet, SheetTrigger, SheetContent } from './ui/Sheet';
 import { Menu } from 'lucide-react';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from './ui/Dialog';
 import { cn } from '../lib/utils';
 import { useAuth } from '../context/AuthContext';
 
@@ -74,9 +75,21 @@ export default function Layout() {
               </nav>
               <Separator />
               <div className="p-4">
-                <Button variant="outline" className="w-full" onClick={logout}>
-                  Log out
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="w-full">Log out</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Sign out</DialogTitle>
+                      <DialogDescription>Are you sure you want to log out?</DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => document.activeElement?.dispatchEvent(new Event('click'))}>Cancel</Button>
+                      <Button onClick={logout}>Log out</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </SheetContent>
@@ -122,9 +135,21 @@ export default function Layout() {
         </nav>
         <Separator />
         <div className="p-4">
-          <Button data-cy="logout-btn" variant="outline" className="w-full" onClick={logout}>
-            Log out
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button data-cy="logout-btn" variant="outline" className="w-full">Log out</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Sign out</DialogTitle>
+                <DialogDescription>Are you sure you want to log out?</DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => document.activeElement?.dispatchEvent(new Event('click'))}>Cancel</Button>
+                <Button onClick={logout}>Log out</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </aside>
 
