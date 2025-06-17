@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useRef, Fragment } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { Table, THead, TBody, TR, TH, TD } from '../components/ui/Table';
@@ -19,6 +21,8 @@ export default function Users() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const { accessToken } = useAuth();
+
   // list users state
   const [users, setUsers] = useState<CognitoUserRow[]>([]);
   const [nextToken, setNextToken] = useState<string | undefined>();
@@ -33,7 +37,10 @@ export default function Users() {
     try {
       const res = await fetch('/api/user-enable', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         body: JSON.stringify({ username: u.username, enabled: newVal }),
       });
       if (!res.ok) throw new Error('Toggle failed');
@@ -49,7 +56,10 @@ export default function Users() {
     try {
       const res = await fetch('/api/user-reset-password', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         body: JSON.stringify({ username: u.username }),
       });
       if (!res.ok) throw new Error('Reset failed');
@@ -68,6 +78,7 @@ export default function Users() {
     try {
       const res = await fetch(`/api/user-delete?username=${encodeURIComponent(u.username)}`, {
         method: 'DELETE',
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       });
       if (!res.ok) throw new Error('Delete failed');
       toast.success('User deleted');
@@ -77,12 +88,14 @@ export default function Users() {
     }
   };
 
-  const handleReset = (u: CognitoUserRow) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const handleReset = (u: CognitoUserRow) => {
     setMenuOpen(null);
     resetPassword(u);
   };
 
-  const handleDelete = (u: CognitoUserRow) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const handleDelete = (u: CognitoUserRow) => {
     setMenuOpen(null);
     deleteUser(u);
   };
@@ -103,7 +116,9 @@ export default function Users() {
     setListLoading(true);
     try {
       const qs = token ? `?paginationToken=${encodeURIComponent(token)}` : '';
-      const res = await fetch(`/api/users${qs}`);
+      const res = await fetch(`/api/users${qs}`, {
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+      });
       if (!res.ok) throw new Error('Failed to fetch users');
       const data = await res.json();
       setUsers((prev) => (token ? [...prev, ...data.users] : data.users));
@@ -118,7 +133,7 @@ export default function Users() {
   // initial load
   useEffect(() => {
     fetchUsers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -127,7 +142,10 @@ export default function Users() {
     try {
       const res = await fetch('/api/invite', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         body: JSON.stringify({ email, password: password || undefined }),
       });
       if (!res.ok) {
