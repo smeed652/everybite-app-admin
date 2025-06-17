@@ -1,6 +1,6 @@
 # Fail commit if lint or unit tests fail
 npm run lint || exit 1
-npm test -- --bail || exit 1
+npm run test:unit || exit 1
 
 # Fix staged files
 npx --no-install lint-staged

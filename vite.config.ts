@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 
 // Vite configuration for EveryBite Admin Panel
@@ -8,4 +8,11 @@ export default defineConfig({
   build: {
     sourcemap: true,
   },
+  // Vitest configuration for unit tests
+  test: {
+    include: ['src/**/*.vitest.{ts,tsx}'],
+    environment: 'happy-dom',
+    setupFiles: './src/setupTests.ts',
+    globals: true,
+  }
 });
