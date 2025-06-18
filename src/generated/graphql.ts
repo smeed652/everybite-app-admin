@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -762,3 +763,23 @@ export type WorkingHours = {
   day: Day;
   period?: Maybe<TimePeriod>;
 };
+
+export type GetAllWidgetsBasicsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllWidgetsBasicsQuery = { __typename?: 'Query', widgets: Array<{ __typename?: 'Widget', id: string, publishedAt?: any | null, displayImages: boolean, layout: Layout, isOrderButtonEnabled: boolean, isByoEnabled: boolean } | null> };
+
+export type GetSmartMenusQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSmartMenusQuery = { __typename?: 'Query', widgets: Array<{ __typename?: 'Widget', id: string, name?: any | null, slug?: any | null, updatedAt: any, publishedAt?: any | null, displayImages: boolean, isOrderButtonEnabled: boolean, layout: Layout, primaryBrandColor?: any | null, highlightColor?: any | null, backgroundColor?: any | null } | null> };
+
+export type GetAllWidgetsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllWidgetsQuery = { __typename?: 'Query', widgets: Array<{ __typename?: 'Widget', id: string, createdAt: any, publishedAt?: any | null } | null> };
+
+
+export const GetAllWidgetsBasicsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllWidgetsBasics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"widgets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"displayImages"}},{"kind":"Field","name":{"kind":"Name","value":"layout"}},{"kind":"Field","name":{"kind":"Name","value":"isOrderButtonEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"isByoEnabled"}}]}}]}}]} as unknown as DocumentNode<GetAllWidgetsBasicsQuery, GetAllWidgetsBasicsQueryVariables>;
+export const GetSmartMenusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSmartMenus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"widgets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"displayImages"}},{"kind":"Field","name":{"kind":"Name","value":"isOrderButtonEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"layout"}},{"kind":"Field","name":{"kind":"Name","value":"primaryBrandColor"}},{"kind":"Field","name":{"kind":"Name","value":"highlightColor"}},{"kind":"Field","name":{"kind":"Name","value":"backgroundColor"}}]}}]}}]} as unknown as DocumentNode<GetSmartMenusQuery, GetSmartMenusQueryVariables>;
+export const GetAllWidgetsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllWidgets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"widgets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]} as unknown as DocumentNode<GetAllWidgetsQuery, GetAllWidgetsQueryVariables>;

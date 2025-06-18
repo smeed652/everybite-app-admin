@@ -18,7 +18,8 @@ export default function App() {
   const [apiStatus, setApiStatus] = useState<'ok' | 'offline'>('offline');
 
   useEffect(() => {
-    // @ts-expect-error import.meta env types missing
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore import.meta env types missing
     fetch(`${import.meta.env.VITE_API_URL?.replace('/graphql', '') || 'http://localhost:4000'}/health`)
       .then((r) => r.ok ? r.json() : Promise.reject())
       .then(() => setApiStatus('ok'))
@@ -55,14 +56,7 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="smart-menus"
-              element={
-                <ProtectedRoute allowedRoles={['ADMIN']}>
-                  <SmartMenus />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="smart-menus" element={<SmartMenus />} />
             {/* Nested 404 fallback for any unmatched protected route */}
             <Route path="*" element={<NotFound />} />
             </Route>
