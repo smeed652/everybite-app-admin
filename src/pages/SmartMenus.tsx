@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Image as ImageIcon, ShoppingCart, Table as TableIcon, IdCard, Tag, Minus } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem } from '../components/ui/DropdownMenu';
@@ -9,6 +10,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useSmartMenus } from '../features/smartMenus/hooks/useSmartMenus';
 
 export default function SmartMenus() {
+  const navigate = useNavigate();
   const { smartMenus, loading, error } = useSmartMenus();
   
 
@@ -157,6 +159,7 @@ export default function SmartMenus() {
         columns={columns}
         loading={loading}
         pageSize={10}
+        onRowClick={(row) => navigate(`/smart-menus/${row.id}`)}
       />
     </div>
   );

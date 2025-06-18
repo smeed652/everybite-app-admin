@@ -7,6 +7,7 @@ import ChangePassword from './pages/ChangePassword';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import SmartMenus from './pages/SmartMenus';
+import SmartMenuDetail from './pages/SmartMenuDetail';
 import Forbidden from './pages/Forbidden';
 import NotFound from './pages/NotFound';
 import Layout from './components/Layout';
@@ -57,6 +58,7 @@ export default function App() {
               }
             />
             <Route path="smart-menus" element={<SmartMenus />} />
+            <Route path="smart-menus/:widgetId" element={<SmartMenuDetail />} />
             {/* Nested 404 fallback for any unmatched protected route */}
             <Route path="*" element={<NotFound />} />
             </Route>

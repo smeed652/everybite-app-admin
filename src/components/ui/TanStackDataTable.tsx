@@ -26,6 +26,7 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SlidersHorizontal } from 'lucide-react';
 
 interface DataTableProps<TData extends object> {
+  onRowClick?: (row: TData) => void;
   columns: ColumnDef<TData, unknown>[];
   data: TData[];
   loading?: boolean;
@@ -40,6 +41,7 @@ export function TanStackDataTable<TData extends object>({
   loading = false,
   pageSize = 10,
   id,
+  onRowClick,
 }: DataTableProps<TData>) {
   // Sorting / filtering / selection state
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -173,7 +175,8 @@ export function TanStackDataTable<TData extends object>({
               table.getRowModel().rows.map((row) => (
                 <TR
                   key={row.id}
-                  className="border-t border-gray-200 dark:border-gray-700 hover:bg-accent/20"
+                  className="border-t border-gray-200 dark:border-gray-700 hover:bg-accent/20 cursor-pointer"
+                  onClick={() => onRowClick?.(row.original)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TD key={cell.id} className="px-3 py-2 whitespace-nowrap">
