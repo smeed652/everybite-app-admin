@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import ChangePassword from './pages/ChangePassword';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
+import SmartMenus from './pages/SmartMenus';
 import Forbidden from './pages/Forbidden';
 import NotFound from './pages/NotFound';
 import Layout from './components/Layout';
@@ -51,6 +52,14 @@ export default function App() {
               element={
                 <ProtectedRoute allowedRoles={['ADMIN']}>
                   <Users />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="smart-menus"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <SmartMenus />
                 </ProtectedRoute>
               }
             />

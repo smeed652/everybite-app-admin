@@ -19,6 +19,7 @@ export default function Layout() {
       items: [
         { label: 'Dashboard', to: '/' },
         { label: 'Users', to: '/users' },
+        { label: 'SmartMenus', to: '/smart-menus' },
       ],
     },
     {
@@ -52,7 +53,7 @@ export default function Layout() {
                       {section.heading}
                     </p>
                     {section.items.map(({ label, to, disabled }) => {
-                      const Icon = label === 'Dashboard' ? Gauge : label === 'Users' ? Users : undefined;
+                      const Icon = label === 'Dashboard' ? Gauge : label === 'Users' ? Users : label === 'SmartMenus' ? Menu : undefined;
                       return (
                       <NavLink
                         key={label}
@@ -112,7 +113,7 @@ export default function Layout() {
               </p>
               {section.items.map((item) => {
                 const { label, to, disabled } = item;
-                const Icon = label === 'Dashboard' ? Gauge : label === 'Users' ? Users : undefined;
+                const Icon = label === 'Dashboard' ? Gauge : label === 'Users' ? Users : label === 'SmartMenus' ? Menu : undefined;
                 return (
                 <NavLink
                   key={label}
