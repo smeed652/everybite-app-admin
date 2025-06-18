@@ -2,7 +2,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { Button } from './ui/Button';
 import { Separator } from './ui/Separator';
 import { Sheet, SheetTrigger, SheetContent } from './ui/Sheet';
-import { Menu } from 'lucide-react';
+import { Menu, Gauge, Users } from 'lucide-react';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from './ui/Dialog';
 import { cn } from '../lib/utils';
 import { useAuth } from '../context/AuthContext';
@@ -51,7 +51,9 @@ export default function Layout() {
                     <p className="mb-2 px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                       {section.heading}
                     </p>
-                    {section.items.map(({ label, to, disabled }) => (
+                    {section.items.map(({ label, to, disabled }) => {
+                      const Icon = label === 'Dashboard' ? Gauge : label === 'Users' ? Users : undefined;
+                      return (
                       <NavLink
                         key={label}
                         to={to}
@@ -66,10 +68,11 @@ export default function Layout() {
                           )
                         }
                       >
-                        <span className="text-lg">•</span>
+                        {Icon ? <Icon className="h-4 w-4" /> : <span className="text-lg">•</span>}
                         <span>{label}</span>
                       </NavLink>
-                    ))}
+                      );
+                    })}
                   </div>
                 ))}
               </nav>
@@ -109,6 +112,7 @@ export default function Layout() {
               </p>
               {section.items.map((item) => {
                 const { label, to, disabled } = item;
+                const Icon = label === 'Dashboard' ? Gauge : label === 'Users' ? Users : undefined;
                 return (
                 <NavLink
                   key={label}
@@ -124,8 +128,7 @@ export default function Layout() {
                     )
                   }
                 >
-                  {/* placeholder icon */}
-                  <span className="text-lg">•</span>
+                  {Icon ? <Icon className="h-4 w-4" /> : <span className="text-lg">•</span>}
                   <span>{label}</span>
                 </NavLink>
                 );

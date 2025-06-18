@@ -17,8 +17,9 @@
     --card: 0 0% 100%;
     --card-foreground: 222.2 47.4% 11.2%;
 
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
+    /* Purple theme */
+    --primary: 262 87% 66%; /* purple-600 */
+    --primary-foreground: 0 0% 100%;
   }
 
   .dark {
@@ -35,8 +36,9 @@
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 240 5.9% 10%;
+    /* Purple theme */
+    --primary: 262 87% 66%; /* purple-600 */
+    --primary-foreground: 0 0% 100%;
   }
 }
 

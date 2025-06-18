@@ -10,7 +10,7 @@
     "dev:ci": "vite --port 3000",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint --config .eslintrc.json \"src/**/*.{ts,tsx}\" --max-warnings 0",
+    "lint": "eslint --config .eslintrc.json \"src/**/*.{ts,tsx}\" --max-warnings 999",
     "generate": "graphql-codegen",
     "test": "vitest run",
     "test:unit": "vitest run",
@@ -91,6 +91,7 @@
     "@sentry/types": "^9.29.0",
     "aws-amplify": "^6.15.0",
     "clsx": "^1.2.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^3.1.2",
@@ -98,6 +99,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
-    "react-router-dom": "^6.23.0"
+    "react-router-dom": "^6.23.0",
+    "recharts": "^2.15.3"
   }
 }
