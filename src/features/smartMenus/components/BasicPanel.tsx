@@ -1,0 +1,72 @@
+import { useState, useEffect } from 'react';
+import { Widget } from '../../../generated/graphql';
+import { Card } from '../../../components/ui/Card';
+import { Input } from '../../../components/ui/Input';
+
+interface Props {
+  widget: Widget;
+  onFieldChange: (changes: Partial<Widget>) => void;
+}
+
+export default function BasicPanel({ widget, onFieldChange }: Props) {
+  const [name, setName] = useState(widget.name);
+  const [slug, setSlug] = useState(widget.slug);
+  const [isActive, setIsActive] = useState(widget.isActive);
+  const [loading] = useState(false);
+
+  // report text changes on blur
+  const commitText = () => {
+    const changes: Partial<Widget> = {};
+    if (name !== widget.name) changes.name = name;
+    if (slug !== widget.slug) changes.slug = slug;
+    if (Object.keys(changes).length) onFieldChange(changes);
+  };
+
+  // report toggle change
+  useEffect(() => {
+    if (isActive !== widget.isActive) {
+      onFieldChange({ isActive });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive]);
+
+  return (
+    <section className="space-y-6" data-testid="basic-panel">
+      <h3 className="text-lg font-semibold">Basics</h3>
+      <Card className="p-4 space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <label className="text-sm font-medium" htmlFor="name">Name</label>
+            <Input id="name" value={name} onChange={e => setName(e.target.value)} onBlur={commitText} disabled={loading} />
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm font-medium" htmlFor="slug">Slug</label>
+            <Input id="slug" value={slug} onChange={e => setSlug(e.target.value)} onBlur={commitText} disabled={loading} />
+          </div>
+        </div>
+      </Card>
+
+      <Card className="p-4 flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium">Status</p>
+          <p className="text-sm text-muted-foreground">Activate or deactivate this SmartMenu.</p>
+        </div>
+        <Toggle checked={isActive} onChange={setIsActive} disabled={loading} />
+      </Card>
+    </section>
+  );
+}
+
+function Toggle({ checked, onChange, disabled }: { checked: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
+  return (
+    <button
+      type="button"
+      onClick={() => !disabled && onChange(!checked)}
+      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${checked ? 'bg-green-500' : 'bg-gray-300'} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+    >
+      <span
+        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`}
+      />
+    </button>
+  );
+}

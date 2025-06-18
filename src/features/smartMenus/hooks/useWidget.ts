@@ -9,6 +9,7 @@ export const GET_WIDGET = gql`
       slug
       layout
       displayImages
+      isActive
       isOrderButtonEnabled
       primaryBrandColor
       highlightColor
