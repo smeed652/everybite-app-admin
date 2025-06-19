@@ -12,7 +12,7 @@ import { ThemeProvider } from './context/ThemeContext';
 // Root render
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ApolloProvider client={client}>
         <ThemeProvider>
           <AuthProvider>

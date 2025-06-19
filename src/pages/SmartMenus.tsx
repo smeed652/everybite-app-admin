@@ -12,13 +12,6 @@ import { useSmartMenus } from '../features/smartMenus/hooks/useSmartMenus';
 export default function SmartMenus() {
   const navigate = useNavigate();
   const { smartMenus, loading, error } = useSmartMenus();
-  
-
-  if (error) {
-    return <p className="text-red-500">Error loading SmartMenus: {error.message}</p>;
-  }
-
-
 
   const columns: ColumnDef<typeof smartMenus[number]>[] = useMemo(() => [
     {
@@ -114,9 +107,9 @@ export default function SmartMenus() {
         const b = row.original.backgroundColor;
         return (
           <div className="flex gap-1">
-            {[p, h, b].map((c) => (
+            {[p, h, b].map((c, idx) => (
               <span
-                key={c}
+                key={`${c ?? 'none'}-${idx}`}
                 className="h-4 w-4 rounded-sm border border-gray-300 dark:border-gray-700"
                 style={{ background: c || '#fff' }}
                 title={c}
@@ -149,6 +142,10 @@ export default function SmartMenus() {
       ),
     },
   ], [smartMenus]);
+
+  if (error) {
+    return <p className="text-red-500">Error loading SmartMenus: {error.message}</p>;
+  }
 
   return (
     <div className="space-y-6">

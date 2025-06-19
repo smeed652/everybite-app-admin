@@ -19,8 +19,16 @@ export default function App() {
   const [apiStatus, setApiStatus] = useState<'ok' | 'offline'>('offline');
 
   useEffect(() => {
+    // Skip health-check in local dev unless explicitly enabled
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore import.meta env types missing
+    // @ts-ignore
+    // Opt-in: ping only when explicitly enabled via env
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const shouldPing = Boolean(import.meta.env.VITE_ENABLE_HEALTHCHECK);
+    if (!shouldPing) return;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore import.meta env types missing
     fetch(`${import.meta.env.VITE_API_URL?.replace('/graphql', '') || 'http://localhost:4000'}/health`)
       .then((r) => r.ok ? r.json() : Promise.reject())
       .then(() => setApiStatus('ok'))

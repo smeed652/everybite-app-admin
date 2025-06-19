@@ -14,12 +14,19 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
   const [isActive, setIsActive] = useState(widget.isActive);
   const [loading] = useState(false);
 
-  // report text changes on blur
-  const commitText = () => {
-    const changes: Partial<Widget> = {};
-    if (name !== widget.name) changes.name = name;
-    if (slug !== widget.slug) changes.slug = slug;
-    if (Object.keys(changes).length) onFieldChange(changes);
+  // report text changes immediately on each keystroke
+  const handleNameChange = (val: string) => {
+    setName(val);
+    if (val !== widget.name) {
+      onFieldChange({ name: val });
+    }
+  };
+
+  const handleSlugChange = (val: string) => {
+    setSlug(val);
+    if (val !== widget.slug) {
+      onFieldChange({ slug: val });
+    }
   };
 
   // report toggle change
@@ -30,6 +37,7 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive]);
 
+
   return (
     <section className="space-y-6" data-testid="basic-panel">
       <h3 className="text-lg font-semibold">Basics</h3>
@@ -37,11 +45,11 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1">
             <label className="text-sm font-medium" htmlFor="name">Name</label>
-            <Input id="name" value={name} onChange={e => setName(e.target.value)} onBlur={commitText} disabled={loading} />
+            <Input id="name" value={name} onChange={e => handleNameChange(e.target.value)} disabled={loading} />
           </div>
           <div className="space-y-1">
             <label className="text-sm font-medium" htmlFor="slug">Slug</label>
-            <Input id="slug" value={slug} onChange={e => setSlug(e.target.value)} onBlur={commitText} disabled={loading} />
+            <Input id="slug" value={slug} onChange={e => handleSlugChange(e.target.value)} disabled={loading} />
           </div>
         </div>
       </Card>
