@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { Button } from './ui/Button';
+import SmartMenusNav from '../features/smartMenus/components/SmartMenusNav';
 import { Separator } from './ui/Separator';
 import { Sheet, SheetTrigger, SheetContent } from './ui/Sheet';
 import { Menu, Gauge, Users } from 'lucide-react';
@@ -19,7 +20,6 @@ export default function Layout() {
       items: [
         { label: 'Dashboard', to: '/' },
         { label: 'Users', to: '/users' },
-        { label: 'SmartMenus', to: '/smart-menus' },
       ],
     },
     {
@@ -76,6 +76,7 @@ export default function Layout() {
                     })}
                   </div>
                 ))}
+                <SmartMenusNav />
               </nav>
               <Separator />
               <div className="p-4">
@@ -136,6 +137,7 @@ export default function Layout() {
               })}
             </div>
           ))}
+          <SmartMenusNav />
         </nav>
         <Separator />
         <div className="p-4">

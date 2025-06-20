@@ -1,31 +1,42 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import SmartMenuHeader from '../features/smartMenus/components/SmartMenuHeader';
-import { Widget } from '../generated/graphql';
 import { useWidget } from '../features/smartMenus/hooks/useWidget';
 import { useUpdateWidget } from '../features/smartMenus/hooks/useUpdateWidget';
-import { Button } from '../components/ui/Button';
+import { Widget } from '../generated/graphql';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Card } from '../components/ui/Card';
-import BasicPanel from '../features/smartMenus/components/BasicPanel';
-import DesignPanel from '../features/smartMenus/components/DesignPanel';
-import BrandingPanel from '../features/smartMenus/components/BrandingPanel';
-import { toast } from 'react-hot-toast';
 
-export default function SmartMenuDetail() {
-  const navigate = useNavigate();
+import MarketingPanel from '../features/smartMenus/components/MarketingPanel';
+
+export default function SmartMenuMarketing() {
   const { widgetId } = useParams<{ widgetId: string }>();
+  const navigate = useNavigate();
   const { widget, loading, error } = useWidget(widgetId || '');
   const { updateWidgetFields } = useUpdateWidget();
-
   const [saving, setSaving] = useState(false);
   const [pendingChanges, setPendingChanges] = useState<Record<string, unknown>>({});
-
+  // clear pending changes whenever a new widget is loaded
+  useEffect(() => setPendingChanges({}), [widget?.id]);
   const dirty = Object.keys(pendingChanges).length > 0;
 
-  // helpers -------------------------------------------------
-  const handleFieldChange = (changes: Record<string, unknown>) =>
-    setPendingChanges((prev) => ({ ...prev, ...changes }));
+  const handleFieldChange = (changes: Record<string, unknown>) => {
+    if (!widget) return;
+    setPendingChanges(prev => {
+      const next = { ...prev };
+      Object.entries(changes).forEach(([k, v]) => {
+        // treat undefined original as false
+        const original = (widget as Widget)[k as keyof Widget] ?? false;
+        if (v === original) {
+          delete next[k];
+        } else {
+          next[k] = v;
+        }
+      });
+      return next;
+    });
+  };
 
   const handleSave = async () => {
     if (!widget?.id || !dirty) return;
@@ -37,15 +48,11 @@ export default function SmartMenuDetail() {
   };
 
   const handleCancel = () => window.location.reload();
-  // --------------------------------------------------------
 
   if (error) return <p className="text-red-600">Error loading widget.</p>;
 
   return (
-    <div
-      className="space-y-4 bg-gray-50 min-h-screen px-6 py-6"
-      data-testid="smartmenu-detail"
-    >
+    <div className="space-y-4 bg-gray-50 min-h-screen px-6 py-6" data-testid="smartmenu-marketing">
       {widget && (
         <SmartMenuHeader
           widget={widget}
@@ -53,7 +60,7 @@ export default function SmartMenuDetail() {
           saving={saving}
           onSave={handleSave}
           onCancel={handleCancel}
-          onPreview={() => navigate(`/preview/${widget.id}`)}
+          onPreview={() => navigate(`/smart-menus/${widgetId}?mode=preview`)}
         />
       )}
 
@@ -64,18 +71,8 @@ export default function SmartMenuDetail() {
           ))}
         </Card>
       ) : (
-        <>
-          <BasicPanel widget={widget} onFieldChange={handleFieldChange} />
-          <DesignPanel widget={widget} onFieldChange={handleFieldChange} />
-          <BrandingPanel widget={widget} onFieldChange={handleFieldChange} />
-        </>
+        <MarketingPanel widget={widget} onFieldChange={handleFieldChange} />
       )}
-
-
-
-      <Button variant="outline" onClick={() => navigate('/smart-menus')}>
-        Back to list
-      </Button>
     </div>
   );
 }

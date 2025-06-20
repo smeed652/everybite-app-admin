@@ -148,16 +148,18 @@ export default function SmartMenus() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col h-full space-y-6">
       <h1 className="text-2xl font-bold">SmartMenus</h1>
-      <TanStackDataTable
-        id="smartmenus-table"
-        data={smartMenus}
-        columns={columns}
-        loading={loading}
-        pageSize={10}
-        onRowClick={(row) => navigate(`/smart-menus/${row.id}`)}
-      />
+      <div className="flex-1">
+        <TanStackDataTable
+          id="smartmenus-table"
+          data={smartMenus}
+          columns={columns}
+          loading={loading}
+          pageSize={10}
+          onRowClick={(row) => navigate(`/smart-menus/${row.id}`)}
+        />
+      </div>
     </div>
   );
 }

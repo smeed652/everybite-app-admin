@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Widget } from '../../../generated/graphql';
 import { Card } from '../../../components/ui/Card';
+import { Activity } from 'lucide-react';
 import { Input } from '../../../components/ui/Input';
 
 interface Props {
@@ -56,7 +57,7 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
 
       <Card className="p-4 flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium">Status</p>
+          <p className="flex items-center gap-2 text-sm font-medium"><Activity className="h-4 w-4" /> Status</p>
           <p className="text-sm text-muted-foreground">Activate or deactivate this SmartMenu.</p>
         </div>
         <Toggle checked={isActive} onChange={setIsActive} disabled={loading} />

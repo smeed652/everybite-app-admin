@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Widget } from '../../../generated/graphql';
 import { Card } from '../../../components/ui/Card';
+import { Palette, Type as FontIcon } from 'lucide-react';
 import { Input } from '../../../components/ui/Input';
 
 interface Props {
@@ -20,7 +21,7 @@ export default function BrandingPanel({ widget, onFieldChange }: Props) {
 
   // Fonts – API currently supports a single `fontFamily` field only
   const fonts = ['Plus Jakarta Sans', 'Inter', 'Open Sans', 'Roboto'];
-  const [fontFamily, setFontFamily] = useState(widget.fontFamily ?? '');
+  const [fontFamily, setFontFamily] = useState(widget.fontFamily ?? fonts[0]);
 
   // Handlers that update local state and notify parent once per user change
   const handlePrimary = (v: string) => {
@@ -45,7 +46,7 @@ export default function BrandingPanel({ widget, onFieldChange }: Props) {
       <h3 className="text-lg font-semibold">Branding</h3>
       {/* Colors */}
       <Card className="p-4 space-y-4">
-        <h4 className="font-medium">Colors</h4>
+        <h4 className="flex items-center gap-2 font-medium"><Palette className="h-4 w-4" /> Colors</h4>
         <div className="space-y-3">
           <ColorInput label="Primary" value={primary} onChange={handlePrimary} />
           <ColorInput label="Secondary" value={secondary} onChange={handleSecondary} />
@@ -55,17 +56,16 @@ export default function BrandingPanel({ widget, onFieldChange }: Props) {
 
       {/* Fonts */}
       <Card className="p-4 space-y-4">
-        <h4 className="font-medium">Font</h4>
+        <h4 className="flex items-center gap-2 font-medium"><FontIcon className="h-4 w-4" /> Font</h4>
         <div>
           <label className="text-sm font-medium mr-3">Font family</label>
           <select
-            className="border rounded px-2 py-1 text-sm"
+            className="border rounded px-2 py-1 text-sm w-60"
+            style={{ fontFamily: fontFamily || 'inherit' }}
             value={fontFamily}
             onChange={(e) => handleFont(e.target.value)}
           >
-            <option value="" disabled>
-              Select…
-            </option>
+
             {/* include current font even if not in preset list */}
             {[fontFamily, ...fonts].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).map((f) => (
               <option key={f} value={f} style={{ fontFamily: f }}>
@@ -74,8 +74,8 @@ export default function BrandingPanel({ widget, onFieldChange }: Props) {
             ))}
           </select>
           {fontFamily && (
-            <span className="ml-4 text-sm" style={{ fontFamily: fontFamily }}>
-              The quick brown fox
+            <span className="ml-4 text-base" style={{ fontFamily: fontFamily, fontSize: '125%' }} key={fontFamily}>
+              The quick brown fox jumps over the lazy dog
             </span>
           )}
         </div>

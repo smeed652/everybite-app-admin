@@ -15,6 +15,18 @@ export const GET_WIDGET = gql`
       highlightColor
       backgroundColor
       orderUrl
+      supportedDietaryPreferences
+      displayIngredients
+      supportedAllergens
+      displayNutrientPreferences
+      displayMacronutrients
+      isByoEnabled
+      # CTA flags
+      displaySoftSignUp
+      displayNotifyMeBanner
+      displayGiveFeedbackBanner
+      displayFeedbackButton
+      displayDishDetailsLink
       updatedAt
       publishedAt
     }

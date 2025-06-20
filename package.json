@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "lint": "eslint --config .eslintrc.json \"src/**/*.{ts,tsx}\" --max-warnings 999",
     "generate": "graphql-codegen",
+    "codegen": "npm run generate",
     "test": "vitest run",
     "test:unit": "vitest run",
     "test:jest": "jest --config jest.config.js",

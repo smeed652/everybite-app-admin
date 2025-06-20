@@ -356,7 +356,9 @@ export type MenuItemInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   activateWidget?: Maybe<Widget>;
+  activateWidgetSync?: Maybe<Widget>;
   deactivateWidget?: Maybe<Widget>;
+  deactivateWidgetSync?: Maybe<Widget>;
   updateBanner?: Maybe<Banner>;
   updateWidget?: Maybe<Widget>;
 };
@@ -367,7 +369,17 @@ export type MutationActivateWidgetArgs = {
 };
 
 
+export type MutationActivateWidgetSyncArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationDeactivateWidgetArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeactivateWidgetSyncArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -729,6 +741,7 @@ export type Widget = Node & {
   isActive: Scalars['Boolean']['output'];
   isByoEnabled: Scalars['Boolean']['output'];
   isOrderButtonEnabled: Scalars['Boolean']['output'];
+  isSyncEnabled: Scalars['Boolean']['output'];
   layout: Layout;
   logoUrl?: Maybe<Scalars['URL']['output']>;
   logoWidth?: Maybe<Scalars['Int']['output']>;
@@ -772,7 +785,14 @@ export type GetAllWidgetsBasicsQuery = { __typename?: 'Query', widgets: Array<{ 
 export type GetSmartMenusQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSmartMenusQuery = { __typename?: 'Query', widgets: Array<{ __typename?: 'Widget', id: string, name?: any | null, slug?: any | null, updatedAt: any, publishedAt?: any | null, displayImages: boolean, isOrderButtonEnabled: boolean, layout: Layout, primaryBrandColor?: any | null, highlightColor?: any | null, backgroundColor?: any | null } | null> };
+export type GetSmartMenusQuery = { __typename?: 'Query', widgets: Array<{ __typename?: 'Widget', id: string, name?: any | null, slug?: any | null, updatedAt: any, publishedAt?: any | null, displayImages: boolean, isOrderButtonEnabled: boolean, layout: Layout, primaryBrandColor?: any | null, highlightColor?: any | null, backgroundColor?: any | null, orderUrl?: any | null } | null> };
+
+export type GetWidgetQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetWidgetQuery = { __typename?: 'Query', widget: { __typename?: 'Widget', id: string, name?: any | null, slug?: any | null, layout: Layout, displayImages: boolean, isActive: boolean, isOrderButtonEnabled: boolean, primaryBrandColor?: any | null, highlightColor?: any | null, backgroundColor?: any | null, orderUrl?: any | null, supportedDietaryPreferences: Array<DietType>, displayIngredients: boolean, supportedAllergens: Array<AllergenType>, displayNutrientPreferences: boolean, displayMacronutrients: boolean, isByoEnabled: boolean, displaySoftSignUp: boolean, displayNotifyMeBanner: boolean, displayGiveFeedbackBanner: boolean, displayFeedbackButton: boolean, displayDishDetailsLink: boolean, updatedAt: any, publishedAt?: any | null } };
 
 export type GetAllWidgetsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -781,5 +801,6 @@ export type GetAllWidgetsQuery = { __typename?: 'Query', widgets: Array<{ __type
 
 
 export const GetAllWidgetsBasicsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllWidgetsBasics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"widgets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"displayImages"}},{"kind":"Field","name":{"kind":"Name","value":"layout"}},{"kind":"Field","name":{"kind":"Name","value":"isOrderButtonEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"isByoEnabled"}}]}}]}}]} as unknown as DocumentNode<GetAllWidgetsBasicsQuery, GetAllWidgetsBasicsQueryVariables>;
-export const GetSmartMenusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSmartMenus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"widgets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"displayImages"}},{"kind":"Field","name":{"kind":"Name","value":"isOrderButtonEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"layout"}},{"kind":"Field","name":{"kind":"Name","value":"primaryBrandColor"}},{"kind":"Field","name":{"kind":"Name","value":"highlightColor"}},{"kind":"Field","name":{"kind":"Name","value":"backgroundColor"}}]}}]}}]} as unknown as DocumentNode<GetSmartMenusQuery, GetSmartMenusQueryVariables>;
+export const GetSmartMenusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSmartMenus"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"widgets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}},{"kind":"Field","name":{"kind":"Name","value":"displayImages"}},{"kind":"Field","name":{"kind":"Name","value":"isOrderButtonEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"layout"}},{"kind":"Field","name":{"kind":"Name","value":"primaryBrandColor"}},{"kind":"Field","name":{"kind":"Name","value":"highlightColor"}},{"kind":"Field","name":{"kind":"Name","value":"backgroundColor"}},{"kind":"Field","name":{"kind":"Name","value":"orderUrl"}}]}}]}}]} as unknown as DocumentNode<GetSmartMenusQuery, GetSmartMenusQueryVariables>;
+export const GetWidgetDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetWidget"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"widget"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"layout"}},{"kind":"Field","name":{"kind":"Name","value":"displayImages"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"isOrderButtonEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"primaryBrandColor"}},{"kind":"Field","name":{"kind":"Name","value":"highlightColor"}},{"kind":"Field","name":{"kind":"Name","value":"backgroundColor"}},{"kind":"Field","name":{"kind":"Name","value":"orderUrl"}},{"kind":"Field","name":{"kind":"Name","value":"supportedDietaryPreferences"}},{"kind":"Field","name":{"kind":"Name","value":"displayIngredients"}},{"kind":"Field","name":{"kind":"Name","value":"supportedAllergens"}},{"kind":"Field","name":{"kind":"Name","value":"displayNutrientPreferences"}},{"kind":"Field","name":{"kind":"Name","value":"displayMacronutrients"}},{"kind":"Field","name":{"kind":"Name","value":"isByoEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"displaySoftSignUp"}},{"kind":"Field","name":{"kind":"Name","value":"displayNotifyMeBanner"}},{"kind":"Field","name":{"kind":"Name","value":"displayGiveFeedbackBanner"}},{"kind":"Field","name":{"kind":"Name","value":"displayFeedbackButton"}},{"kind":"Field","name":{"kind":"Name","value":"displayDishDetailsLink"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]} as unknown as DocumentNode<GetWidgetQuery, GetWidgetQueryVariables>;
 export const GetAllWidgetsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllWidgets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"widgets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"publishedAt"}}]}}]}}]} as unknown as DocumentNode<GetAllWidgetsQuery, GetAllWidgetsQueryVariables>;

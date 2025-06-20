@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
+import { LayoutDashboard, Image as ImageIcon } from 'lucide-react';
 import { Layout, Widget } from '../../../generated/graphql';
 import CardLayoutImg from '../../../assets/CardLayoutIcon.png';
 import TableLayoutImg from '../../../assets/TableLayoutIcon.png';
@@ -30,7 +31,7 @@ export default function DesignPanel({ widget, onFieldChange }: Props) {
 
       {/* Template selector */}
       <Card className="p-4 space-y-4">
-        <p className="text-sm font-medium">Template</p>
+        <p className="flex items-center gap-2 text-sm font-medium"><LayoutDashboard className="h-4 w-4" /> Template</p>
         <div className="flex gap-6">
           <LayoutOption
             label="Table Layout"
@@ -50,8 +51,8 @@ export default function DesignPanel({ widget, onFieldChange }: Props) {
       {/* Images toggle */}
       <Card className="p-4 space-y-2 flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium">Images</p>
-          <p className="text-sm text-muted-foreground">Show images on dish cards and dish detail modals.</p>
+          <p className="flex items-center gap-2 text-sm font-medium"><ImageIcon className="h-4 w-4" /> Photos</p>
+          <p className="text-sm text-muted-foreground">Show photos on dish cards and dish detail modals.</p>
         </div>
         <Toggle checked={images} onChange={setImages} disabled={loading} />
       </Card>
