@@ -6,10 +6,15 @@ import Login from './pages/Login';
 import ChangePassword from './pages/ChangePassword';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
+import SmartMenus from './pages/SmartMenus';
+import SmartMenuDetail from './pages/SmartMenuDetail';
+import { lazy, Suspense } from 'react';
+
+const SmartMenuFeatures = lazy(() => import('./pages/SmartMenuFeatures'));
+const SmartMenuMarketing = lazy(() => import('./pages/SmartMenuMarketing'));
 import Forbidden from './pages/Forbidden';
 import NotFound from './pages/NotFound';
 import Layout from './components/Layout';
-import { ThemeToggle } from './components/ui/ThemeToggle';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
@@ -17,7 +22,16 @@ export default function App() {
   const [apiStatus, setApiStatus] = useState<'ok' | 'offline'>('offline');
 
   useEffect(() => {
-    // @ts-expect-error import.meta env types missing
+    // Skip health-check in local dev unless explicitly enabled
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    // Opt-in: ping only when explicitly enabled via env
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const shouldPing = Boolean(import.meta.env.VITE_ENABLE_HEALTHCHECK);
+    if (!shouldPing) return;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore import.meta env types missing
     fetch(`${import.meta.env.VITE_API_URL?.replace('/graphql', '') || 'http://localhost:4000'}/health`)
       .then((r) => r.ok ? r.json() : Promise.reject())
       .then(() => setApiStatus('ok'))
@@ -26,10 +40,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex flex-col">
-        <header className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
-          <h1 className="text-xl font-bold">EveryBite Admin Panel</h1>
-          <ThemeToggle />
-        </header>
+
         <main className="flex-1">
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -54,6 +65,10 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="smart-menus" element={<SmartMenus />} />
+            <Route path="smart-menus/:widgetId" element={<SmartMenuDetail />} />
+            <Route path="smart-menus/:widgetId/features" element={<Suspense fallback={<div>Loading...</div>}><SmartMenuFeatures /></Suspense>} />
+<Route path="smart-menus/:widgetId/marketing" element={<Suspense fallback={<div>Loading...</div>}><SmartMenuMarketing /></Suspense>} />
             {/* Nested 404 fallback for any unmatched protected route */}
             <Route path="*" element={<NotFound />} />
             </Route>

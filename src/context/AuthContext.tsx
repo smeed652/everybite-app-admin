@@ -17,7 +17,7 @@ interface AuthContextValue extends AuthState {
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+export const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 function parseUser(token: string | null): { sub: string } | null {
   if (!token) return null;

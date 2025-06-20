@@ -7,6 +7,7 @@ import { Table, THead, TBody, TR, TH, TD } from '../components/ui/Table';
 import { Checkbox } from '../components/ui/Checkbox';
 import { Label } from '../components/ui/Label';
 import toast from 'react-hot-toast';
+import { Skeleton } from '../components/ui/Skeleton';
 
 interface CognitoUserRow {
   username: string;
@@ -210,7 +211,11 @@ const handleDelete = (u: CognitoUserRow) => {
           />
         </div>
         {listLoading && users.length === 0 ? (
-          <p>Loading…</p>
+          <div className="space-y-2">
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-10 w-full" />
+            ))}
+          </div>
         ) : (
           <Table striped className="border border-gray-200 dark:border-gray-700">
             <THead className="bg-gray-100 dark:bg-gray-800 text-left">

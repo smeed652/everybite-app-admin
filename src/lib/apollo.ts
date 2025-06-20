@@ -1,29 +1,29 @@
 import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { getAccessToken } from '../context/AuthContext';
-import { currentSession } from './auth';
+
+const apiKey = import.meta.env.VITE_API_KEY || import.meta.env.VITE_GRAPHQL_API_KEY || '';
 
 const httpLink = createHttpLink({
-  uri: import.meta.env.VITE_API_URL || 'https://api.everybite.com/graphql',
+  uri: import.meta.env.VITE_GRAPHQL_URI || 'https://api.everybite.com/graphql',
+  headers: {
+    Authorization: apiKey,
+  },
 });
 
-const authLink = setContext(async (_, { headers }) => {
-  let token = '';
-  try {
-    const session = await currentSession();
-    token = session.tokens?.idToken?.toString() || '';
-  } catch {
-    token = getAccessToken() || '';
-  }
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : '',
-    },
-  };
-});
+// For this project the API expects a static API key; user tokens are not required for GraphQL
+// Keep authLink minimal in case future headers need dynamic injection
+const authLink = setContext((_, { headers }) => ({
+  headers: {
+    ...headers,
+    // ensure apiKey present even if httpLink headers overridden elsewhere
+    Authorization: apiKey,
+  },
+}));
 
 export const client = new ApolloClient({
   link: ApolloLink.from([authLink, httpLink]),
   cache: new InMemoryCache(),
 });
+
+// Ensure this file is treated as an ES module so `import.meta` is allowed by TypeScript
+export {};
