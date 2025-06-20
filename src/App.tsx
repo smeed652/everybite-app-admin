@@ -15,7 +15,6 @@ const SmartMenuMarketing = lazy(() => import('./pages/SmartMenuMarketing'));
 import Forbidden from './pages/Forbidden';
 import NotFound from './pages/NotFound';
 import Layout from './components/Layout';
-import { ThemeToggle } from './components/ui/ThemeToggle';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
@@ -41,10 +40,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex flex-col">
-        <header className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
-          <h1 className="text-xl font-bold">EveryBite Admin Panel</h1>
-          <ThemeToggle />
-        </header>
+
         <main className="flex-1">
           <Routes>
             <Route path="/login" element={<Login />} />

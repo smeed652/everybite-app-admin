@@ -27,6 +27,37 @@ export const GET_WIDGET = gql`
       displayGiveFeedbackBanner
       displayFeedbackButton
       displayDishDetailsLink
+      # Additional flags & appearance
+      displayNavbar
+      usePagination
+      displayFooter
+      footerText
+      buttonFont
+      buttonBackgroundColor
+      buttonTextColor
+      buttonBorderRadius
+      categoryTitleFont
+      categoryTitleTextColor
+      contentAreaGlobalColor
+      contentAreaColumnHeaderColor
+      subheaderFont
+      subheaderLocationTextColor
+      subheaderAdditionalTextColor
+      navbarFont
+      navbarFontSize
+      navbarBackgroundColor
+      logoUrl
+      logoWidth
+      faviconUrl
+      htmlTitleText
+      pageTitleText
+      pageTitleTextColor
+      numberOfLocations
+      numberOfLocationsSource
+      widgetLogoUrl
+      widgetUrl
+      isSyncEnabled
+      createdAt
       updatedAt
       publishedAt
     }

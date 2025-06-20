@@ -53,7 +53,7 @@ export default function SmartMenuDetail() {
           saving={saving}
           onSave={handleSave}
           onCancel={handleCancel}
-          onPreview={() => navigate(`/preview/${widget.id}`)}
+          onPreview={() => window.open(`https://app.everybite.com/widget/${widget.id}`, '_blank')}
         />
       )}
 

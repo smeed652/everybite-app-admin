@@ -34,9 +34,9 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
             : typeof rawGroups === 'string'
               ? [rawGroups]
               : [];
-          // If user has no groups at all, treat as unauthenticated (token likely expired)
+          // If user has no groups at all, consider them signed-in but unauthorized
           if (groupsArr.length === 0) {
-            setSignedIn(false);
+            setRoleAllowed(false);
           } else {
             const isAllowed = groupsArr.some((g) => allowedRoles.includes(g));
             setRoleAllowed(isAllowed);

@@ -5,6 +5,7 @@ interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function Skeleton({ className, ...props }: SkeletonProps) {
   return (
     <div
+      role="status"
       className={cn('animate-pulse rounded-md bg-muted', className)}
       {...props}
     />

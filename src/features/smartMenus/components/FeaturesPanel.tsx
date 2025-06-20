@@ -9,6 +9,7 @@ interface Props {
 import { useState, useEffect } from 'react';
 import { Leaf, Utensils, AlertCircle, Activity, Hammer, ShoppingCart } from 'lucide-react';
 import { Input } from '../../../components/ui/Input';
+import { Toggle } from '../../../components/ui/Toggle';
 
 const dietOptions: DietType[] = [DietType.Vegetarian, DietType.Pescatarian, DietType.Vegan];
 const allergenOptions: AllergenType[] = [
@@ -23,20 +24,8 @@ const allergenOptions: AllergenType[] = [
   AllergenType.Soy,
 ];
 
-function Toggle({ checked, onChange, disabled }: { checked: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
-  return (
-    <button
-      type="button"
-      onClick={() => !disabled && onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${checked ? 'bg-green-500' : 'bg-gray-300'} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-    >
-      <span
-        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`}
-      />
-    </button>
-  );
-}
 
+  
 export default function FeaturesPanel({ widget, onFieldChange }: Props) {
   // Feature flags & selections derived from typed widget props
   const [selectedDiets, setSelectedDiets] = useState<DietType[]>(widget.supportedDietaryPreferences ?? []);

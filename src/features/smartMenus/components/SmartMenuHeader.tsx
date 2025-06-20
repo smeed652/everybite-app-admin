@@ -34,16 +34,19 @@ export default function SmartMenuHeader({
         <div>
           <nav className="text-sm text-gray-600 mb-1">Edit Widget</nav>
           <h1 className="text-3xl font-semibold">
-            {widget.name}{' '}
-            <span className="ml-2 text-base font-normal text-gray-500">#{widget.id}</span>
+            {widget.name}
           </h1>
         </div>
         <div className="flex gap-2">
-          {onPreview && (
-            <Button variant="outline" onClick={onPreview} type="button">
-              Preview Widget
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            type="button"
+            onClick={
+              onPreview ?? (() => window.open(`https://app.everybite.com/widget/${widget.id}`, '_blank'))
+            }
+          >
+            Preview Widget
+          </Button>
           {dirty && onCancel && (
             <Button variant="outline" onClick={onCancel} disabled={saving} type="button">
               Cancel

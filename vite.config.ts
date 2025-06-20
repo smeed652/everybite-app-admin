@@ -10,7 +10,8 @@ export default defineConfig({
   },
   // Vitest configuration for unit tests
   test: {
-    include: ['src/**/*.vitest.{ts,tsx}'],
+    // run every *.test or *.spec file inside src
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
     environment: 'happy-dom',
     setupFiles: './src/setupTests.ts',
     globals: true,
