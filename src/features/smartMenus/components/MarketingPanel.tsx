@@ -2,26 +2,12 @@ import { useState } from 'react';
 import { Widget } from '../../../generated/graphql';
 import { Card } from '../../../components/ui/Card';
 import { Mail, ThumbsUp, SearchX, ExternalLink } from 'lucide-react';
+import { Toggle } from '../../../components/ui/Toggle';
 
 export interface MarketingPanelProps {
   widget: Widget;
   /** callback with changed fields */
   onFieldChange: (changes: Record<string, unknown>) => void;
-}
-
-// Simple toggle switch component reused across panels
-function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
-  return (
-    <button
-      type="button"
-      onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${checked ? 'bg-green-500' : 'bg-gray-300'}`}
-    >
-      <span
-        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`}
-      />
-    </button>
-  );
 }
 
 export default function MarketingPanel({ widget, onFieldChange }: MarketingPanelProps) {
