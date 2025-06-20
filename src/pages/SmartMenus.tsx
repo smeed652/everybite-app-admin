@@ -126,7 +126,12 @@ export default function SmartMenus() {
       cell: ({ row }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="h-8 w-8 p-0" aria-label="Row actions">
+            <Button
+              variant="outline"
+              className="h-8 w-8 p-0"
+              aria-label="Row actions"
+              onClick={(e) => e.stopPropagation()}
+            >
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -157,6 +162,7 @@ export default function SmartMenus() {
           columns={columns}
           loading={loading}
           pageSize={10}
+          selectable={false}
           onRowClick={(row) => navigate(`/smart-menus/${row.id}`)}
         />
       </div>

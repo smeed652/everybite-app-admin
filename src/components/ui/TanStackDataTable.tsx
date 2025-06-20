@@ -42,7 +42,8 @@ export function TanStackDataTable<TData extends object>({
   pageSize = 10,
   id,
   onRowClick,
-}: DataTableProps<TData>) {
+  selectable = true,
+}: DataTableProps<TData> & { selectable?: boolean }) {
   // Sorting / filtering / selection state
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -50,33 +51,36 @@ export function TanStackDataTable<TData extends object>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   // Inject row-selection checkbox column at the start
-  const columnsWithSelection = React.useMemo<ColumnDef<TData, unknown>[]>(() => [
-    {
-      id: 'select',
-      enableSorting: false,
-      enableHiding: false,
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          className="h-4 w-4"
-          checked={table.getIsAllRowsSelected() || table.getIsSomeRowsSelected()}
-          aria-checked={table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          className="h-4 w-4"
-          checked={row.getIsSelected()}
-          disabled={!row.getCanSelect()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      size: 24,
-    },
-    ...columns,
-  ], [columns]);
+  const columnsWithSelection = React.useMemo<ColumnDef<TData, unknown>[]>(() => {
+    if (!selectable) return columns;
+    return [
+      {
+        id: 'select',
+        enableSorting: false,
+        enableHiding: false,
+        header: ({ table }) => (
+          <input
+            type="checkbox"
+            className="h-4 w-4"
+            checked={table.getIsAllRowsSelected() || table.getIsSomeRowsSelected()}
+            aria-checked={table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()}
+          />
+        ),
+        cell: ({ row }) => (
+          <input
+            type="checkbox"
+            className="h-4 w-4"
+            checked={row.getIsSelected()}
+            disabled={!row.getCanSelect()}
+            onChange={row.getToggleSelectedHandler()}
+          />
+        ),
+        size: 24,
+      },
+      ...columns,
+    ];
+  }, [columns, selectable]);
 
   const table = useReactTable({
     data,
