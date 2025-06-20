@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import Users from '../Users';
 import React from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { vi } from 'vitest';
+import { vi, type Mock } from 'vitest';
 
 // Helper to render Users with AuthContext
 function renderWithAuth() {
@@ -31,6 +31,6 @@ describe('Users page', () => {
     const skeletons = screen.getAllByRole('status'); // Skeleton component has no role, fallback to test id
     expect(skeletons.length).toBeGreaterThanOrEqual(5);
 
-    (global.fetch as vi.Mock).mockRestore();
+    (global.fetch as Mock).mockRestore();
   });
 });

@@ -13,13 +13,15 @@ function loginAsUser() {
 }
 
 describe('Non-admin access control', () => {
-  beforeEach(() => {
-    cy.visit('/');
-    loginAsUser();
-  });
+  // no global beforeEach – set token during the visit that matters
+
 
   it('redirects /users to 403 page', () => {
-    cy.visit('/users');
-    cy.contains('403').should('exist');
+    cy.visit('/users', {
+      onBeforeLoad(win) {
+        win.localStorage.setItem('everybiteAuth', JSON.stringify(USER_TOKEN));
+      },
+    });
+    cy.get('[data-testid="forbidden-page"]', { timeout: 10000 }).should('be.visible');
   });
 });
