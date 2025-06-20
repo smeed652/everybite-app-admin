@@ -1,38 +1,36 @@
-import { useState, useEffect } from 'react';
-import {
-  Widget,
-  DietType,
-  AllergenType,
-} from '../../../generated/graphql';
-
-import { Card } from '../../../components/ui/Card';
-import { Toggle } from '../../../components/ui/Toggle';
+import { useEffect, useMemo, useState } from 'react';
+import { Widget, DietType, AllergenType } from '../../../generated/graphql';
 import { SettingToggle } from '../../../components/ui/SettingToggle';
 import { Input } from '../../../components/ui/Input';
+import { Activity, Hammer, ShoppingCart } from 'lucide-react';
 
-import {
-  Leaf,
-  Utensils,
-  AlertCircle,
-  Activity,
-  Hammer,
-  ShoppingCart,
-} from 'lucide-react';
+import DietarySection from './DietarySection';
+import AllergensSection from './AllergensSection';
 
-interface Props {
+/* ------------------------------------------------------------------ */
+/* Types                                                               */
+/* ------------------------------------------------------------------ */
+export interface FeaturesPanelProps {
   widget: Widget;
   onFieldChange: (diff: Record<string, unknown>) => void;
 }
 
 /* ------------------------------------------------------------------ */
+/* Helpers                                                             */
+/* ------------------------------------------------------------------ */
+const toggleArrayItem = <T,>(arr: T[], v: T): T[] =>
+  arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
 
-const dietOptions: DietType[] = [
+/* ------------------------------------------------------------------ */
+/* Constants                                                           */
+/* ------------------------------------------------------------------ */
+const DIET_OPTIONS: DietType[] = [
   DietType.Vegetarian,
   DietType.Pescatarian,
   DietType.Vegan,
 ];
 
-const allergenOptions: AllergenType[] = [
+const ALLERGEN_OPTIONS: AllergenType[] = [
   AllergenType.Wheat,
   AllergenType.Dairy,
   AllergenType.Egg,
@@ -45,27 +43,31 @@ const allergenOptions: AllergenType[] = [
 ];
 
 /* ------------------------------------------------------------------ */
-
-export default function FeaturesPanel({ widget, onFieldChange }: Props) {
-  /* ---------- local state derived from widget --------------------- */
+/* Component                                                           */
+/* ------------------------------------------------------------------ */
+export default function FeaturesPanel({
+  widget,
+  onFieldChange,
+}: FeaturesPanelProps) {
+  /* ---------- dietary / ingredients ------------------------------- */
   const [selectedDiets, setSelectedDiets] = useState<DietType[]>(
     widget.supportedDietaryPreferences ?? []
   );
-  const [enableDiets, setEnableDiets] = useState(
-    (widget.supportedDietaryPreferences ?? []).length > 0
-  );
+  const [enableDiets, setEnableDiets] = useState(selectedDiets.length > 0);
 
   const [enableIngredients, setEnableIngredients] = useState(
     widget.displayIngredients
   );
 
+  /* ---------- allergens ------------------------------------------- */
   const [selectedAllergens, setSelectedAllergens] = useState<AllergenType[]>(
     widget.supportedAllergens ?? []
   );
   const [enableAllergens, setEnableAllergens] = useState(
-    (widget.supportedAllergens ?? []).length > 0
+    selectedAllergens.length > 0
   );
 
+  /* ---------- nutrients ------------------------------------------- */
   const [enableNutrients, setEnableNutrients] = useState(
     widget.displayNutrientPreferences
   );
@@ -73,59 +75,43 @@ export default function FeaturesPanel({ widget, onFieldChange }: Props) {
     widget.displayMacronutrients
   );
 
+  /* ---------- build-your-own -------------------------------------- */
   const [enableBuildYourOwn, setEnableBuildYourOwn] = useState(
     widget.isByoEnabled
   );
 
+  /* ---------- ordering -------------------------------------------- */
   const [enableOrdering, setEnableOrdering] = useState(
     widget.isOrderButtonEnabled
   );
-  const initialBase = widget.orderUrl?.split('?')[0] ?? '';
-  const initialUtm = widget.orderUrl?.split('?')[1] ?? '';
-  const [baseUrl, setBaseUrl] = useState(initialBase);
-  const [utmTags, setUtmTags] = useState(initialUtm);
+  const [baseUrl, setBaseUrl] = useState(widget.orderUrl?.split('?')[0] ?? '');
+  const [utmTags, setUtmTags] = useState(widget.orderUrl?.split('?')[1] ?? '');
 
-  const fullUrl =
-    baseUrl + (utmTags ? (baseUrl.includes('?') ? '&' : '?') + utmTags : '');
+  const fullUrl = useMemo(
+    () => (enableOrdering && baseUrl ? `${baseUrl}${utmTags ? `?${utmTags}` : ''}` : ''),
+    [enableOrdering, baseUrl, utmTags]
+  );
 
-  /* ---------- helpers -------------------------------------------- */
-  const toggleArrayItem = <T,>(arr: T[], v: T) =>
-    arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
-
-  /* ---------- propagate diff up ---------------------------------- */
+  /* ------------------------------------------------------------------
+   * Emit diff upward whenever any setting changes
+   * ------------------------------------------------------------------ */
   useEffect(() => {
     const diff: Record<string, unknown> = {};
 
-    const dietsVal = enableDiets ? selectedDiets : [];
-    if (
-      JSON.stringify(dietsVal) !==
-      JSON.stringify(widget.supportedDietaryPreferences ?? [])
-    )
-      diff.supportedDietaryPreferences = dietsVal;
+    diff.supportedDietaryPreferences = enableDiets ? selectedDiets : [];
+    diff.displayIngredients = enableIngredients;
 
-    if (enableIngredients !== widget.displayIngredients)
-      diff.displayIngredients = enableIngredients;
+    diff.supportedAllergens = enableAllergens ? selectedAllergens : [];
 
-    const allergensVal = enableAllergens ? selectedAllergens : [];
-    if (
-      JSON.stringify(allergensVal) !==
-      JSON.stringify(widget.supportedAllergens ?? [])
-    )
-      diff.supportedAllergens = allergensVal;
+    diff.displayNutrientPreferences = enableNutrients;
+    diff.displayMacronutrients = enableCalories;
 
-    if (enableNutrients !== widget.displayNutrientPreferences)
-      diff.displayNutrientPreferences = enableNutrients;
-    if (enableCalories !== widget.displayMacronutrients)
-      diff.displayMacronutrients = enableCalories;
+    diff.isByoEnabled = enableBuildYourOwn;
 
-    if (enableBuildYourOwn !== widget.isByoEnabled)
-      diff.isByoEnabled = enableBuildYourOwn;
+    diff.isOrderButtonEnabled = enableOrdering;
+    diff.orderUrl = fullUrl || null;
 
-    if (enableOrdering !== widget.isOrderButtonEnabled)
-      diff.isOrderButtonEnabled = enableOrdering;
-    if (fullUrl !== (widget.orderUrl ?? '')) diff.orderUrl = fullUrl;
-
-    if (Object.keys(diff).length) onFieldChange(diff);
+    onFieldChange(diff);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     enableDiets,
@@ -139,113 +125,41 @@ export default function FeaturesPanel({ widget, onFieldChange }: Props) {
     enableOrdering,
     baseUrl,
     utmTags,
+    fullUrl,
   ]);
 
-  /* ---------- render --------------------------------------------- */
+  /* ------------------------------------------------------------------ */
+  /* Render                                                             */
+  /* ------------------------------------------------------------------ */
   return (
     <section className="space-y-6" data-testid="features-panel">
-      {/* Diets ------------------------------------------------------ */}
-      <Card className="p-4 space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <Leaf className="h-4 w-4" />
-              Diets
-              {enableDiets && (
-                <button
-                  type="button"
-                  onClick={() => setSelectedDiets(dietOptions)}
-                  className="text-xs underline text-blue-600 hover:text-blue-800"
-                >
-                  Select&nbsp;All
-                </button>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Display diet filters (select at least one diet when enabled)
-            </p>
-          </div>
-          <Toggle checked={enableDiets} onChange={setEnableDiets} />
-        </div>
+      {/* Dietary + Ingredients */}
+      <DietarySection
+        dietOptions={DIET_OPTIONS}
+        enableDiets={enableDiets}
+        onToggleDiets={setEnableDiets}
+        selectedDiets={selectedDiets}
+        onChangeSelectedDiets={setSelectedDiets}
+        enableIngredients={enableIngredients}
+        onToggleIngredients={setEnableIngredients}
+        toggleArrayItem={toggleArrayItem}
+      />
 
-        {enableDiets && (
-          <div className="pl-6 grid grid-cols-2 gap-2">
-            {dietOptions.map((d) => (
-              <label key={d} className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4"
-                  checked={selectedDiets.includes(d)}
-                  onChange={() => setSelectedDiets(toggleArrayItem(selectedDiets, d))}
-                />
-                {d}
-              </label>
-            ))}
-          </div>
-        )}
-      </Card>
+      {/* Allergens */}
+      <AllergensSection
+        allergenOptions={ALLERGEN_OPTIONS}
+        enableAllergens={enableAllergens}
+        onToggleAllergens={setEnableAllergens}
+        selectedAllergens={selectedAllergens}
+        onChangeSelectedAllergens={setSelectedAllergens}
+        toggleArrayItem={toggleArrayItem}
+      />
 
-      {/* Ingredients ------------------------------------------------ */}
-      <Card className="p-4 flex items-center justify-between">
-        <div>
-          <p className="flex items-center gap-2 text-sm font-medium">
-            <Utensils className="h-4 w-4" /> Ingredients
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Allow users to search by including/excluding ingredients
-          </p>
-        </div>
-        <Toggle checked={enableIngredients} onChange={setEnableIngredients} />
-      </Card>
-
-      {/* Allergens -------------------------------------------------- */}
-      <Card className="p-4 space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <AlertCircle className="h-4 w-4" />
-              Allergens
-              {enableAllergens && (
-                <button
-                  type="button"
-                  onClick={() => setSelectedAllergens(allergenOptions)}
-                  className="text-xs underline text-blue-600 hover:text-blue-800"
-                >
-                  Select&nbsp;All
-                </button>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Enable allergen filters (select at least one allergen when enabled)
-            </p>
-          </div>
-          <Toggle checked={enableAllergens} onChange={setEnableAllergens} />
-        </div>
-
-        {enableAllergens && (
-          <div className="pl-6 grid grid-cols-2 gap-2">
-            {allergenOptions.map((a) => (
-              <label key={a} className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4"
-                  checked={selectedAllergens.includes(a)}
-                  onChange={() =>
-                    setSelectedAllergens(toggleArrayItem(selectedAllergens, a))
-                  }
-                />
-                {a}
-              </label>
-            ))}
-          </div>
-        )}
-      </Card>
-
-      {/* Nutrients -------------------------------------------------- */}
+      {/* Nutrients */}
       <SettingToggle
         icon={<Activity className="h-4 w-4" />}
         title="Nutrients"
-        description="Enable filtering by protein, fat and carbohydrate ranges"
+        description="Enable filtering by protein, fat & carb ranges"
         checked={enableNutrients}
         onChange={setEnableNutrients}
       />
@@ -263,16 +177,16 @@ export default function FeaturesPanel({ widget, onFieldChange }: Props) {
         </div>
       )}
 
-      {/* Build-Your-Own ------------------------------------------- */}
+      {/* Build-Your-Own */}
       <SettingToggle
         icon={<Hammer className="h-4 w-4" />}
         title="Build-Your-Own"
-        description="Enable Build-Your-Own for all dishes by default"
+        description="Enable BYO for all dishes by default"
         checked={enableBuildYourOwn}
         onChange={setEnableBuildYourOwn}
       />
 
-      {/* Ordering --------------------------------------------------- */}
+      {/* Ordering */}
       <SettingToggle
         icon={<ShoppingCart className="h-4 w-4" />}
         title="Ordering"
@@ -304,12 +218,9 @@ export default function FeaturesPanel({ widget, onFieldChange }: Props) {
               placeholder="utm_source=...&utm_medium=..."
             />
           </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Full&nbsp;URL</label>
-            <p className="text-sm break-all bg-gray-50 border rounded px-2 py-1">
-              {fullUrl || '—'}
-            </p>
-          </div>
+          <p className="text-sm break-all bg-gray-50 border rounded px-2 py-1">
+            {fullUrl || '—'}
+          </p>
         </div>
       )}
     </section>

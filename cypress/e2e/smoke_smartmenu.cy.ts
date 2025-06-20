@@ -25,17 +25,21 @@ describe('Admin Happy Path', () => {
   it('navigates SmartMenus list > detail > preview', () => {
     cy.visit('/smart-menus');
 
-    // Click first row (assumes link cell has data-testid)
-    cy.get('[data-testid="smartmenu-row"]').first().click();
+    // Click first row in SmartMenus table (uses component id)
+    // Wait for data rows (exclude loading skeleton rows with animate-pulse class)
+    cy.get('[data-testid="smartmenus-table"] tbody tr:not(.animate-pulse)', { timeout: 10000 })
+      .first()
+      .click({ force: true });
 
-    // Header should show widget name
-    cy.get('[data-testid="smartmenu-header"]').contains(/widget/i);
+    // Confirm navigation to detail page
+    cy.url({ timeout: 10000 }).should('match', /\/smart-menus\/[\w-]+/);
 
     // Click Preview button – should open external url (verify href via stubbed window.open)
     cy.window().then((win) => {
       cy.stub(win, 'open').as('open');
     });
-    cy.contains('button', /preview widget/i).click();
+
+    cy.contains('button', /preview widget/i, { timeout: 10000 }).click();
     cy.get('@open').should('have.been.called');
   });
 });

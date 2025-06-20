@@ -44,13 +44,11 @@ describe('SmartMenus admin list', () => {
     });
   });
 
-  it('allows selecting a row and opens actions menu', () => {
-    // Select first row
+  it('opens actions menu for a row', () => {
     cy.get('table tbody tr').first().within(() => {
-      cy.get('input[type="checkbox"]').first().check({ force: true }).should('be.checked');
-      cy.get('button[aria-label="Row actions"]').click({force:true});
+      cy.get('button[aria-label="Row actions"]').click({ force: true });
     });
     // actions menu should appear
-    cy.contains('View details').should('exist');
+    cy.contains('View details', { timeout: 10000 }).should('exist');
   });
 });

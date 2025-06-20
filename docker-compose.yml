@@ -35,6 +35,20 @@ services:
     ports:
       - "27017:27017"
 
+  postgres-audit:
+    image: postgres:16
+    container_name: audit-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: smartmenu_audit
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - audit-data:/var/lib/postgresql/data
+
   prod:
     build:
       context: .
@@ -48,3 +62,4 @@ services:
 
 volumes:
   mongo-data:
+  audit-data:

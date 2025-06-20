@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
-import { cn } from '../lib/utils';
 import { logger } from '../lib/logger';
 import { Label } from '../components/ui/Label';
 import { useAuth } from '../context/AuthContext';
@@ -44,11 +43,16 @@ export default function Login() {
       if (!idToken) throw new Error('No id token');
       login({ accessToken: idToken });
       navigate('/');
-    } catch (err: any) {
+    } catch (err: unknown) {
       // DEBUG: log error details
       // eslint-disable-next-line no-console
       logger.error('[login] signIn error', err);
-      setError(err.message || err?.name || 'Invalid credentials');
+      if (err && typeof err === 'object' && 'message' in err) {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        setError((err as { message?: string }).message || 'Invalid credentials');
+      } else {
+        setError('Invalid credentials');
+      }
     }
   };
 
@@ -61,6 +65,7 @@ export default function Login() {
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
+            data-testid="email"
             type="email"
             placeholder="you@example.com"
             value={email}
@@ -72,6 +77,7 @@ export default function Login() {
           <Label htmlFor="password">Password</Label>
           <Input
             id="password"
+            data-testid="password"
             type="password"
             placeholder="••••••••"
             value={password}
@@ -79,7 +85,7 @@ export default function Login() {
             required
           />
         </div>
-        <Button type="submit" className="w-full">Sign in</Button>
+        <Button type="submit" data-testid="login-submit" className="w-full">Sign in</Button>
       </form>
     </div>
   );
