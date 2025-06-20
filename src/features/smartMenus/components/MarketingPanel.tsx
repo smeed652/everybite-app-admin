@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Widget } from '../../../generated/graphql';
-import { Card } from '../../../components/ui/Card';
 import { Mail, ThumbsUp, SearchX, ExternalLink } from 'lucide-react';
-import { Toggle } from '../../../components/ui/Toggle';
+import { SettingToggle } from '../../../components/ui/SettingToggle';
 
 export interface MarketingPanelProps {
   widget: Widget;
@@ -33,69 +32,49 @@ export default function MarketingPanel({ widget, onFieldChange }: MarketingPanel
     <section className="space-y-6" data-testid="marketing-panel">
       <h3 className="text-lg font-semibold">Call to Actions (CTA)</h3>
       {/* Soft Sign-Up banner */}
-      <Card className="p-4 flex items-center justify-between">
-        <div>
-          <p className="flex items-center gap-2 text-sm font-medium">
-            <Mail className="h-4 w-4" />Soft Signup: Save preferences banner
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Appears when a user applies preferences. Captures email.
-          </p>
-        </div>
-        <Toggle checked={softSignup} onChange={makeHandler(setSoftSignup, 'displaySoftSignUp')} />
-      </Card>
+      <SettingToggle
+        icon={<Mail className="h-4 w-4" />}
+        title="Soft Signup: Save preferences banner"
+        description="Appears when a user applies preferences. Captures email."
+        checked={softSignup}
+        onChange={makeHandler(setSoftSignup, 'displaySoftSignUp')}
+      />
 
       {/* No Results banner */}
-      <Card className="p-4 flex items-center justify-between">
-        <div>
-          <p className="flex items-center gap-2 text-sm font-medium">
-            <SearchX className="h-4 w-4" />Email Signup CTA: No Results banner
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Appears when search returns no results. Captures email.
-          </p>
-        </div>
-        <Toggle checked={notifyMe} onChange={makeHandler(setNotifyMe, 'displayNotifyMeBanner')} />
-      </Card>
+      <SettingToggle
+        icon={<SearchX className="h-4 w-4" />}
+        title="Email Signup CTA: No Results banner"
+        description="Appears when search returns no results. Captures email."
+        checked={notifyMe}
+        onChange={makeHandler(setNotifyMe, 'displayNotifyMeBanner')}
+      />
 
       {/* Give Feedback banner */}
-      <Card className="p-4 flex items-center justify-between">
-        <div>
-          <p className="flex items-center gap-2 text-sm font-medium">
-            <ThumbsUp className="h-4 w-4" />Email Signup CTA: Give Feedback banner
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Appears at bottom of scrolled page. Captures feedback and email.
-          </p>
-        </div>
-        <Toggle checked={giveFeedback} onChange={makeHandler(setGiveFeedback, 'displayGiveFeedbackBanner')} />
-      </Card>
+      <SettingToggle
+        icon={<ThumbsUp className="h-4 w-4" />}
+        title="Email Signup CTA: Give Feedback banner"
+        description="Appears at bottom of scrolled page. Captures feedback and email."
+        checked={giveFeedback}
+        onChange={makeHandler(setGiveFeedback, 'displayGiveFeedbackBanner')}
+      />
 
       {/* Persistent Feedback button */}
-      <Card className="p-4 flex items-center justify-between">
-        <div>
-          <p className="flex items-center gap-2 text-sm font-medium">
-            <ExternalLink className="h-4 w-4" />Link to EveryBite: Dish Detail modal
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Appears on dish detail modal. Links users to EveryBite main app.
-          </p>
-        </div>
-        <Toggle checked={dishDetail} onChange={makeHandler(setDishDetail, 'displayDishDetailsLink')} />
-      </Card>
+      <SettingToggle
+        icon={<ExternalLink className="h-4 w-4" />}
+        title="Link to EveryBite: Dish Detail modal"
+        description="Appears on dish detail modal. Links users to EveryBite main app."
+        checked={dishDetail}
+        onChange={makeHandler(setDishDetail, 'displayDishDetailsLink')}
+      />
 
       {/* Feedback floating button */}
-      <Card className="p-4 flex items-center justify-between">
-        <div>
-          <p className="flex items-center gap-2 text-sm font-medium">
-            <ThumbsUp className="h-4 w-4" />Floating Feedback Button
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Persistent button that opens feedback modal. Captures feedback and email.
-          </p>
-        </div>
-        <Toggle checked={feedbackButton} onChange={makeHandler(setFeedbackButton, 'displayFeedbackButton')} />
-      </Card>
+      <SettingToggle
+        icon={<ThumbsUp className="h-4 w-4" />}
+        title="Floating Feedback Button"
+        description="Persistent button that opens feedback modal. Captures feedback and email."
+        checked={feedbackButton}
+        onChange={makeHandler(setFeedbackButton, 'displayFeedbackButton')}
+      />
     </section>
   );
 }
