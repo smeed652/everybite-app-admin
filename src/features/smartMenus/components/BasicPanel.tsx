@@ -16,28 +16,25 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
   const [isActive, setIsActive] = useState(widget.isActive);
   const [loading] = useState(false);
 
-  // report text changes immediately on each keystroke
+  // update local state; diff emitted in effect
   const handleNameChange = (val: string) => {
     setName(val);
-    if (val !== widget.name) {
-      onFieldChange({ name: val });
-    }
   };
 
   const handleSlugChange = (val: string) => {
     setSlug(val);
-    if (val !== widget.slug) {
-      onFieldChange({ slug: val });
-    }
   };
 
-  // report toggle change
+  // emit aggregated diff whenever any basic field changes
   useEffect(() => {
-    if (isActive !== widget.isActive) {
-      onFieldChange({ isActive });
-    }
+    const diff: Partial<Widget> = {
+      name,
+      slug,
+      isActive,
+    };
+    onFieldChange(diff);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActive]);
+  }, [name, slug, isActive]);
 
 
   return (

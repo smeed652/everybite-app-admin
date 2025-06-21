@@ -65,10 +65,11 @@ function LayoutOption({ label, imgSrc, selected, onClick }: { label: string; img
     <Button
       type="button"
       variant="outline"
-      className={`h-28 w-36 overflow-hidden relative border-2 ${selected ? 'border-primary' : 'border-muted'} rounded-sm` }
+      className={`w-44 h-36 p-3 flex flex-col items-center justify-center border-2 ${selected ? 'border-primary' : 'border-muted'} rounded-sm`}
       onClick={onClick}
     >
-      <img src={imgSrc} alt={label} className="object-cover h-full w-full" />
+      <img src={imgSrc} alt={label} className="object-contain h-24 w-24" />
+      <span className="mt-2 text-xs text-muted-foreground">{label}</span>
     </Button>
   );
 }

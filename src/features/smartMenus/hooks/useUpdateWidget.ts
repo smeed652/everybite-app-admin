@@ -17,10 +17,21 @@ export function useUpdateWidget() {
   const client = useApolloClient();
 
   const updateWidgetFields = (id: string, data: Partial<Widget>) => {
+    // backend uses dedicated mutations for sync
+    // remove isSyncEnabled if present
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete (data as Partial<Widget> & { isSyncEnabled?: unknown }).isSyncEnabled;
     const allowed: Partial<Widget> = {};
+    const cacheId = client.cache.identify({ __typename: 'Widget', id });
+    const existing = cacheId
+      ? (client.readFragment<Widget>({ id: cacheId, fragment: gql`fragment _Compare on Widget { ${Object.keys(data).join(' ')} }` }) as Widget | null)
+      : null;
+
     type WidgetKey = keyof Widget;
     Object.entries(data).forEach(([k, v]) => {
-      if (v !== undefined) {
+      if (v === undefined) return;
+      const prev = existing ? (existing as Record<string, unknown>)[k] : undefined;
+      if (v !== prev) {
         (allowed as Partial<Widget>)[k as WidgetKey] = v as Widget[WidgetKey];
       }
     });

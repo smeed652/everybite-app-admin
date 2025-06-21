@@ -10,6 +10,7 @@ export const GET_SMART_MENUS = gql`
       updatedAt
       publishedAt
       displayImages
+      isSyncEnabled
       isOrderButtonEnabled
       layout
       primaryBrandColor
