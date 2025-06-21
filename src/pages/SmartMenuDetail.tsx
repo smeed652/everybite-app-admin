@@ -10,6 +10,8 @@ import { Card } from '../components/ui/Card';
 import BasicPanel from '../features/smartMenus/components/BasicPanel';
 import DesignPanel from '../features/smartMenus/components/DesignPanel';
 import BrandingPanel from '../features/smartMenus/components/BrandingPanel';
+import HostedPageBrandingPanel from '../features/smartMenus/components/HostedPageBrandingPanel';
+import FooterPanel from '../features/smartMenus/components/FooterPanel';
 import { toast } from 'react-hot-toast';
 
 export default function SmartMenuDetail() {
@@ -67,7 +69,9 @@ export default function SmartMenuDetail() {
         <>
           <BasicPanel widget={widget} onFieldChange={handleFieldChange} />
           <DesignPanel widget={widget} onFieldChange={handleFieldChange} />
+          <FooterPanel widget={widget} onFieldChange={handleFieldChange} />
           <BrandingPanel widget={widget} onFieldChange={handleFieldChange} />
+          <HostedPageBrandingPanel widget={widget} onFieldChange={handleFieldChange} />
         </>
       )}
 

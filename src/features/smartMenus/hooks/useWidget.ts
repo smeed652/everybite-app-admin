@@ -25,6 +25,8 @@ export const GET_WIDGET = gql`
       displaySoftSignUp
       displayNotifyMeBanner
       displayGiveFeedbackBanner
+      displayFooter
+      footerText
       displayFeedbackButton
       displayDishDetailsLink
       # Additional flags & appearance
