@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
@@ -22,8 +22,17 @@ export default function SmartMenuFeatures() {
 
   const [saving, setSaving] = useState(false);
   const [pending, setPending] = useState<Record<string, unknown>>({});
-  // clear pending when new widget arrives
-  useEffect(() => setPending({}), [widget?.id]);
+  // helper key to remount panel on cancel
+  const [formKey, setFormKey] = useState(0);
+  // snapshot original widget for stable comparisons
+  const originalRef = useRef<Widget | null>(widget ?? null);
+  // reset snapshot & pending when widget id changes
+  useEffect(() => {
+    if (widget && widget.id !== originalRef.current?.id) {
+      originalRef.current = widget;
+      setPending({});
+    }
+  }, [widget]);
   const dirty = Object.keys(pending).length > 0;
 
   /* --------------------------- handlers --------------------------- */
@@ -33,14 +42,23 @@ export default function SmartMenuFeatures() {
     setPending((prev) => {
       const next = { ...prev };
       Object.entries(changes).forEach(([k, v]) => {
-        // @ts-expect-error – widget fields are dynamic
-        const original = widget[k];
+          let original: unknown = originalRef.current ? (originalRef.current as Record<string, unknown>)[k] : undefined;
+        if (original === undefined) {
+          const newVal = v;
+          if (typeof newVal === 'boolean') original = false;
+          else if (typeof newVal === 'number') original = 0;
+          else if (typeof newVal === 'string') original = '';
+        }
         if (JSON.stringify(original) === JSON.stringify(v)) {
           delete next[k];
         } else {
           next[k] = v;
         }
       });
+      if (import.meta.env.MODE === 'development' || import.meta.env.VITE_LOG_LEVEL === 'debug') {
+        // eslint-disable-next-line no-console
+        console.debug('[Features] diff incoming', changes, 'pending next:', next);
+      }
       return next;
     });
   };
@@ -54,7 +72,10 @@ export default function SmartMenuFeatures() {
     setPending({});
   };
 
-  const handleCancel = () => window.location.reload();
+  const handleCancel = () => {
+    setPending({});
+    setFormKey((k) => k + 1);
+  };
 
   /* -------------------------- rendering -------------------------- */
 
@@ -85,7 +106,7 @@ export default function SmartMenuFeatures() {
           ))}
         </Card>
       ) : (
-        <FeaturesPanel widget={widget} onFieldChange={handleFieldChange} />
+        <FeaturesPanel key={`features-${formKey}`} widget={widget} onFieldChange={handleFieldChange} />
       )}
     </div>
   );

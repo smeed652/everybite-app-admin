@@ -25,14 +25,19 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
     setSlug(val);
   };
 
-  // emit aggregated diff whenever any basic field changes
+  // emit only changed fields whenever basics change
   useEffect(() => {
-    const diff: Partial<Widget> = {
-      name,
-      slug,
-      isActive,
-    };
-    onFieldChange(diff);
+    const diff: Partial<Widget> = {};
+    if (name !== widget.name) diff.name = name;
+    if (slug !== widget.slug) diff.slug = slug;
+    if (isActive !== widget.isActive) diff.isActive = isActive;
+    if (Object.keys(diff).length) {
+      if (import.meta.env.MODE === 'development' || import.meta.env.VITE_LOG_LEVEL === 'debug') {
+        // eslint-disable-next-line no-console
+        console.debug('[BasicPanel] emit', diff);
+      }
+      onFieldChange(diff);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, slug, isActive]);
 

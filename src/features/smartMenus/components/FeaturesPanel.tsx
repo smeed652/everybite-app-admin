@@ -99,22 +99,27 @@ export default function FeaturesPanel({
    * Emit diff upward whenever any setting changes
    * ------------------------------------------------------------------ */
   useEffect(() => {
+    const raw: Record<string, unknown> = {
+      supportedDietaryPreferences: enableDiets ? selectedDiets : [],
+      displayIngredients: enableIngredients,
+      supportedAllergens: enableAllergens ? selectedAllergens : [],
+      displayNutrientPreferences: enableNutrients,
+      displayMacronutrients: enableCalories,
+      isByoEnabled: enableBuildYourOwn,
+      isOrderButtonEnabled: enableOrdering,
+      orderUrl: fullUrl || null,
+    };
+
+    // send only the keys that differ from the original widget to avoid
+    // false-positive dirty states
     const diff: Record<string, unknown> = {};
-
-    diff.supportedDietaryPreferences = enableDiets ? selectedDiets : [];
-    diff.displayIngredients = enableIngredients;
-
-    diff.supportedAllergens = enableAllergens ? selectedAllergens : [];
-
-    diff.displayNutrientPreferences = enableNutrients;
-    diff.displayMacronutrients = enableCalories;
-
-    diff.isByoEnabled = enableBuildYourOwn;
-
-    diff.isOrderButtonEnabled = enableOrdering;
-    diff.orderUrl = fullUrl || null;
-
-    onFieldChange(diff);
+    Object.entries(raw).forEach(([k, v]) => {
+      // @ts-expect-error – dynamic widget field access
+      if (JSON.stringify(v) !== JSON.stringify(widget[k])) {
+        diff[k] = v;
+      }
+    });
+    if (Object.keys(diff).length) onFieldChange(diff);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     enableDiets,

@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import SmartMenuHeader from '../features/smartMenus/components/SmartMenuHeader';
 import { useWidget } from '../features/smartMenus/hooks/useWidget';
@@ -17,8 +17,16 @@ export default function SmartMenuMarketing() {
   const { updateWidgetFields } = useUpdateWidget();
   const [saving, setSaving] = useState(false);
   const [pendingChanges, setPendingChanges] = useState<Record<string, unknown>>({});
-  // clear pending changes whenever a new widget is loaded
-  useEffect(() => setPendingChanges({}), [widget?.id]);
+  // key to force remount on cancel
+  const [formKey, setFormKey] = useState(0);
+  // snapshot original widget once per widget id
+  const originalRef = useRef<Widget | null>(widget ?? null);
+  useEffect(() => {
+    if (widget && widget.id !== originalRef.current?.id) {
+      originalRef.current = widget;
+      setPendingChanges({});
+    }
+  }, [widget]);
   const dirty = Object.keys(pendingChanges).length > 0;
 
   const handleFieldChange = (changes: Record<string, unknown>) => {
@@ -26,8 +34,13 @@ export default function SmartMenuMarketing() {
     setPendingChanges(prev => {
       const next = { ...prev };
       Object.entries(changes).forEach(([k, v]) => {
-        // treat undefined original as false
-        const original = (widget as Widget)[k as keyof Widget] ?? false;
+        let original: unknown = originalRef.current ? (originalRef.current as Record<string, unknown>)[k] : undefined;
+        if (original === undefined) {
+          const newVal = v;
+          if (typeof newVal === 'boolean') original = false;
+          else if (typeof newVal === 'number') original = 0;
+          else if (typeof newVal === 'string') original = '';
+        }
         if (v === original) {
           delete next[k];
         } else {
@@ -47,7 +60,10 @@ export default function SmartMenuMarketing() {
     setPendingChanges({});
   };
 
-  const handleCancel = () => window.location.reload();
+  const handleCancel = () => {
+    setPendingChanges({});
+    setFormKey((k) => k + 1);
+  };
 
   if (error) return <p className="text-red-600">Error loading widget.</p>;
 
@@ -71,7 +87,7 @@ export default function SmartMenuMarketing() {
           ))}
         </Card>
       ) : (
-        <MarketingPanel widget={widget} onFieldChange={handleFieldChange} />
+        <MarketingPanel key={`marketing-${formKey}`} widget={widget} onFieldChange={handleFieldChange} />
       )}
     </div>
   );

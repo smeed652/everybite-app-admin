@@ -21,7 +21,13 @@ export default function DesignPanel({ widget, onFieldChange }: Props) {
     const changes: Partial<Widget> = {};
     if (layout !== widget.layout) changes.layout = layout;
     if (images !== widget.displayImages) changes.displayImages = images;
-    if (Object.keys(changes).length) onFieldChange(changes);
+    if (Object.keys(changes).length) {
+      if (import.meta.env.MODE === 'development' || import.meta.env.VITE_LOG_LEVEL === 'debug') {
+        // eslint-disable-next-line no-console
+        console.debug('[DesignPanel] emit', changes);
+      }
+      onFieldChange(changes);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layout, images]);
 
@@ -34,13 +40,13 @@ export default function DesignPanel({ widget, onFieldChange }: Props) {
         <p className="flex items-center gap-2 text-sm font-medium"><LayoutDashboard className="h-4 w-4" /> Template</p>
         <div className="flex gap-6">
           <LayoutOption
-            label="Table Layout"
+            label="Table"
             imgSrc={TableLayoutImg}
             selected={layout === Layout.Table}
             onClick={() => setLayout(Layout.Table)}
           />
           <LayoutOption
-            label="Card Layout"
+            label="Card"
             imgSrc={CardLayoutImg}
             selected={layout === Layout.Card}
             onClick={() => setLayout(Layout.Card)}
@@ -62,15 +68,17 @@ export default function DesignPanel({ widget, onFieldChange }: Props) {
 
 function LayoutOption({ label, imgSrc, selected, onClick }: { label: string; imgSrc: string; selected: boolean; onClick: () => void }) {
   return (
-    <Button
-      type="button"
-      variant="outline"
-      className={`w-44 h-36 p-3 flex flex-col items-center justify-center border-2 ${selected ? 'border-primary' : 'border-muted'} rounded-sm`}
-      onClick={onClick}
-    >
-      <img src={imgSrc} alt={label} className="object-contain h-24 w-24" />
-      <span className="mt-2 text-xs text-muted-foreground">{label}</span>
-    </Button>
+    <div className="flex flex-col items-center">
+      <Button
+        type="button"
+        variant="outline"
+        className={`w-36 h-28 p-2 flex items-center justify-center border-2 ${selected ? 'border-primary' : 'border-muted'} rounded-sm`}
+        onClick={onClick}
+      >
+        <img src={imgSrc} alt={label} className="object-contain h-full w-full" />
+      </Button>
+      <span className="mt-2 text-xs text-muted-foreground text-center">{label}</span>
+    </div>
   );
 }
 

@@ -31,7 +31,7 @@ export default function HostedPageBrandingPanel({
     String(widget.navbarFontSize ?? '16')
   );
   const [navbarBg, setNavbarBg] = useState(
-    widget.navbarBackgroundColor ?? '#ffffff'
+    widget.navbarBackgroundColor ?? ''
   );
 
   /* ----- Logo section state ------------------------------------------ */
@@ -43,21 +43,21 @@ export default function HostedPageBrandingPanel({
   const [htmlTitle, setHtmlTitle] = useState(widget.htmlTitleText ?? '');
   const [pageTitle, setPageTitle] = useState(widget.pageTitleText ?? '');
   const [pageTitleColor, setPageTitleColor] = useState(
-    widget.pageTitleTextColor ?? '#000000'
+    widget.pageTitleTextColor ?? ''
   );
 
   /* ----- Content section state --------------------------------------- */
   const [contentGlobalColor, setContentGlobalColor] = useState(
-    widget.contentAreaGlobalColor ?? '#ffffff'
+    widget.contentAreaGlobalColor ?? ''
   );
   const [contentHeaderColor, setContentHeaderColor] = useState(
-    widget.contentAreaColumnHeaderColor ?? '#000000'
+    widget.contentAreaColumnHeaderColor ?? ''
   );
   const [categoryFont, setCategoryFont] = useState(
     widget.categoryTitleFont ?? fonts[0]
   );
   const [categoryColor, setCategoryColor] = useState(
-    widget.categoryTitleTextColor ?? '#000000'
+    widget.categoryTitleTextColor ?? ''
   );
 
   /* ----- bubble changes up ------------------------------------------- */

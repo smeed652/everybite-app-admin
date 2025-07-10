@@ -17,6 +17,8 @@ import { toast } from 'react-hot-toast';
 import { useToggleWidgetSync } from '../features/smartMenus/hooks/useToggleWidgetSync';
 
 export default function SmartMenuDetail() {
+  // remount helper to reset all child panel states on cancel
+  const [formKey, setFormKey] = useState(0);
   const navigate = useNavigate();
   const { widgetId } = useParams<{ widgetId: string }>();
   const { widget, loading, error } = useWidget(widgetId || '');
@@ -29,25 +31,37 @@ export default function SmartMenuDetail() {
   const dirty = Object.keys(pendingChanges).length > 0;
 
   // helpers -------------------------------------------------
-  const originalRef = useRef<Widget | null>(null);
+  const originalRef = useRef<Widget | null>(widget ?? null);
 
-  // store first-loaded widget snapshot to compare against
+  // whenever widget id changes, reset snapshot
   useEffect(() => {
-    if (widget) originalRef.current = widget;
+    if (widget && widget.id !== originalRef.current?.id) {
+      originalRef.current = widget;
+    }
   }, [widget]);
 
   const handleFieldChange = (changes: Record<string, unknown>) =>
     setPendingChanges((prev) => {
-      const merged = { ...prev, ...changes };
-      // remove any keys that match original widget value to avoid false dirty state
-      Object.keys(merged).forEach((k) => {
-        // compare by JSON value to avoid type (number vs string) discrepancies
-        const originalVal = originalRef.current ? (originalRef.current as Record<string, unknown>)[k] : undefined;
-        if (JSON.stringify(merged[k]) === JSON.stringify(originalVal)) {
-          delete merged[k];
+      const next = { ...prev, ...changes };
+      // remove keys that match original widget values to avoid false dirty state
+      Object.keys(next).forEach((k) => {
+        let originalVal: unknown = originalRef.current ? (originalRef.current as Record<string, unknown>)[k] : undefined;
+        // coerce undefined to sensible falsy defaults so "undefined" vs false doesn't count as dirty
+        if (originalVal === undefined) {
+          const newVal = next[k];
+          if (typeof newVal === 'boolean') originalVal = false;
+          else if (typeof newVal === 'number') originalVal = 0;
+          else if (typeof newVal === 'string') originalVal = '';
+        }
+        if (JSON.stringify(next[k]) === JSON.stringify(originalVal)) {
+          delete next[k];
         }
       });
-      return merged;
+      if (import.meta.env.MODE === 'development' || import.meta.env.VITE_LOG_LEVEL === 'debug') {
+        // eslint-disable-next-line no-console
+        console.debug('[Detail] diff incoming', changes, 'pending next:', next);
+      }
+      return next;
     });
 
   const handleSave = async () => {
@@ -74,7 +88,11 @@ export default function SmartMenuDetail() {
     setPendingChanges({});
   };
 
-  const handleCancel = () => window.location.reload();
+  const handleCancel = () => {
+    setPendingChanges({});
+    // bump key so all panels remount with original widget props
+    setFormKey((k) => k + 1);
+  };
   // --------------------------------------------------------
 
   if (error) return <p className="text-red-600">Error loading widget.</p>;
@@ -103,12 +121,13 @@ export default function SmartMenuDetail() {
         </Card>
       ) : (
         <>
-          <BasicPanel widget={widget} onFieldChange={handleFieldChange} />
-          <SyncPanel widget={widget} onFieldChange={handleFieldChange} />
-          <DesignPanel widget={widget} onFieldChange={handleFieldChange} />
-          <FooterPanel widget={widget} onFieldChange={handleFieldChange} />
-          <BrandingPanel widget={widget} onFieldChange={handleFieldChange} />
-          <HostedPageBrandingPanel widget={widget} onFieldChange={handleFieldChange} />
+          {/* key forces remount on soft reset */}
+          <BasicPanel key={`basic-${formKey}`} widget={widget} onFieldChange={handleFieldChange} />
+          <SyncPanel key={`sync-${formKey}`} widget={widget} onFieldChange={handleFieldChange} />
+          <DesignPanel key={`design-${formKey}`} widget={widget} onFieldChange={handleFieldChange} />
+          <FooterPanel key={`footer-${formKey}`} widget={widget} onFieldChange={handleFieldChange} />
+          <BrandingPanel key={`branding-${formKey}`} widget={widget} onFieldChange={handleFieldChange} />
+          <HostedPageBrandingPanel key={`hp-brand-${formKey}`} widget={widget} onFieldChange={handleFieldChange} />
         </>
       )}
 
