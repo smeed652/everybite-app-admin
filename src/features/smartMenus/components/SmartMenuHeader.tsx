@@ -36,8 +36,8 @@ export default function SmartMenuHeader({
         Preview Widget
       </Button>
 
-      {dirty && onCancel && (
-        <Button variant="outline" onClick={onCancel} disabled={saving} type="button">
+      {onCancel && (
+        <Button variant="outline" onClick={onCancel} disabled={!dirty || saving} type="button">
           Cancel
         </Button>
       )}
