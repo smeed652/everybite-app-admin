@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Widget } from '../../../generated/graphql';
-import { Card } from '../../../components/ui/Card';
 import { Panel } from '../../../components/ui/Panel';
+import FormSection from '../../../components/ui/FormSection';
+import FormField from '../../../components/ui/FormField';
 import { SettingToggle } from '../../../components/ui/SettingToggle';
 import { Activity } from 'lucide-react';
 import { Input } from '../../../components/ui/Input';
@@ -58,18 +59,16 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
 
   return (
     <Panel title="Basics" data-testid="basic-panel">
-      <Card className="p-4 space-y-4">
+      <FormSection title="General">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <label className="text-sm font-medium" htmlFor="name">Name</label>
+          <FormField label="Name" required>
             <Input id="name" value={name} onChange={e => handleNameChange(e.target.value)} disabled={loading} />
-          </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium" htmlFor="slug">Slug</label>
+          </FormField>
+          <FormField label="Slug" required>
             <Input id="slug" value={slug} onChange={e => handleSlugChange(e.target.value)} disabled={loading} />
-          </div>
+          </FormField>
         </div>
-      </Card>
+      </FormSection>
 
       <SettingToggle
         icon={<Activity className="h-4 w-4" />}

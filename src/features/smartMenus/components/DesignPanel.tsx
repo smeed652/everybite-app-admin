@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Card } from '../../../components/ui/Card';
 import { Panel } from '../../../components/ui/Panel';
+import FormSection from '../../../components/ui/FormSection';
 import { Button } from '../../../components/ui/Button';
 import { LayoutDashboard, Image as ImageIcon } from 'lucide-react';
 import type { Widget, Layout as GraphQLLayout } from '../../../generated/graphql';
@@ -44,8 +44,7 @@ export default function DesignPanel({ widget, onFieldChange }: Props) {
     <Panel title="Design" data-testid="design-panel">
 
       {/* Template selector */}
-      <Card className="p-4 space-y-4">
-        <p className="flex items-center gap-2 text-sm font-medium"><LayoutDashboard className="h-4 w-4" /> Template</p>
+      <FormSection title={<span className="flex items-center gap-2"><LayoutDashboard className="h-4 w-4" /> Template</span>}>
         <div className="flex gap-6">
           <LayoutOption
             label="Table"
@@ -60,16 +59,18 @@ export default function DesignPanel({ widget, onFieldChange }: Props) {
             onClick={() => setLayout(LayoutValues.Card)}
           />
         </div>
-      </Card>
+      </FormSection>
 
       {/* Images toggle */}
-      <Card className="p-4 space-y-2 flex items-center justify-between">
-        <div>
-          <p className="flex items-center gap-2 text-sm font-medium"><ImageIcon className="h-4 w-4" /> Photos</p>
-          <p className="text-sm text-muted-foreground">Show photos on dish cards and dish detail modals.</p>
+      <FormSection>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="flex items-center gap-2 text-sm font-medium"><ImageIcon className="h-4 w-4" /> Photos</p>
+            <p className="text-sm text-muted-foreground">Show photos on dish cards and dish detail modals.</p>
+          </div>
+          <Toggle checked={images} onChange={setImages} disabled={loading} />
         </div>
-        <Toggle checked={images} onChange={setImages} disabled={loading} />
-      </Card>
+      </FormSection>
     </Panel>
   );
 }
