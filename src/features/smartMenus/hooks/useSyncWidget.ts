@@ -3,18 +3,12 @@ import { gql, useMutation } from '@apollo/client';
 
 const SYNC_WIDGET_MUTATION = gql`
   mutation SyncWidget($id: ID!) {
-    syncWidget(id: $id) {
-      id
-      lastSyncedAt
-    }
+    syncWidget(id: $id)
   }
 `;
 
 interface SyncWidgetResponse {
-  syncWidget: {
-    id: string;
-    lastSyncedAt: string;
-  };
+  syncWidget: boolean;
 }
 
 interface SyncWidgetVars {
@@ -28,7 +22,7 @@ export function useSyncWidget() {
   if (process.env.NODE_ENV === 'test') {
     const sync = async () =>
       Promise.resolve({
-        data: { syncWidget: { id: 'stub', lastSyncedAt: new Date().toISOString() } },
+        data: { syncWidget: true },
       } as import('@apollo/client').FetchResult<SyncWidgetResponse>);
     return { sync, loading: false, error: undefined } as const;
   }
