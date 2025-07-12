@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Widget, DietType, AllergenType } from '../../../generated/graphql';
+import type { Widget, DietType, AllergenType } from '../../../generated/graphql';
 import { SettingToggle } from '../../../components/ui/SettingToggle';
 import { Panel } from '../../../components/ui/Panel';
-import { Hammer } from 'lucide-react';
+import { Hammer, ThumbsUp } from 'lucide-react';
 
 import DietarySection from './DietarySection';
 import AllergensSection from './AllergensSection';
@@ -27,20 +27,20 @@ const toggleArrayItem = <T,>(arr: T[], v: T): T[] =>
 /* Constants                                                           */
 /* ------------------------------------------------------------------ */
 const DIET_OPTIONS: DietType[] = [
-  DietType.Vegetarian,
-  DietType.Pescatarian,
-  DietType.Vegan,
+  'VEGETARIAN' as DietType,
+  'PESCATARIAN' as DietType,
+  'VEGAN' as DietType,
 ];
 
 const ALLERGEN_OPTIONS: AllergenType[] = [
-  AllergenType.Wheat,
-  AllergenType.Dairy,
-  AllergenType.Egg,
-  AllergenType.Fish,
-  AllergenType.Shellfish,
-  AllergenType.TreeNut,
-  AllergenType.Peanut,
-  AllergenType.Sesame,
+  'WHEAT' as AllergenType,
+  'DAIRY' as AllergenType,
+  'EGG' as AllergenType,
+  'FISH' as AllergenType,
+  'SHELLFISH' as AllergenType,
+  'TREE_NUT' as AllergenType,
+  'PEANUT' as AllergenType,
+  'SESAME' as AllergenType,
 ];
 
 /* ------------------------------------------------------------------ */
@@ -76,6 +76,9 @@ export default function FeaturesPanel({
     widget.displayMacronutrients
   );
 
+  /* ---------- feedback button ------------------------------------- */
+  const [feedbackButton, setFeedbackButton] = useState(widget.displayFeedbackButton ?? false);
+
   /* ---------- build-your-own -------------------------------------- */
   const [enableBuildYourOwn, setEnableBuildYourOwn] = useState(
     widget.isByoEnabled
@@ -106,6 +109,7 @@ export default function FeaturesPanel({
       supportedAllergens: enableAllergens ? selectedAllergens : [],
       displayNutrientPreferences: enableNutrients,
       displayMacronutrients: enableCalories,
+      displayFeedbackButton: feedbackButton,
       isByoEnabled: enableBuildYourOwn,
       isOrderButtonEnabled: enableOrdering,
       orderUrl: fullUrl || null,
@@ -130,6 +134,7 @@ export default function FeaturesPanel({
     selectedAllergens,
     enableNutrients,
     enableCalories,
+    feedbackButton,
     enableBuildYourOwn,
     enableOrdering,
     baseUrl,
@@ -186,6 +191,15 @@ export default function FeaturesPanel({
         onBaseUrlChange={setBaseUrl}
         utmTags={utmTags}
         onUtmTagsChange={setUtmTags}
+      />
+
+      {/* Floating Feedback button */}
+      <SettingToggle
+        icon={<ThumbsUp className="h-4 w-4" />}
+        title="Floating Feedback Button"
+        description="Persistent button that opens feedback modal. Captures feedback and email."
+        checked={feedbackButton}
+        onChange={setFeedbackButton}
       />
     </Panel>
   );

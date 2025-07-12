@@ -15,7 +15,7 @@ export default function MarketingPanel({ widget, onFieldChange }: MarketingPanel
   const [softSignup, setSoftSignup] = useState<boolean>((widget as Widget).displaySoftSignUp ?? false);
   const [notifyMe, setNotifyMe] = useState<boolean>((widget as Widget).displayNotifyMeBanner ?? false);
   const [giveFeedback, setGiveFeedback] = useState<boolean>((widget as Widget).displayGiveFeedbackBanner ?? false);
-  const [feedbackButton, setFeedbackButton] = useState<boolean>((widget as Widget).displayFeedbackButton ?? false);
+
   const [dishDetail, setDishDetail] = useState<boolean>((widget as Widget).displayDishDetailsLink ?? false);
 
   // helper to wire toggle -> state + dirty
@@ -67,14 +67,7 @@ export default function MarketingPanel({ widget, onFieldChange }: MarketingPanel
         onChange={makeHandler(setDishDetail, 'displayDishDetailsLink')}
       />
 
-      {/* Feedback floating button */}
-      <SettingToggle
-        icon={<ThumbsUp className="h-4 w-4" />}
-        title="Floating Feedback Button"
-        description="Persistent button that opens feedback modal. Captures feedback and email."
-        checked={feedbackButton}
-        onChange={makeHandler(setFeedbackButton, 'displayFeedbackButton')}
-      />
+
     </Panel>
   );
 }
