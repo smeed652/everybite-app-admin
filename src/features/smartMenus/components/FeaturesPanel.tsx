@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Widget, DietType, AllergenType } from '../../../generated/graphql';
+import type { Widget, DietType, AllergenType } from '../../../generated/graphql';
 import { SettingToggle } from '../../../components/ui/SettingToggle';
-import { Input } from '../../../components/ui/Input';
-import { Activity, Hammer, ShoppingCart } from 'lucide-react';
+import { Panel } from '../../../components/ui/Panel';
+import { Hammer, ThumbsUp } from 'lucide-react';
 
 import DietarySection from './DietarySection';
 import AllergensSection from './AllergensSection';
+import NutrientsSection from './NutrientsSection';
+import OrderingSection from './OrderingSection';
 
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
@@ -25,21 +27,20 @@ const toggleArrayItem = <T,>(arr: T[], v: T): T[] =>
 /* Constants                                                           */
 /* ------------------------------------------------------------------ */
 const DIET_OPTIONS: DietType[] = [
-  DietType.Vegetarian,
-  DietType.Pescatarian,
-  DietType.Vegan,
+  'VEGETARIAN' as DietType,
+  'PESCATARIAN' as DietType,
+  'VEGAN' as DietType,
 ];
 
 const ALLERGEN_OPTIONS: AllergenType[] = [
-  AllergenType.Wheat,
-  AllergenType.Dairy,
-  AllergenType.Egg,
-  AllergenType.Fish,
-  AllergenType.Shellfish,
-  AllergenType.TreeNut,
-  AllergenType.Peanut,
-  AllergenType.Sesame,
-  AllergenType.Soy,
+  'WHEAT' as AllergenType,
+  'DAIRY' as AllergenType,
+  'EGG' as AllergenType,
+  'FISH' as AllergenType,
+  'SHELLFISH' as AllergenType,
+  'TREE_NUT' as AllergenType,
+  'PEANUT' as AllergenType,
+  'SESAME' as AllergenType,
 ];
 
 /* ------------------------------------------------------------------ */
@@ -49,7 +50,7 @@ export default function FeaturesPanel({
   widget,
   onFieldChange,
 }: FeaturesPanelProps) {
-  /* ---------- dietary / ingredients ------------------------------- */
+  /* ---------- diets / ingredients ---------------------------------- */
   const [selectedDiets, setSelectedDiets] = useState<DietType[]>(
     widget.supportedDietaryPreferences ?? []
   );
@@ -75,6 +76,9 @@ export default function FeaturesPanel({
     widget.displayMacronutrients
   );
 
+  /* ---------- feedback button ------------------------------------- */
+  const [feedbackButton, setFeedbackButton] = useState(widget.displayFeedbackButton ?? false);
+
   /* ---------- build-your-own -------------------------------------- */
   const [enableBuildYourOwn, setEnableBuildYourOwn] = useState(
     widget.isByoEnabled
@@ -88,7 +92,10 @@ export default function FeaturesPanel({
   const [utmTags, setUtmTags] = useState(widget.orderUrl?.split('?')[1] ?? '');
 
   const fullUrl = useMemo(
-    () => (enableOrdering && baseUrl ? `${baseUrl}${utmTags ? `?${utmTags}` : ''}` : ''),
+    () =>
+      enableOrdering && baseUrl
+        ? `${baseUrl}${utmTags ? `?${utmTags}` : ''}`
+        : '',
     [enableOrdering, baseUrl, utmTags]
   );
 
@@ -96,22 +103,28 @@ export default function FeaturesPanel({
    * Emit diff upward whenever any setting changes
    * ------------------------------------------------------------------ */
   useEffect(() => {
+    const raw: Record<string, unknown> = {
+      supportedDietaryPreferences: enableDiets ? selectedDiets : [],
+      displayIngredients: enableIngredients,
+      supportedAllergens: enableAllergens ? selectedAllergens : [],
+      displayNutrientPreferences: enableNutrients,
+      displayMacronutrients: enableCalories,
+      displayFeedbackButton: feedbackButton,
+      isByoEnabled: enableBuildYourOwn,
+      isOrderButtonEnabled: enableOrdering,
+      orderUrl: fullUrl || null,
+    };
+
+    // send only the keys that differ from the original widget to avoid
+    // false-positive dirty states
     const diff: Record<string, unknown> = {};
-
-    diff.supportedDietaryPreferences = enableDiets ? selectedDiets : [];
-    diff.displayIngredients = enableIngredients;
-
-    diff.supportedAllergens = enableAllergens ? selectedAllergens : [];
-
-    diff.displayNutrientPreferences = enableNutrients;
-    diff.displayMacronutrients = enableCalories;
-
-    diff.isByoEnabled = enableBuildYourOwn;
-
-    diff.isOrderButtonEnabled = enableOrdering;
-    diff.orderUrl = fullUrl || null;
-
-    onFieldChange(diff);
+    Object.entries(raw).forEach(([k, v]) => {
+      // @ts-expect-error – dynamic widget field access
+      if (JSON.stringify(v) !== JSON.stringify(widget[k])) {
+        diff[k] = v;
+      }
+    });
+    if (Object.keys(diff).length) onFieldChange(diff);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     enableDiets,
@@ -121,19 +134,17 @@ export default function FeaturesPanel({
     selectedAllergens,
     enableNutrients,
     enableCalories,
+    feedbackButton,
     enableBuildYourOwn,
     enableOrdering,
     baseUrl,
     utmTags,
-    fullUrl,
   ]);
 
-  /* ------------------------------------------------------------------ */
-  /* Render                                                             */
-  /* ------------------------------------------------------------------ */
+  /* ---------- JSX -------------------------------------------------- */
   return (
-    <section className="space-y-6" data-testid="features-panel">
-      {/* Dietary + Ingredients */}
+    <Panel title="Features" data-testid="features-panel">
+      {/* Diets & Ingredients */}
       <DietarySection
         dietOptions={DIET_OPTIONS}
         enableDiets={enableDiets}
@@ -156,26 +167,12 @@ export default function FeaturesPanel({
       />
 
       {/* Nutrients */}
-      <SettingToggle
-        icon={<Activity className="h-4 w-4" />}
-        title="Nutrients"
-        description="Enable filtering by protein, fat & carb ranges"
-        checked={enableNutrients}
-        onChange={setEnableNutrients}
+      <NutrientsSection
+        enableNutrients={enableNutrients}
+        onToggleNutrients={setEnableNutrients}
+        enableCalories={enableCalories}
+        onToggleCalories={setEnableCalories}
       />
-      {enableNutrients && (
-        <div className="pl-6">
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              className="h-4 w-4"
-              checked={enableCalories}
-              onChange={() => setEnableCalories(!enableCalories)}
-            />
-            Macro&nbsp;Nutrients
-          </label>
-        </div>
-      )}
 
       {/* Build-Your-Own */}
       <SettingToggle
@@ -187,42 +184,23 @@ export default function FeaturesPanel({
       />
 
       {/* Ordering */}
-      <SettingToggle
-        icon={<ShoppingCart className="h-4 w-4" />}
-        title="Ordering"
-        description="Configure the order-button link & UTM tags"
-        checked={enableOrdering}
-        onChange={setEnableOrdering}
+      <OrderingSection
+        enableOrdering={enableOrdering}
+        onToggleOrdering={setEnableOrdering}
+        baseUrl={baseUrl}
+        onBaseUrlChange={setBaseUrl}
+        utmTags={utmTags}
+        onUtmTagsChange={setUtmTags}
       />
-      {enableOrdering && (
-        <div className="space-y-3 pl-6">
-          <div className="space-y-1">
-            <label className="text-sm font-medium" htmlFor="base-url">
-              Base&nbsp;URL
-            </label>
-            <Input
-              id="base-url"
-              value={baseUrl}
-              onChange={(e) => setBaseUrl(e.target.value)}
-              placeholder="https://example.com"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium" htmlFor="utm-tags">
-              UTM&nbsp;Tags
-            </label>
-            <Input
-              id="utm-tags"
-              value={utmTags}
-              onChange={(e) => setUtmTags(e.target.value)}
-              placeholder="utm_source=...&utm_medium=..."
-            />
-          </div>
-          <p className="text-sm break-all bg-gray-50 border rounded px-2 py-1">
-            {fullUrl || '—'}
-          </p>
-        </div>
-      )}
-    </section>
+
+      {/* Floating Feedback button */}
+      <SettingToggle
+        icon={<ThumbsUp className="h-4 w-4" />}
+        title="Floating Feedback Button"
+        description="Persistent button that opens feedback modal. Captures feedback and email."
+        checked={feedbackButton}
+        onChange={setFeedbackButton}
+      />
+    </Panel>
   );
 }

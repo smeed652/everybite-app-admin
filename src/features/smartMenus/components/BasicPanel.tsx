@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Widget } from '../../../generated/graphql';
-import { Card } from '../../../components/ui/Card';
+import { Panel } from '../../../components/ui/Panel';
+import FormSection from '../../../components/ui/FormSection';
+import FormField from '../../../components/ui/FormField';
 import { SettingToggle } from '../../../components/ui/SettingToggle';
 import { Activity } from 'lucide-react';
 import { Input } from '../../../components/ui/Input';
@@ -14,47 +16,59 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
   const [name, setName] = useState(widget.name);
   const [slug, setSlug] = useState(widget.slug);
   const [isActive, setIsActive] = useState(widget.isActive);
+  // Remember the last value we emitted so a Strict-Mode revert doesn’t wipe diffs
+  const lastIsActiveRef = useRef(isActive);
   const [loading] = useState(false);
 
-  // report text changes immediately on each keystroke
+  // update local state; diff emitted in effect
   const handleNameChange = (val: string) => {
     setName(val);
-    if (val !== widget.name) {
-      onFieldChange({ name: val });
-    }
   };
 
   const handleSlugChange = (val: string) => {
     setSlug(val);
-    if (val !== widget.slug) {
-      onFieldChange({ slug: val });
-    }
   };
 
-  // report toggle change
+  // emit only changed fields whenever basics change
   useEffect(() => {
-    if (isActive !== widget.isActive) {
-      onFieldChange({ isActive });
+    const diff: Partial<Widget> = {};
+    if (name !== widget.name) diff.name = name;
+    if (slug !== widget.slug) diff.slug = slug;
+    if (
+      isActive !== widget.isActive &&
+      isActive !== lastIsActiveRef.current // skip Strict-Mode revert
+    ) {
+      diff.isActive = isActive;
+    }
+    if (Object.keys(diff).length) {
+      // log every diff in test/dev
+      // eslint-disable-next-line no-console
+      console.debug('[BasicPanel diff]', diff);
+      if (import.meta.env.MODE === 'development' || import.meta.env.VITE_LOG_LEVEL === 'debug') {
+        // eslint-disable-next-line no-console
+        console.debug('[BasicPanel] emit', diff);
+      }
+      onFieldChange(diff);
+      if (diff.isActive !== undefined) {
+        lastIsActiveRef.current = isActive;
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActive]);
+  }, [name, slug, isActive]);
 
 
   return (
-    <section className="space-y-6" data-testid="basic-panel">
-      <h3 className="text-lg font-semibold">Basics</h3>
-      <Card className="p-4 space-y-4">
+    <Panel title="Basics" data-testid="basic-panel">
+      <FormSection title="General">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <label className="text-sm font-medium" htmlFor="name">Name</label>
+          <FormField label="Name" required>
             <Input id="name" value={name} onChange={e => handleNameChange(e.target.value)} disabled={loading} />
-          </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium" htmlFor="slug">Slug</label>
+          </FormField>
+          <FormField label="Slug" required>
             <Input id="slug" value={slug} onChange={e => handleSlugChange(e.target.value)} disabled={loading} />
-          </div>
+          </FormField>
         </div>
-      </Card>
+      </FormSection>
 
       <SettingToggle
         icon={<Activity className="h-4 w-4" />}
@@ -64,6 +78,6 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
         onChange={setIsActive}
         disabled={loading}
       />
-    </section>
+    </Panel>
   );
 }

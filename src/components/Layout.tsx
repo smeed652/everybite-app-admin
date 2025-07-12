@@ -31,7 +31,7 @@ export default function Layout() {
   ];
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       {/* Mobile sidebar trigger */}
       <div className="flex md:hidden items-center p-2 border-b">
         <Sheet>
@@ -136,7 +136,7 @@ export default function Layout() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto p-6">
+      <main className="flex-1 overflow-hidden">
         <Outlet />
       </main>
     </div>

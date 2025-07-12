@@ -3,7 +3,7 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
+
   getSortedRowModel,
   SortingState,
   useReactTable,
@@ -23,7 +23,7 @@ import {
 import { Button } from './Button';
 import { Input } from './Input';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from './DropdownMenu';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 
 interface DataTableProps<TData extends object> {
   onRowClick?: (row: TData) => void;
@@ -39,11 +39,18 @@ export function TanStackDataTable<TData extends object>({
   columns,
   data,
   loading = false,
-  pageSize = 10,
+  pageSize: _pageSize = 10,
   id,
   onRowClick,
   selectable = true,
 }: DataTableProps<TData> & { selectable?: boolean }) {
+  // Ensure we reference _pageSize so it isn't considered unused
+  void _pageSize;
+  // Scrollable wrapper ref (future use)
+
+  // Scrollable wrapper ref (future use)
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
+
   // Sorting / filtering / selection state
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -96,13 +103,14 @@ export function TanStackDataTable<TData extends object>({
     onRowSelectionChange: setRowSelection,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    initialState: {
-      pagination: { pageSize },
-    },
+
   });
+
+  //
+
 
   // Simple global fuzzy text filter helper – here we just lowercase includes for brevity
   const globalFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,7 +118,7 @@ export function TanStackDataTable<TData extends object>({
   };
 
   return (
-    <div className="space-y-2" data-testid={id}>
+    <div ref={wrapperRef} className="flex flex-col h-full space-y-2 pb-6" data-testid={id}>
       {/* Toolbar */}
       <div className="flex items-center gap-2">
         <Input
@@ -141,7 +149,8 @@ export function TanStackDataTable<TData extends object>({
       </div>
 
       {/* Table */}
-      <div className="border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden">
+      <div className="flex-1 overflow-auto pb-4">
+        <div className="border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden">
         <Table className="min-w-full">
           <THead className="bg-gray-100 dark:bg-gray-800">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -166,7 +175,7 @@ export function TanStackDataTable<TData extends object>({
           <TBody>
             {loading ? (
               // Skeleton rows
-              Array.from({ length: pageSize }).map((_, i) => (
+              Array.from({ length: 15 }).map((_, i) => (
                 <TR key={i} className="border-t border-gray-200 dark:border-gray-700 animate-pulse">
                   {table.getAllLeafColumns().map((col) => (
                     <TD key={col.id} className="px-3 py-2">
@@ -199,47 +208,7 @@ export function TanStackDataTable<TData extends object>({
           </TBody>
         </Table>
       </div>
-
-      {/* Pagination */}
-      {table.getPageCount() > 1 && (
-        <div className="flex items-center justify-end gap-1 text-sm">
-          <span className="mr-2">
-            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!table.getCanPreviousPage()}
-            onClick={() => table.setPageIndex(0)}
-          >
-            <ChevronsLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!table.getCanPreviousPage()}
-            onClick={() => table.previousPage()}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!table.getCanNextPage()}
-            onClick={() => table.nextPage()}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!table.getCanNextPage()}
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          >
-            <ChevronsRight className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
     </div>
+  </div>
   );
 }

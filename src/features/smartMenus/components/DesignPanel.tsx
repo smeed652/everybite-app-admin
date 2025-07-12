@@ -1,8 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Card } from '../../../components/ui/Card';
+import { Panel } from '../../../components/ui/Panel';
+import FormSection from '../../../components/ui/FormSection';
 import { Button } from '../../../components/ui/Button';
 import { LayoutDashboard, Image as ImageIcon } from 'lucide-react';
-import { Layout, Widget } from '../../../generated/graphql';
+import type { Widget, Layout as GraphQLLayout } from '../../../generated/graphql';
+// The GraphQL codegen enums are stripped at runtime in Vite, so we re-declare the
+// two layout string literals we need locally. This keeps type-safety while
+// removing the runtime dependency that caused "does not provide an export named 'Layout'".
+type Layout = GraphQLLayout;
+const LayoutValues = {
+  Table: 'Table' as Layout,
+  Card: 'Card' as Layout,
+} as const;
 import CardLayoutImg from '../../../assets/CardLayoutIcon.png';
 import TableLayoutImg from '../../../assets/TableLayoutIcon.png';
 
@@ -21,55 +30,64 @@ export default function DesignPanel({ widget, onFieldChange }: Props) {
     const changes: Partial<Widget> = {};
     if (layout !== widget.layout) changes.layout = layout;
     if (images !== widget.displayImages) changes.displayImages = images;
-    if (Object.keys(changes).length) onFieldChange(changes);
+    if (Object.keys(changes).length) {
+      if (import.meta.env.MODE === 'development' || import.meta.env.VITE_LOG_LEVEL === 'debug') {
+        // eslint-disable-next-line no-console
+        console.debug('[DesignPanel] emit', changes);
+      }
+      onFieldChange(changes);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layout, images]);
 
   return (
-    <section className="space-y-6" data-testid="design-panel">
-      <h3 className="text-lg font-semibold">Design</h3>
+    <Panel title="Design" data-testid="design-panel">
 
       {/* Template selector */}
-      <Card className="p-4 space-y-4">
-        <p className="flex items-center gap-2 text-sm font-medium"><LayoutDashboard className="h-4 w-4" /> Template</p>
+      <FormSection title={<span className="flex items-center gap-2"><LayoutDashboard className="h-4 w-4" /> Template</span>}>
         <div className="flex gap-6">
           <LayoutOption
-            label="Table Layout"
+            label="Table"
             imgSrc={TableLayoutImg}
-            selected={layout === Layout.Table}
-            onClick={() => setLayout(Layout.Table)}
+            selected={layout === LayoutValues.Table}
+            onClick={() => setLayout(LayoutValues.Table)}
           />
           <LayoutOption
-            label="Card Layout"
+            label="Card"
             imgSrc={CardLayoutImg}
-            selected={layout === Layout.Card}
-            onClick={() => setLayout(Layout.Card)}
+            selected={layout === LayoutValues.Card}
+            onClick={() => setLayout(LayoutValues.Card)}
           />
         </div>
-      </Card>
+      </FormSection>
 
       {/* Images toggle */}
-      <Card className="p-4 space-y-2 flex items-center justify-between">
-        <div>
-          <p className="flex items-center gap-2 text-sm font-medium"><ImageIcon className="h-4 w-4" /> Photos</p>
-          <p className="text-sm text-muted-foreground">Show photos on dish cards and dish detail modals.</p>
+      <FormSection>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="flex items-center gap-2 text-sm font-medium"><ImageIcon className="h-4 w-4" /> Photos</p>
+            <p className="text-sm text-muted-foreground">Show photos on dish cards and dish detail modals.</p>
+          </div>
+          <Toggle checked={images} onChange={setImages} disabled={loading} />
         </div>
-        <Toggle checked={images} onChange={setImages} disabled={loading} />
-      </Card>
-    </section>
+      </FormSection>
+    </Panel>
   );
 }
 
 function LayoutOption({ label, imgSrc, selected, onClick }: { label: string; imgSrc: string; selected: boolean; onClick: () => void }) {
   return (
-    <Button
-      type="button"
-      variant="outline"
-      className={`h-28 w-36 overflow-hidden relative border-2 ${selected ? 'border-primary' : 'border-muted'} rounded-sm` }
-      onClick={onClick}
-    >
-      <img src={imgSrc} alt={label} className="object-cover h-full w-full" />
-    </Button>
+    <div className="flex flex-col items-center">
+      <Button
+        type="button"
+        variant="outline"
+        className={`w-36 h-28 p-2 flex items-center justify-center border-2 ${selected ? 'border-primary' : 'border-muted'} rounded-sm`}
+        onClick={onClick}
+      >
+        <img src={imgSrc} alt={label} className="object-contain h-full w-full" />
+      </Button>
+      <span className="mt-2 text-xs text-muted-foreground text-center">{label}</span>
+    </div>
   );
 }
 

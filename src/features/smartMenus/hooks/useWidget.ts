@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import { Widget } from '../../../generated/graphql';
+import type { Widget } from '../../../generated/graphql';
 
 export const GET_WIDGET = gql`
   query GetWidget($id: ID!) {
@@ -10,6 +10,8 @@ export const GET_WIDGET = gql`
       layout
       displayImages
       isActive
+      isSyncEnabled
+      lastSyncedAt
       isOrderButtonEnabled
       primaryBrandColor
       highlightColor
@@ -25,6 +27,8 @@ export const GET_WIDGET = gql`
       displaySoftSignUp
       displayNotifyMeBanner
       displayGiveFeedbackBanner
+      displayFooter
+      footerText
       displayFeedbackButton
       displayDishDetailsLink
       # Additional flags & appearance
