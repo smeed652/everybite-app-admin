@@ -62,7 +62,7 @@ export default function SmartMenuHeader({
       label: 'Production Date',
       value: widget.publishedAt ? new Date(widget.publishedAt).toLocaleDateString() : '—',
     },
-    { label: 'Widget ID', value: widget.id },
+    { label: 'SmartMenu ID', value: widget.id },
     { label: 'Slug', value: widget.slug || '—' },
     {
       label: 'Status',
