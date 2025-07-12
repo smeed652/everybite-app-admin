@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Widget } from '../../../generated/graphql';
 import { Card } from '../../../components/ui/Card';
+import { Panel } from '../../../components/ui/Panel';
 import { SettingToggle } from '../../../components/ui/SettingToggle';
 import { Activity } from 'lucide-react';
 import { Input } from '../../../components/ui/Input';
@@ -56,8 +57,7 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
 
 
   return (
-    <section className="space-y-6" data-testid="basic-panel">
-      <h3 className="text-lg font-semibold">Basics</h3>
+    <Panel title="Basics" data-testid="basic-panel">
       <Card className="p-4 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1">
@@ -79,6 +79,6 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
         onChange={setIsActive}
         disabled={loading}
       />
-    </section>
+    </Panel>
   );
 }
