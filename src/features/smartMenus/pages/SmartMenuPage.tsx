@@ -8,6 +8,9 @@ import { useWidgetDiff } from '../hooks/useWidgetDiff';
 import { useUpdateWidget } from '../hooks/useUpdateWidget';
 import SmartMenuHeader from '../components/SmartMenuHeader';
 import { Card } from '../../../components/ui/Card';
+import { useSyncWidget } from '../hooks/useSyncWidget';
+import { Button } from '../../../components/ui/Button';
+import { RefreshCcw } from 'lucide-react';
 import { Skeleton } from '../../../components/ui/Skeleton';
 
 export interface SmartMenuSaveArgs {
@@ -43,6 +46,7 @@ export default function SmartMenuPage({ widgetId, renderPanels, onSave }: Props)
   } = useWidgetDiff(widget ?? null);
 
   const [saving, setSaving] = useState(false);
+  const { sync, loading: syncing } = useSyncWidget();
 
   /* ---------- loading / error ---------- */
   if (loading) {
@@ -83,6 +87,15 @@ export default function SmartMenuPage({ widgetId, renderPanels, onSave }: Props)
     navigate(0);
   };
 
+  const handleSyncNow = async () => {
+    try {
+      await sync(widget.id);
+      toast.success('Sync started');
+    } catch {
+      toast.error('Sync failed');
+    }
+  };
+
   /* ---------- render ---------- */
 return (
   // this wrapper becomes the single flex item inside <AppContent>
@@ -94,6 +107,11 @@ return (
       saving={saving}
       onSave={handleSave}
       onCancel={handleCancel}
+      extraActions={
+        <Button variant="outline" onClick={handleSyncNow} disabled={syncing}>
+          <RefreshCcw className="h-4 w-4 mr-2" /> Sync Now
+        </Button>
+      }
     />
 
     {/* scrollable page body */}

@@ -25,7 +25,7 @@ export default function ResourceHeader({ title, meta = [], actions }: Props) {
       </div>
 
       {meta.length > 0 && (
-        <div className="grid grid-cols-5 gap-8 border-t pt-4">
+        <div className="grid grid-flow-col auto-cols-fr gap-8 border-t pt-4">
           {meta.map((m, idx) => (
             <div key={idx} className="min-w-0">
               <h4 className="text-sm font-medium text-muted-foreground truncate" title={m.label}>{m.label}</h4>

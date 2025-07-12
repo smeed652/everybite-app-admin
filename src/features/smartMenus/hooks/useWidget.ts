@@ -11,6 +11,7 @@ export const GET_WIDGET = gql`
       displayImages
       isActive
       isSyncEnabled
+      lastSyncedAt
       isOrderButtonEnabled
       primaryBrandColor
       highlightColor

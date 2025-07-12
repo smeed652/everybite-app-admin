@@ -1,10 +1,11 @@
 import { ReactNode } from 'react';
 import type { Widget } from '../../../generated/graphql';
 import { Button } from '../../../components/ui/Button';
+import { Eye } from 'lucide-react';
 import ResourceHeader from '../../../components/ResourceHeader';
 
 interface Props {
-  widget: Widget;
+  widget: Widget & { lastSyncedAt?: string | null };
   dirty?: boolean;
   saving?: boolean;
   onSave?: () => void;
@@ -25,15 +26,18 @@ export default function SmartMenuHeader({
   /* ---------- actions ---------- */
   const actions = (
     <>
+      {extraActions}
+
       <Button
         variant="outline"
         type="button"
+        className="mr-4"
         onClick={
           onPreview ??
           (() => window.open(`https://app.everybite.com/widget/${widget.id}`, '_blank'))
         }
       >
-        Preview Widget
+        <Eye className="h-4 w-4 mr-2" /> Preview Widget
       </Button>
 
       {onCancel && (
@@ -47,8 +51,6 @@ export default function SmartMenuHeader({
           Save
         </Button>
       )}
-
-      {extraActions}
     </>
   );
 
@@ -61,6 +63,10 @@ export default function SmartMenuHeader({
     {
       label: 'Production Date',
       value: widget.publishedAt ? new Date(widget.publishedAt).toLocaleDateString() : '—',
+    },
+    {
+      label: 'Last Synced',
+      value: widget.lastSyncedAt ? new Date(widget.lastSyncedAt).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' }) : '—',
     },
     { label: 'SmartMenu ID', value: widget.id },
     { label: 'Slug', value: widget.slug || '—' },

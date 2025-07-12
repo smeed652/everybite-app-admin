@@ -5,12 +5,13 @@ import { SettingToggle } from '../../../components/ui/SettingToggle';
 import { Plug } from 'lucide-react';
 
 interface Props {
-  widget: Widget;
+  widget: Widget & { lastSyncedAt?: string | null };
   onFieldChange: (changes: Partial<Widget>) => void;
 }
 
 export default function SyncPanel({ widget, onFieldChange }: Props) {
   const [isSyncEnabled, setIsSyncEnabled] = useState(widget.isSyncEnabled);
+
 
   const handleToggle = (val: boolean) => {
     setIsSyncEnabled(val);
@@ -24,6 +25,8 @@ export default function SyncPanel({ widget, onFieldChange }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSyncEnabled]);
 
+
+
   return (
     <section className="space-y-4" data-testid="sync-panel">
       <h3 className="text-lg font-semibold">Sync</h3>
@@ -34,6 +37,8 @@ export default function SyncPanel({ widget, onFieldChange }: Props) {
         checked={isSyncEnabled}
         onChange={handleToggle}
       />
+
+
     </section>
   );
 }
