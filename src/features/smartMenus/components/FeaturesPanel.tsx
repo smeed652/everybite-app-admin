@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Widget, DietType, AllergenType } from '../../../generated/graphql';
 import { SettingToggle } from '../../../components/ui/SettingToggle';
+import { Panel } from '../../../components/ui/Panel';
 import { Hammer } from 'lucide-react';
 
 import DietarySection from './DietarySection';
@@ -137,7 +138,7 @@ export default function FeaturesPanel({
 
   /* ---------- JSX -------------------------------------------------- */
   return (
-    <section className="space-y-6" data-testid="features-panel">
+    <Panel title="Features" data-testid="features-panel">
       {/* Diets & Ingredients */}
       <DietarySection
         dietOptions={DIET_OPTIONS}
@@ -186,6 +187,6 @@ export default function FeaturesPanel({
         utmTags={utmTags}
         onUtmTagsChange={setUtmTags}
       />
-    </section>
+    </Panel>
   );
 }

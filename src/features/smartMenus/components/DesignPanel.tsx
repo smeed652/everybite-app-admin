@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card } from '../../../components/ui/Card';
+import { Panel } from '../../../components/ui/Panel';
 import { Button } from '../../../components/ui/Button';
 import { LayoutDashboard, Image as ImageIcon } from 'lucide-react';
 import type { Widget, Layout as GraphQLLayout } from '../../../generated/graphql';
@@ -40,8 +41,7 @@ export default function DesignPanel({ widget, onFieldChange }: Props) {
   }, [layout, images]);
 
   return (
-    <section className="space-y-6" data-testid="design-panel">
-      <h3 className="text-lg font-semibold">Design</h3>
+    <Panel title="Design" data-testid="design-panel">
 
       {/* Template selector */}
       <Card className="p-4 space-y-4">
@@ -70,7 +70,7 @@ export default function DesignPanel({ widget, onFieldChange }: Props) {
         </div>
         <Toggle checked={images} onChange={setImages} disabled={loading} />
       </Card>
-    </section>
+    </Panel>
   );
 }
 

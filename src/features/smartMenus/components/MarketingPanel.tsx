@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Widget } from '../../../generated/graphql';
 import { Mail, ThumbsUp, SearchX, ExternalLink } from 'lucide-react';
 import { SettingToggle } from '../../../components/ui/SettingToggle';
+import { Panel } from '../../../components/ui/Panel';
 
 export interface MarketingPanelProps {
   widget: Widget;
@@ -29,8 +30,7 @@ export default function MarketingPanel({ widget, onFieldChange }: MarketingPanel
     
 
   return (
-    <section className="space-y-6" data-testid="marketing-panel">
-      <h3 className="text-lg font-semibold">Call to Actions (CTA)</h3>
+    <Panel title="Call to Actions (CTA)" data-testid="marketing-panel">
       {/* Soft Sign-Up banner */}
       <SettingToggle
         icon={<Mail className="h-4 w-4" />}
@@ -75,6 +75,6 @@ export default function MarketingPanel({ widget, onFieldChange }: MarketingPanel
         checked={feedbackButton}
         onChange={makeHandler(setFeedbackButton, 'displayFeedbackButton')}
       />
-    </section>
+    </Panel>
   );
 }
