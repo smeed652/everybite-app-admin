@@ -34,3 +34,6 @@ cypress/screenshots/
 *.local
 .aws/
 .vercel/cache/
+
+*storybook.log
+storybook-static

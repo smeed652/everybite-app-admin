@@ -2,7 +2,15 @@ import { useState, useEffect } from 'react';
 import { Card } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { LayoutDashboard, Image as ImageIcon } from 'lucide-react';
-import { Layout, Widget } from '../../../generated/graphql';
+import type { Widget, Layout as GraphQLLayout } from '../../../generated/graphql';
+// The GraphQL codegen enums are stripped at runtime in Vite, so we re-declare the
+// two layout string literals we need locally. This keeps type-safety while
+// removing the runtime dependency that caused "does not provide an export named 'Layout'".
+type Layout = GraphQLLayout;
+const LayoutValues = {
+  Table: 'Table' as Layout,
+  Card: 'Card' as Layout,
+} as const;
 import CardLayoutImg from '../../../assets/CardLayoutIcon.png';
 import TableLayoutImg from '../../../assets/TableLayoutIcon.png';
 
@@ -42,14 +50,14 @@ export default function DesignPanel({ widget, onFieldChange }: Props) {
           <LayoutOption
             label="Table"
             imgSrc={TableLayoutImg}
-            selected={layout === Layout.Table}
-            onClick={() => setLayout(Layout.Table)}
+            selected={layout === LayoutValues.Table}
+            onClick={() => setLayout(LayoutValues.Table)}
           />
           <LayoutOption
             label="Card"
             imgSrc={CardLayoutImg}
-            selected={layout === Layout.Card}
-            onClick={() => setLayout(Layout.Card)}
+            selected={layout === LayoutValues.Card}
+            onClick={() => setLayout(LayoutValues.Card)}
           />
         </div>
       </Card>

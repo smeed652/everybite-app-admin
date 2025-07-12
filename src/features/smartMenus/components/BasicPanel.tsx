@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Widget } from '../../../generated/graphql';
 import { Card } from '../../../components/ui/Card';
 import { SettingToggle } from '../../../components/ui/SettingToggle';
@@ -14,6 +14,8 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
   const [name, setName] = useState(widget.name);
   const [slug, setSlug] = useState(widget.slug);
   const [isActive, setIsActive] = useState(widget.isActive);
+  // Remember the last value we emitted so a Strict-Mode revert doesn’t wipe diffs
+  const lastIsActiveRef = useRef(isActive);
   const [loading] = useState(false);
 
   // update local state; diff emitted in effect
@@ -30,13 +32,24 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
     const diff: Partial<Widget> = {};
     if (name !== widget.name) diff.name = name;
     if (slug !== widget.slug) diff.slug = slug;
-    if (isActive !== widget.isActive) diff.isActive = isActive;
+    if (
+      isActive !== widget.isActive &&
+      isActive !== lastIsActiveRef.current // skip Strict-Mode revert
+    ) {
+      diff.isActive = isActive;
+    }
     if (Object.keys(diff).length) {
+      // log every diff in test/dev
+      // eslint-disable-next-line no-console
+      console.debug('[BasicPanel diff]', diff);
       if (import.meta.env.MODE === 'development' || import.meta.env.VITE_LOG_LEVEL === 'debug') {
         // eslint-disable-next-line no-console
         console.debug('[BasicPanel] emit', diff);
       }
       onFieldChange(diff);
+      if (diff.isActive !== undefined) {
+        lastIsActiveRef.current = isActive;
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, slug, isActive]);

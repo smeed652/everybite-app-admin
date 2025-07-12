@@ -17,7 +17,8 @@ export function Toggle({ checked, onChange, disabled, className = '' }: TogglePr
       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
         checked ? 'bg-green-500' : 'bg-gray-300'
       } ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
-      aria-pressed={checked}
+      role="switch"
+      aria-checked={checked}
     >
       <span
         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${

@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import { Widget } from '../../../generated/graphql';
+import type { Widget } from '../../../generated/graphql';
 
 export const GET_WIDGET = gql`
   query GetWidget($id: ID!) {

@@ -48,3 +48,11 @@
 .dark-surface {
   @apply bg-gray-950 text-gray-100;
 }
+
+/* Ensure the application fills the viewport and suppress root scrolling */
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}

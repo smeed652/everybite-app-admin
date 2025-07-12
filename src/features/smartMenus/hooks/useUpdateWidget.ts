@@ -1,5 +1,5 @@
 import { gql, useApolloClient } from '@apollo/client';
-import { Widget, UpdateWidget } from '../../../generated/graphql';
+import type { Widget, UpdateWidget } from '../../../generated/graphql';
 
 // GraphQL fragment to get widget fields
 const WIDGET_FIELDS = gql`

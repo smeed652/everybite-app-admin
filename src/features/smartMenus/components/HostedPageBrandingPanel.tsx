@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Card } from '../../../components/ui/Card';
 import { Toggle } from '../../../components/ui/Toggle';
 import { ToggleLeft } from 'lucide-react';
@@ -19,6 +19,7 @@ export default function HostedPageBrandingPanel({
   widget,
   onFieldChange,
 }: Props) {
+  const mountedRef = useRef(false);
   /* ----- constants & shared font list -------------------------------- */
   const fonts = ['Plus Jakarta Sans', 'Inter', 'Open Sans', 'Roboto'];
 
@@ -62,6 +63,11 @@ export default function HostedPageBrandingPanel({
 
   /* ----- bubble changes up ------------------------------------------- */
   useEffect(() => {
+    // skip first run on mount to avoid emitting default-diff noise
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
     const c: Partial<Widget> = {};
 
     // navbar
@@ -94,7 +100,10 @@ export default function HostedPageBrandingPanel({
     if (categoryColor !== (widget.categoryTitleTextColor ?? ''))
       c.categoryTitleTextColor = categoryColor;
 
-    if (Object.keys(c).length) onFieldChange(c);
+    if (Object.keys(c).length) {
+      console.debug('[HostedPageBranding diff]', c);
+      onFieldChange(c);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     displayNavbar,
