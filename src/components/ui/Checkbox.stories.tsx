@@ -14,8 +14,8 @@ type Story = StoryObj<typeof Checkbox>;
 
 const Template = (args: React.ComponentProps<typeof Checkbox>) => (
   <label className="inline-flex items-center gap-2">
-    <Checkbox {...args} id="checkbox" />
-    <span>Checkbox</span>
+    <Checkbox {...args} ariaLabel="Checkbox" />
+    <span className="sr-only">Checkbox</span>
   </label>
 );
 
@@ -24,12 +24,12 @@ export const Default: Story = {
 };
 
 export const Checked: Story = {
-  args: { defaultChecked: true },
+  args: { defaultChecked: true, ariaLabel: 'Checkbox checked' },
   render: Template,
 };
 
 export const Disabled: Story = {
-  args: { disabled: true },
+  args: { disabled: true, ariaLabel: 'Checkbox disabled' },
   render: Template,
 };
 
@@ -51,7 +51,10 @@ export const Indeterminate: Story = {
     };
     return (
         <label className="inline-flex items-center gap-2">
-          <IndeterminateCheckbox {...args} id="indeterminate" />
+          <label className="inline-flex items-center gap-2">
+          <IndeterminateCheckbox {...args} ariaLabel="Checkbox indeterminate" />
+          <span className="sr-only">Indeterminate</span>
+        </label>
           <span>Indeterminate</span>
         </label>
       );
