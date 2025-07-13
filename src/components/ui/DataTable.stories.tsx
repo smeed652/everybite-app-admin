@@ -20,11 +20,11 @@ const meta: Meta<typeof DataTable<Person>> = {
     data: sample,
     columns: [
       {
-        accessorKey: 'name',
+        accessor: (row: Person) => row.name,
         header: 'Name',
       },
       {
-        accessorKey: 'email',
+        accessor: (row: Person) => row.email,
         header: 'Email',
       },
     ],

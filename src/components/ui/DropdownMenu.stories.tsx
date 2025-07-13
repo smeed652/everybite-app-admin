@@ -24,7 +24,7 @@ const Template: Story = {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem inset>Settings</DropdownMenuItem>
+        <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuItem disabled>Disabled item</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -46,7 +46,7 @@ export const WithIcons: Story = {
           </span>
           Profile
         </DropdownMenuItem>
-        <DropdownMenuItem inset>
+        <DropdownMenuItem>
           <span role="img" aria-label="gear" className="mr-2">
             ⚙️
           </span>
