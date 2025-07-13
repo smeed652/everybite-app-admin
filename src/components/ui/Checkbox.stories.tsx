@@ -12,14 +12,25 @@ export default meta;
 
 type Story = StoryObj<typeof Checkbox>;
 
-export const Default: Story = {};
+const Template = (args: React.ComponentProps<typeof Checkbox>) => (
+  <label className="inline-flex items-center gap-2">
+    <Checkbox {...args} id="checkbox" />
+    <span>Checkbox</span>
+  </label>
+);
+
+export const Default: Story = {
+  render: Template,
+};
 
 export const Checked: Story = {
   args: { defaultChecked: true },
+  render: Template,
 };
 
 export const Disabled: Story = {
   args: { disabled: true },
+  render: Template,
 };
 
 export const Indeterminate: Story = {
@@ -38,6 +49,11 @@ export const Indeterminate: Story = {
       // Cast to any to avoid ref-type mismatch warnings
       return <Checkbox ref={ref as any} {...props} />;
     };
-    return <IndeterminateCheckbox {...args} />;
+    return (
+        <label className="inline-flex items-center gap-2">
+          <IndeterminateCheckbox {...args} id="indeterminate" />
+          <span>Indeterminate</span>
+        </label>
+      );
   },
 };
