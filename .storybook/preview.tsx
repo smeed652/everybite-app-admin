@@ -1,9 +1,10 @@
 import type { Preview } from '@storybook/react';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 import { initialize, mswDecorator } from 'msw-storybook-addon';
 import '../src/index.css'; // tailwind styles
-import { apolloClient } from '../src/lib/apollo';
+import { client as apolloClient } from '../src/lib/apollo';
 
 // Initialize MSW once
 initialize({ onUnhandledRequest: 'warn' });

@@ -7,7 +7,7 @@ const meta: Meta<typeof Button> = {
   args: {
     children: 'Button',
     variant: 'default',
-    size: 'md',
+    size: 'default',
     disabled: false,
   },
   argTypes: {
@@ -17,7 +17,7 @@ const meta: Meta<typeof Button> = {
     },
     size: {
       control: 'select',
-      options: ['sm', 'md', 'lg'],
+      options: ['default', 'sm', 'lg'],
     },
   },
 };
