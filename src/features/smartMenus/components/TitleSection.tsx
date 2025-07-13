@@ -47,3 +47,5 @@ export default function TitleSection({
     </Card>
   );
 }
+
+export { TitleSection };

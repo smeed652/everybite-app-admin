@@ -8,7 +8,7 @@ const meta = {
   component: FormSection,
   tags: ['autodocs'],
   args: {
-    title: 'Profile Information',
+    title: 'UI/Misc/Profile Information',
     description: 'Update your personal details below.',
     children: (
       <>

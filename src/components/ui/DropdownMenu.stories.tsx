@@ -8,7 +8,7 @@ import {
 import { Button } from './Button';
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: 'UI/DropdownMenu',
+  title: 'UI/Inputs/DropdownMenu',
   component: DropdownMenu,
   args: {},
 };

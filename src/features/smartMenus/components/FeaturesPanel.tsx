@@ -204,3 +204,5 @@ export default function FeaturesPanel({
     </Panel>
   );
 }
+
+export { FeaturesPanel };

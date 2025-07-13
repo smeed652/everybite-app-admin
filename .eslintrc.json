@@ -35,6 +35,15 @@
   "ignorePatterns": ["cypress/**/*"],
   "overrides": [
     {
+      "files": ["**/*.stories.ts", "**/*.stories.tsx"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "react-hooks/rules-of-hooks": "off",
+        "storybook/await-interactions": "warn"
+      }
+    },
+    {
       "files": ["*.ts", "*.tsx"],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off",

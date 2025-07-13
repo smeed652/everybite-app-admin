@@ -71,3 +71,5 @@ export default function MarketingPanel({ widget, onFieldChange }: MarketingPanel
     </Panel>
   );
 }
+
+export { MarketingPanel };

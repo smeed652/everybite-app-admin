@@ -45,3 +45,5 @@ export default function LogoSection({
     </Card>
   );
 }
+
+export { LogoSection };

@@ -81,3 +81,5 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
     </Panel>
   );
 }
+
+export { BasicPanel };

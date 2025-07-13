@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import Section from './Section';
 
 const meta = {
-  title: 'UI/Section',
+  title: 'UI/Layout/Section',
   component: Section,
   tags: ['autodocs'],
   args: {
-    title: 'Profile Information',
+    title: 'UI/Misc/Profile Information',
     description: 'Group of settings related to the user profile',
     children: <p className="text-sm">Section body content goes here.</p>,
   },

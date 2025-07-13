@@ -68,3 +68,5 @@ export default function AllergensSection({
     </Card>
   );
 }
+
+export { AllergensSection };

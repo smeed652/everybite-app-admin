@@ -72,3 +72,5 @@ export default function ContentSection({
     </Card>
   );
 }
+
+export { ContentSection };

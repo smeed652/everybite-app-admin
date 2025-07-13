@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import Stack from './Stack';
 
 const meta = {
-  title: 'UI/Stack',
+  title: 'UI/Layout/Stack',
   component: Stack,
   tags: ['autodocs'],
   args: {

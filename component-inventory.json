@@ -1,0 +1,330 @@
+[
+  {
+    "name": "ErrorBoundary",
+    "file": "src/components/ErrorBoundary.tsx"
+  },
+  {
+    "name": "Layout",
+    "file": "src/components/Layout.tsx"
+  },
+  {
+    "name": "MetricsCard",
+    "file": "src/components/MetricsCard.tsx"
+  },
+  {
+    "name": "ProtectedRoute",
+    "file": "src/components/ProtectedRoute.tsx"
+  },
+  {
+    "name": "ResourceHeader",
+    "file": "src/components/ResourceHeader.tsx"
+  },
+  {
+    "name": "TrendsChart",
+    "file": "src/components/TrendsChart.tsx"
+  },
+  {
+    "name": "Card",
+    "file": "src/components/ui/Card.tsx"
+  },
+  {
+    "name": "Checkbox",
+    "file": "src/components/ui/Checkbox.tsx"
+  },
+  {
+    "name": "ColorRow",
+    "file": "src/components/ui/ColorRow.tsx"
+  },
+  {
+    "name": "Command",
+    "file": "src/components/ui/Command.tsx"
+  },
+  {
+    "name": "CommandInput",
+    "file": "src/components/ui/Command.tsx"
+  },
+  {
+    "name": "CommandGroup",
+    "file": "src/components/ui/Command.tsx"
+  },
+  {
+    "name": "CommandItem",
+    "file": "src/components/ui/Command.tsx"
+  },
+  {
+    "name": "DataTable",
+    "file": "src/components/ui/DataTable.tsx"
+  },
+  {
+    "name": "Dialog",
+    "file": "src/components/ui/Dialog.tsx"
+  },
+  {
+    "name": "DialogTrigger",
+    "file": "src/components/ui/Dialog.tsx"
+  },
+  {
+    "name": "DialogPortal",
+    "file": "src/components/ui/Dialog.tsx"
+  },
+  {
+    "name": "DialogOverlay",
+    "file": "src/components/ui/Dialog.tsx"
+  },
+  {
+    "name": "DialogContent",
+    "file": "src/components/ui/Dialog.tsx"
+  },
+  {
+    "name": "DialogHeader",
+    "file": "src/components/ui/Dialog.tsx"
+  },
+  {
+    "name": "DialogFooter",
+    "file": "src/components/ui/Dialog.tsx"
+  },
+  {
+    "name": "DialogTitle",
+    "file": "src/components/ui/Dialog.tsx"
+  },
+  {
+    "name": "DialogDescription",
+    "file": "src/components/ui/Dialog.tsx"
+  },
+  {
+    "name": "Drawer",
+    "file": "src/components/ui/Drawer.tsx"
+  },
+  {
+    "name": "DropdownMenu",
+    "file": "src/components/ui/DropdownMenu.tsx"
+  },
+  {
+    "name": "DropdownMenuTrigger",
+    "file": "src/components/ui/DropdownMenu.tsx"
+  },
+  {
+    "name": "DropdownMenuContent",
+    "file": "src/components/ui/DropdownMenu.tsx"
+  },
+  {
+    "name": "DropdownMenuItem",
+    "file": "src/components/ui/DropdownMenu.tsx"
+  },
+  {
+    "name": "DropdownMenuCheckboxItem",
+    "file": "src/components/ui/DropdownMenu.tsx"
+  },
+  {
+    "name": "DropdownMenuSeparator",
+    "file": "src/components/ui/DropdownMenu.tsx"
+  },
+  {
+    "name": "FormField",
+    "file": "src/components/ui/FormField.tsx"
+  },
+  {
+    "name": "FormSection",
+    "file": "src/components/ui/FormSection.tsx"
+  },
+  {
+    "name": "Grid",
+    "file": "src/components/ui/Grid.tsx"
+  },
+  {
+    "name": "Modal",
+    "file": "src/components/ui/Modal.tsx"
+  },
+  {
+    "name": "Panel",
+    "file": "src/components/ui/Panel.tsx"
+  },
+  {
+    "name": "Popover",
+    "file": "src/components/ui/Popover.tsx"
+  },
+  {
+    "name": "PopoverTrigger",
+    "file": "src/components/ui/Popover.tsx"
+  },
+  {
+    "name": "PopoverContent",
+    "file": "src/components/ui/Popover.tsx"
+  },
+  {
+    "name": "Prose",
+    "file": "src/components/ui/Prose.tsx"
+  },
+  {
+    "name": "Section",
+    "file": "src/components/ui/Section.tsx"
+  },
+  {
+    "name": "Separator",
+    "file": "src/components/ui/Separator.tsx"
+  },
+  {
+    "name": "SettingToggle",
+    "file": "src/components/ui/SettingToggle.tsx"
+  },
+  {
+    "name": "Sheet",
+    "file": "src/components/ui/Sheet.tsx"
+  },
+  {
+    "name": "SheetTrigger",
+    "file": "src/components/ui/Sheet.tsx"
+  },
+  {
+    "name": "SheetContent",
+    "file": "src/components/ui/Sheet.tsx"
+  },
+  {
+    "name": "Skeleton",
+    "file": "src/components/ui/Skeleton.tsx"
+  },
+  {
+    "name": "Stack",
+    "file": "src/components/ui/Stack.tsx"
+  },
+  {
+    "name": "Table",
+    "file": "src/components/ui/Table.tsx"
+  },
+  {
+    "name": "THead",
+    "file": "src/components/ui/Table.tsx"
+  },
+  {
+    "name": "TBody",
+    "file": "src/components/ui/Table.tsx"
+  },
+  {
+    "name": "TR",
+    "file": "src/components/ui/Table.tsx"
+  },
+  {
+    "name": "TH",
+    "file": "src/components/ui/Table.tsx"
+  },
+  {
+    "name": "TD",
+    "file": "src/components/ui/Table.tsx"
+  },
+  {
+    "name": "Tabs",
+    "file": "src/components/ui/Tabs.tsx"
+  },
+  {
+    "name": "TabsList",
+    "file": "src/components/ui/Tabs.tsx"
+  },
+  {
+    "name": "TabsTrigger",
+    "file": "src/components/ui/Tabs.tsx"
+  },
+  {
+    "name": "TabsContent",
+    "file": "src/components/ui/Tabs.tsx"
+  },
+  {
+    "name": "TanStackDataTable",
+    "file": "src/components/ui/TanStackDataTable.tsx"
+  },
+  {
+    "name": "ThemeToggle",
+    "file": "src/components/ui/ThemeToggle.tsx"
+  },
+  {
+    "name": "ToastProvider",
+    "file": "src/components/ui/ToastProvider.tsx"
+  },
+  {
+    "name": "Toggle",
+    "file": "src/components/ui/Toggle.tsx"
+  },
+  {
+    "name": "ConcentricDonutChart",
+    "file": "src/features/dashboard/components/ConcentricDonutChart.tsx"
+  },
+  {
+    "name": "DonutStatCard",
+    "file": "src/features/dashboard/components/DonutStatCard.tsx"
+  },
+  {
+    "name": "LegendItem",
+    "file": "src/features/dashboard/components/LegendItem.tsx"
+  },
+  {
+    "name": "AllergensSection",
+    "file": "src/features/smartMenus/components/AllergensSection.tsx"
+  },
+  {
+    "name": "BasicPanel",
+    "file": "src/features/smartMenus/components/BasicPanel.tsx"
+  },
+  {
+    "name": "BrandingPanel",
+    "file": "src/features/smartMenus/components/BrandingPanel.tsx"
+  },
+  {
+    "name": "ContentSection",
+    "file": "src/features/smartMenus/components/ContentSection.tsx"
+  },
+  {
+    "name": "DesignPanel",
+    "file": "src/features/smartMenus/components/DesignPanel.tsx"
+  },
+  {
+    "name": "DietarySection",
+    "file": "src/features/smartMenus/components/DietarySection.tsx"
+  },
+  {
+    "name": "FeaturesPanel",
+    "file": "src/features/smartMenus/components/FeaturesPanel.tsx"
+  },
+  {
+    "name": "FontSection",
+    "file": "src/features/smartMenus/components/FontSection.tsx"
+  },
+  {
+    "name": "FooterPanel",
+    "file": "src/features/smartMenus/components/FooterPanel.tsx"
+  },
+  {
+    "name": "HostedPageBrandingPanel",
+    "file": "src/features/smartMenus/components/HostedPageBrandingPanel.tsx"
+  },
+  {
+    "name": "LogoSection",
+    "file": "src/features/smartMenus/components/LogoSection.tsx"
+  },
+  {
+    "name": "MarketingPanel",
+    "file": "src/features/smartMenus/components/MarketingPanel.tsx"
+  },
+  {
+    "name": "NutrientsSection",
+    "file": "src/features/smartMenus/components/NutrientsSection.tsx"
+  },
+  {
+    "name": "OrderingSection",
+    "file": "src/features/smartMenus/components/OrderingSection.tsx"
+  },
+  {
+    "name": "SmartMenuHeader",
+    "file": "src/features/smartMenus/components/SmartMenuHeader.tsx"
+  },
+  {
+    "name": "SmartMenusNav",
+    "file": "src/features/smartMenus/components/SmartMenusNav.tsx"
+  },
+  {
+    "name": "SyncPanel",
+    "file": "src/features/smartMenus/components/SyncPanel.tsx"
+  },
+  {
+    "name": "TitleSection",
+    "file": "src/features/smartMenus/components/TitleSection.tsx"
+  }
+]

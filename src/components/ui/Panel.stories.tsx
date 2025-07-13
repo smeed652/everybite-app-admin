@@ -3,7 +3,7 @@ import { Panel } from './Panel';
 import { Button } from './Button';
 
 const meta = {
-  title: 'UI/Panel',
+  title: 'UI/Layout/Panel',
   component: Panel,
   tags: ['autodocs'],
   args: {
@@ -21,27 +21,27 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    title: 'Panel Title',
+    title: 'UI/Misc/Panel Title',
   },
 };
 
 export const WithDescription: Story = {
   args: {
-    title: 'Panel Title',
+    title: 'UI/Misc/Panel Title',
     description: 'Short explanation about this panel.',
   },
 };
 
 export const WithActions: Story = {
   args: {
-    title: 'Panel Title',
+    title: 'UI/Misc/Panel Title',
     actions: <Button size="sm">Action</Button>,
   },
 };
 
 export const StickyHeader: Story = {
   args: {
-    title: 'Panel Title',
+    title: 'UI/Misc/Panel Title',
     stickyHeader: true,
     children: (
       <div className="space-y-4">

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import Grid from './Grid';
 
 const meta = {
-  title: 'UI/Grid',
+  title: 'UI/Layout/Grid',
   component: Grid,
   tags: ['autodocs'],
   args: {

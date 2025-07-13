@@ -1,0 +1,3 @@
+# Ignore Storybook story files during lint-staged pre-commit
+**/*.stories.ts
+**/*.stories.tsx

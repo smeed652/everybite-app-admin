@@ -183,3 +183,5 @@ export default function HostedPageBrandingPanel({
     </section>
   );
 }
+
+export { HostedPageBrandingPanel };

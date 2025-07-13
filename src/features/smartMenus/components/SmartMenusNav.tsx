@@ -74,3 +74,5 @@ export default function SmartMenusNav() {
     </div>
   );
 }
+
+export { SmartMenusNav };

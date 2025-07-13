@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { DataTable } from './DataTable';
+import { within, userEvent } from '@storybook/testing-library';
+import { expect } from '@storybook/jest';
 
 interface Person {
   id: string;
@@ -14,7 +16,7 @@ const sample: Person[] = [
 ];
 
 const meta: Meta<typeof DataTable<Person>> = {
-  title: 'UI/Table',
+  title: 'UI/Data Display/DataTable',
   component: DataTable,
   args: {
     data: sample,
@@ -40,6 +42,29 @@ export const Default: Story = {};
 export const Empty: Story = {
   args: {
     data: [],
+  },
+};
+
+export const Loading: Story = {
+  args: {
+    data: [],
+    loading: true,
+  },
+};
+
+export const NoResults: Story = {
+  args: {
+    data: [],
+  },
+};
+
+export const Sorting: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const header = await canvas.findByText('Name');
+    await userEvent.click(header);
+    // After click, table should show sorted ascending (Alice first).
+    await expect(canvas.getAllByRole('row')[1]).toHaveTextContent('Alice');
   },
 };
 

@@ -94,3 +94,5 @@ export default function SmartMenuHeader({
 
   return <ResourceHeader title={title} meta={meta} actions={actions} />;
 }
+
+export { SmartMenuHeader };

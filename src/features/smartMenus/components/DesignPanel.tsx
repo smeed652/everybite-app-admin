@@ -104,3 +104,5 @@ function Toggle({ checked, onChange, disabled }: { checked: boolean; onChange: (
     </button>
   );
 }
+
+export { DesignPanel };

@@ -1,8 +1,11 @@
-import type { Preview } from '@storybook/react-vite'
+import type { Preview } from '@storybook/react'
 import '../src/index.css';
 
 const preview: Preview = {
   parameters: {
+    options: {
+      storySort: (a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }),
+    },
     controls: {
       matchers: {
        color: /(background|color)$/i,

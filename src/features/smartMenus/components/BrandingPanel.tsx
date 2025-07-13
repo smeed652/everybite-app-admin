@@ -120,3 +120,5 @@ function ColorInput({ label, value, onChange }: { label: string; value: string; 
     </div>
   );
 }
+
+export { BrandingPanel };

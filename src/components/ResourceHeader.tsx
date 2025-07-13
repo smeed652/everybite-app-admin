@@ -37,3 +37,5 @@ export default function ResourceHeader({ title, meta = [], actions }: Props) {
     </header>
   );
 }
+
+export { ResourceHeader };

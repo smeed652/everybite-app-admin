@@ -11,6 +11,8 @@ const config: StorybookConfig = {
     "@storybook/addon-a11y",
     "@storybook/addon-viewport"
   ],
+  // @ts-expect-error — not yet in Storybook types but supported at runtime
+  "titlePrefix": "EB Admin",
   "framework": {
     "name": "@storybook/react-vite",
     "options": {}

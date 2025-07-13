@@ -84,3 +84,5 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
   if (!roleAllowed) return <Navigate to="/403" replace />;
   return children;
 }
+
+export { ProtectedRoute };

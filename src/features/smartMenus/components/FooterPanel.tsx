@@ -46,3 +46,5 @@ export default function FooterPanel({ widget, onFieldChange }: Props) {
     </section>
   );
 }
+
+export { FooterPanel };

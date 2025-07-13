@@ -22,8 +22,8 @@ function Inner() {
   const { showToast } = useToast();
   return (
     <div className="space-x-2">
-      <Button onClick={() => showToast({ title: 'Saved!', variant: 'success' })}>Success</Button>
-      <Button onClick={() => showToast({ title: 'Error', variant: 'error' })}>Error</Button>
+      <Button onClick={() => showToast({ title: 'UI/Misc/Saved!', variant: 'success' })}>Success</Button>
+      <Button onClick={() => showToast({ title: 'UI/Misc/Error', variant: 'error' })}>Error</Button>
     </div>
   );
 }

@@ -9,7 +9,7 @@ interface Props {
   onFieldChange: (changes: Partial<Widget>) => void;
 }
 
-export default function SyncPanel({ widget, onFieldChange }: Props) {
+function SyncPanel({ widget, onFieldChange }: Props) {
   const [isSyncEnabled, setIsSyncEnabled] = useState(widget.isSyncEnabled);
 
 
@@ -42,3 +42,6 @@ export default function SyncPanel({ widget, onFieldChange }: Props) {
     </section>
   );
 }
+
+export { SyncPanel };
+export default SyncPanel;

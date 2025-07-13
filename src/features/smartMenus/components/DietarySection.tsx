@@ -84,3 +84,5 @@ export default function DietarySection({
     </>
   );
 }
+
+export { DietarySection };

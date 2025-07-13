@@ -137,3 +137,5 @@ export default function FontSection({
     </Card>
   );
 }
+
+export { FontSection };
