@@ -62,11 +62,11 @@ export default function FeaturesPanel({
 
   /* ---------- allergens ------------------------------------------- */
   const [selectedAllergens, setSelectedAllergens] = useState<AllergenType[]>(
-    widget.supportedAllergens ?? []
+    widget.supportedAllergens && widget.supportedAllergens.length > 0
+      ? widget.supportedAllergens
+      : ALLERGEN_OPTIONS
   );
-  const [enableAllergens, setEnableAllergens] = useState(
-    selectedAllergens.length > 0
-  );
+  const [enableAllergens, setEnableAllergens] = useState(true);
 
   /* ---------- nutrients ------------------------------------------- */
   const [enableNutrients, setEnableNutrients] = useState(

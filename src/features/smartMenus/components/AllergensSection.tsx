@@ -49,7 +49,7 @@ export default function AllergensSection({
       {enableAllergens && (
         <div className="pl-6 grid grid-cols-2 gap-2">
           {allergenOptions.map((a) => (
-            <label key={a} className="flex items-center gap-2 text-sm">
+            <label key={a.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())} className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
                 className="h-4 w-4"
@@ -60,7 +60,7 @@ export default function AllergensSection({
                   )
                 }
               />
-              {a}
+              {a.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
             </label>
           ))}
         </div>
