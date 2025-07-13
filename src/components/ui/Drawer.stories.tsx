@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Drawer } from './Drawer';
 import { useState } from 'react';
 import { expect } from '@storybook/jest';
-import { userEvent, within } from '@storybook/testing-library';
+import { userEvent, within, screen } from '@storybook/testing-library';
 
 const meta: Meta<typeof Drawer> = {
   title: 'UI/Overlay/Drawer',
@@ -35,7 +35,8 @@ export const LeftSide: Story = {
 RightSide.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
   await userEvent.click(canvas.getByRole('button', { name: /open drawer/i }));
-  await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+  const dialog = await screen.findByRole('dialog');
+  await expect(dialog).toBeInTheDocument();
   await userEvent.keyboard('{Escape}');
-  await expect(canvas.queryByRole('dialog')).not.toBeInTheDocument();
+  await expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 };

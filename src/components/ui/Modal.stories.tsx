@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { expect } from '@storybook/jest';
-import { userEvent, within } from '@storybook/testing-library';
+import { userEvent, within, screen } from '@storybook/testing-library';
 import { Modal } from './Modal';
 import { useState } from 'react';
 
@@ -31,7 +31,8 @@ export const Default: Story = {
 Default.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
   await userEvent.click(canvas.getByRole('button', { name: /open modal/i }));
-  await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+  const dialog = await screen.findByRole('dialog');
+  await expect(dialog).toBeInTheDocument();
   await userEvent.keyboard('{Escape}');
-  await expect(canvas.queryByRole('dialog')).not.toBeInTheDocument();
+  await expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 };
