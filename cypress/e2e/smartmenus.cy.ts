@@ -28,6 +28,9 @@ describe('SmartMenus admin list', () => {
       hasUtm: true,
       syncEnabled: true,
       previewUrl: 'https://example.com/preview',
+      displayImages: true,
+      isOrderButtonEnabled: true,
+      orderUrl: 'https://myeatery.com/order?utm_source=cypress',
       banners: [],
       menuItems: [],
     };
@@ -40,26 +43,7 @@ describe('SmartMenus admin list', () => {
         req.reply({ data: { widget } });
       }
     });
-    cy.intercept('POST', '/graphql', (req) => {
-      const { operationName } = req.body;
-      if (operationName === 'GetSmartMenus') {
-        req.reply({
-          data: {
-            widgets: [
-              {
-                __typename: 'Widget',
-                id: 'widget_1',
-                name: 'Lunch Menu',
-                layout: 'classic',
-                syncEnabled: true,
-                banners: [],
-                menuItems: [],
-              },
-            ],
-          },
-        });
-      }
-    });
+
     cy.visit('/smart-menus');
     cy.contains('h1', /smart\s*menus/i).should('be.visible');
   });
