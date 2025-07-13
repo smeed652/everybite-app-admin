@@ -16,6 +16,27 @@ describe('SmartMenus admin list', () => {
   });
 
   beforeEach(() => {
+    // Stub GetSmartMenus GraphQL query so UI always gets predictable data
+    cy.intercept('POST', '/graphql', (req) => {
+      const { operationName } = req.body;
+      if (operationName === 'GetSmartMenus') {
+        req.reply({
+          data: {
+            widgets: [
+              {
+                __typename: 'Widget',
+                id: 'widget_1',
+                name: 'Lunch Menu',
+                layout: 'classic',
+                syncEnabled: true,
+                banners: [],
+                menuItems: [],
+              },
+            ],
+          },
+        });
+      }
+    });
     cy.visit('/smart-menus');
     cy.contains('h1', /smart\s*menus/i).should('be.visible');
   });

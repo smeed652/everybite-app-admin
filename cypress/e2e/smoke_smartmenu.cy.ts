@@ -18,6 +18,27 @@ function loginAsAdmin() {
 
 describe('Admin Happy Path', () => {
   beforeEach(() => {
+  // GraphQL stub for widgets
+  cy.intercept('POST', '/graphql', (req) => {
+    const { operationName } = req.body;
+    if (operationName === 'GetSmartMenus') {
+      req.reply({
+        data: {
+          widgets: [
+            {
+              __typename: 'Widget',
+              id: 'widget_1',
+              name: 'Lunch Menu',
+              layout: 'classic',
+              syncEnabled: true,
+              banners: [],
+              menuItems: [],
+            },
+          ],
+        },
+      });
+    }
+  });
     cy.visit('/');
     loginAsAdmin();
   });
