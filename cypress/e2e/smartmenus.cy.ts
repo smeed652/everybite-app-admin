@@ -16,7 +16,30 @@ describe('SmartMenus admin list', () => {
   });
 
   beforeEach(() => {
-    // Stub GetSmartMenus GraphQL query so UI always gets predictable data
+    // Stub GraphQL queries for SmartMenus list and detail
+    const widget = {
+      __typename: 'Widget',
+      id: 'widget_1',
+      name: 'Lunch Menu',
+      slug: 'lunch-menu',
+      layout: 'classic',
+      hasImages: true,
+      hasOrdering: true,
+      hasUtm: true,
+      syncEnabled: true,
+      previewUrl: 'https://example.com/preview',
+      banners: [],
+      menuItems: [],
+    };
+
+    cy.intercept('POST', '/graphql', (req) => {
+      const { operationName } = req.body;
+      if (operationName === 'GetSmartMenus') {
+        req.reply({ data: { widgets: [widget] } });
+      } else if (operationName === 'GetWidget') {
+        req.reply({ data: { widget } });
+      }
+    });
     cy.intercept('POST', '/graphql', (req) => {
       const { operationName } = req.body;
       if (operationName === 'GetSmartMenus') {
