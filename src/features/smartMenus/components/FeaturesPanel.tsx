@@ -51,8 +51,16 @@ export default function FeaturesPanel({
   onFieldChange,
 }: FeaturesPanelProps) {
   /* ---------- diets / ingredients ---------------------------------- */
+  const toSnakeUpper = (v: string) =>
+    v
+      .replace(/([a-z])([A-Z])/g, '$1_$2') // insert underscore before capitals in CamelCase
+      .replace(/\s+/g, '_')
+      .toUpperCase();
+  const normalizeEnum = (v: string) => toSnakeUpper(v) as unknown as DietType;
   const [selectedDiets, setSelectedDiets] = useState<DietType[]>(
-    widget.supportedDietaryPreferences ?? []
+    widget.supportedDietaryPreferences && widget.supportedDietaryPreferences.length > 0
+      ? (widget.supportedDietaryPreferences.map(normalizeEnum) as DietType[])
+      : []
   );
   const [enableDiets, setEnableDiets] = useState(selectedDiets.length > 0);
 
@@ -61,9 +69,10 @@ export default function FeaturesPanel({
   );
 
   /* ---------- allergens ------------------------------------------- */
+  const normalizeAllergen = (v: string) => toSnakeUpper(v) as unknown as AllergenType;
   const [selectedAllergens, setSelectedAllergens] = useState<AllergenType[]>(
     widget.supportedAllergens && widget.supportedAllergens.length > 0
-      ? widget.supportedAllergens
+      ? (widget.supportedAllergens.map(normalizeAllergen) as AllergenType[])
       : ALLERGEN_OPTIONS
   );
   const [enableAllergens, setEnableAllergens] = useState(true);
