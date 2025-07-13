@@ -36,7 +36,7 @@ export default function OrderingSection({
             Configure the order-button link &amp; UTM tags
           </p>
         </div>
-        <Toggle checked={enableOrdering} onChange={onToggleOrdering} />
+        <Toggle checked={enableOrdering} onChange={onToggleOrdering} ariaLabel="Enable ordering" />
       </div>
 
       {enableOrdering && (
@@ -50,6 +50,7 @@ export default function OrderingSection({
               value={baseUrl}
               onChange={(e) => onBaseUrlChange(e.target.value)}
               placeholder="https://example.com"
+              aria-describedby="ordering-preview"
             />
           </div>
           <div className="space-y-1">
@@ -63,7 +64,7 @@ export default function OrderingSection({
               placeholder="utm_source=...&utm_medium=..."
             />
           </div>
-          <p className="text-sm break-all bg-gray-50 border rounded px-2 py-1">
+          <p id="ordering-preview" className="text-sm break-all bg-gray-50 border rounded px-2 py-1">
             {fullUrl || '—'}
           </p>
         </div>

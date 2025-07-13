@@ -10,5 +10,5 @@ export default meta;
 type Story = StoryObj<typeof ResourceHeader>;
 
 export const Default: Story = {
-  args: {},
+  args: { level: 2, title: 'Resource Header' },
 };

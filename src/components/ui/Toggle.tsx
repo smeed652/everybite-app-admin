@@ -1,15 +1,18 @@
 
 interface ToggleProps {
+  /** determines current state */
   checked: boolean;
   onChange: (value: boolean) => void;
   disabled?: boolean;
   className?: string;
+  /** accessible label for screen readers */
+  ariaLabel?: string;
 }
 
 /**
  * Reusable toggle switch component used across the admin panel.
  */
-export function Toggle({ checked, onChange, disabled, className = '' }: ToggleProps) {
+export function Toggle({ checked, onChange, disabled, className = '', ariaLabel = 'toggle' }: ToggleProps) {
   return (
     <button
       type="button"
@@ -18,6 +21,7 @@ export function Toggle({ checked, onChange, disabled, className = '' }: TogglePr
         checked ? 'bg-green-500' : 'bg-gray-300'
       } ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
       role="switch"
+      aria-label={ariaLabel}
       aria-checked={checked}
     >
       <span

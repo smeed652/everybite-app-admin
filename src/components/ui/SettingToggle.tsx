@@ -44,7 +44,7 @@ export function SettingToggle({
         {description && <p className="text-sm text-muted-foreground">{description}</p>}
         {footer && <p className="text-xs text-gray-500 mt-1">{footer}</p>}
       </div>
-      <Toggle checked={checked} onChange={onChange} disabled={disabled} />
+      <Toggle checked={checked} onChange={onChange} disabled={disabled} ariaLabel={title} />
     </Card>
   );
 }
