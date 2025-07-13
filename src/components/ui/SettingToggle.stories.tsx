@@ -38,7 +38,7 @@ export const Disabled: Story = {
 
 Enabled.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
-  const toggle = canvas.getByRole('checkbox');
+  const toggle = await canvas.findByRole('switch');
   await expect(toggle).not.toBeChecked();
   await userEvent.click(toggle);
   await expect(toggle).toBeChecked();
