@@ -113,23 +113,23 @@ export function DataTable<T>({ data, columns, loading = false, pageSize = 10, la
       </Table>
 
       {pageSize && pageCount > 1 && (
-        <div className="flex items-center justify-end gap-1 text-sm">
+        <nav aria-label="Pagination" className="flex items-center justify-end gap-1 text-sm">
           <span className="mr-2">
             Page {page + 1} of {pageCount}
           </span>
-          <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(0)}>
+          <Button aria-label="First page" variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(0)}>
             <ChevronsLeft className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
+          <Button aria-label="Previous page" variant="outline" size="sm" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="sm" disabled={page >= pageCount - 1} onClick={() => setPage((p) => p + 1)}>
+          <Button aria-label="Next page" variant="outline" size="sm" disabled={page >= pageCount - 1} onClick={() => setPage((p) => p + 1)}>
             <ChevronRight className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="sm" disabled={page >= pageCount - 1} onClick={() => setPage(pageCount - 1)}>
+          <Button aria-label="Last page" variant="outline" size="sm" disabled={page >= pageCount - 1} onClick={() => setPage(pageCount - 1)}>
             <ChevronsRight className="h-4 w-4" />
           </Button>
-        </div>
+        </nav>
       )}
     </div>
   );
