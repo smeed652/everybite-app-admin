@@ -87,7 +87,6 @@ export default function SmartMenuHeader({
   /* ---------- title (includes breadcrumb) ---------- */
   const title = (
     <div>
-      <nav className="text-sm text-gray-600 mb-1">Edit Widget</nav>
       <span className="text-3xl font-semibold break-words max-w-full">{widget.name}</span>
     </div>
   );
