@@ -3,7 +3,7 @@ import { cn } from '../../lib/utils';
 
 export const Tabs = TabsPrimitive.Root;
 export const TabsList = ({ className, ...props }: TabsPrimitive.TabsListProps) => (
-  <TabsPrimitive.List
+  <TabsPrimitive.List aria-label="Tabs navigation"
     className={cn(
       'inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground',
       className,

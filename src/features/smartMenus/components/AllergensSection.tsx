@@ -27,7 +27,7 @@ export default function AllergensSection({
 
   return (
     <OptionToggleSection<AllergenType>
-      icon={<AlertCircle className="h-4 w-4" />}
+      icon={<AlertCircle aria-hidden="true" className="h-4 w-4" />}
       title="Allergens"
       description="Enable allergen filters (select at least one allergen when enabled)"
       options={allergenOptions}

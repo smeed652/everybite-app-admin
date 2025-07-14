@@ -16,6 +16,7 @@ export const Default: Story = {
       { accessorKey: 'name', header: 'Name' },
       { accessorKey: 'calories', header: 'Calories' },
     ] as ColumnDef<object, unknown>[],
+    label: 'Sample data table',
     data: [
       { name: 'Margherita Pizza', calories: 300 },
       { name: 'Caesar Salad', calories: 180 },

@@ -17,6 +17,7 @@ export const Default: Story = {
       lastSyncedAt: new Date().toISOString(),
     } as any,
     dirty: true,
+    headingLevel: 1,
     onSave: () => {},
     onCancel: () => {},
   },

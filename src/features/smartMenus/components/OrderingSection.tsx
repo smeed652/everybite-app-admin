@@ -30,7 +30,7 @@ export default function OrderingSection({
       <div className="flex items-center justify-between">
         <div>
           <p className="flex items-center gap-2 text-sm font-medium">
-            <ShoppingCart className="h-4 w-4" /> Ordering
+            <ShoppingCart aria-hidden="true" className="h-4 w-4" /> Ordering
           </p>
           <p className="text-sm text-muted-foreground">
             Configure the order-button link &amp; UTM tags
@@ -52,6 +52,7 @@ export default function OrderingSection({
               placeholder="https://example.com"
               aria-describedby="ordering-preview"
             />
+            
           </div>
           <div className="space-y-1">
             <label className="text-sm font-medium" htmlFor="utm-tags">

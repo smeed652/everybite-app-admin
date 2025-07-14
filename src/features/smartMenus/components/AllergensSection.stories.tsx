@@ -10,5 +10,11 @@ export default meta;
 type Story = StoryObj<typeof AllergensSection>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    allergenOptions: ['PEANUT', 'MILK'] as any[],
+    enableAllergens: true,
+    onToggleAllergens: () => {},
+    selectedAllergens: ['MILK'] as any[],
+    onChangeSelectedAllergens: () => {},
+  },
 };

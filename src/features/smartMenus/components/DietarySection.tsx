@@ -31,7 +31,7 @@ export default function DietarySection({
     <>
       {/* Dietary preferences */}
       <OptionToggleSection<DietType>
-        icon={<Leaf className="h-4 w-4" />}
+        icon={<Leaf aria-hidden="true" className="h-4 w-4" />}
         title="Dietary Preferences"
         description="Enable diet filters (select at least one diet when enabled)"
         options={dietOptions}
@@ -44,7 +44,7 @@ export default function DietarySection({
 
       {/* Ingredients */}
       <SettingToggle
-        icon={<Utensils className="h-4 w-4" />}
+        icon={<Utensils aria-hidden="true" className="h-4 w-4" />}
         title="Ingredients"
         description="Enable ingredients list per dish"
         checked={enableIngredients}

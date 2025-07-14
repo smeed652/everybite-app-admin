@@ -23,7 +23,7 @@ describe('SmartMenuHeader', () => {
   it('renders widget name and status', () => {
     render(<SmartMenuHeader widget={makeWidget()} />);
 
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/My Widget/);
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(/My Widget/);
     expect(screen.getByText(/active/i)).toBeInTheDocument();
   });
 

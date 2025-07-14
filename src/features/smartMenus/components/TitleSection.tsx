@@ -23,19 +23,19 @@ export default function TitleSection({
 }: Props) {
   return (
     <Card className="p-4 space-y-4">
-      <div className="flex items-center gap-2 text-sm font-medium">
-        <Heading3 className="h-4 w-4" /> Title
-      </div>
+      <h4 className="flex items-center gap-2 text-sm font-medium">
+        <Heading3 aria-hidden="true" className="h-4 w-4" /> Title
+      </h4>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-1 md:col-span-2">
-          <label className="text-sm font-medium">HTML Title</label>
-          <Input value={htmlTitle} onChange={(e) => onHtmlTitleChange(e.target.value)} />
+          <label htmlFor="html-title-input" className="text-sm font-medium">HTML Title</label>
+          <Input id="html-title-input" value={htmlTitle} onChange={(e) => onHtmlTitleChange(e.target.value)} />
         </div>
 
         <div className="space-y-1 md:col-span-2">
-          <label className="text-sm font-medium">Page Title</label>
-          <Input value={pageTitle} onChange={(e) => onPageTitleChange(e.target.value)} />
+          <label htmlFor="page-title-input" className="text-sm font-medium">Page Title</label>
+          <Input id="page-title-input" value={pageTitle} onChange={(e) => onPageTitleChange(e.target.value)} />
         </div>
 
         <ColorRow

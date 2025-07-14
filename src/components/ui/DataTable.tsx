@@ -64,6 +64,7 @@ export function DataTable<T>({ data, columns, loading = false, pageSize = 10, la
   return (
     <div className="space-y-2" aria-label={label}>
       <Table striped className="border border-gray-200 dark:border-gray-700">
+          {label && <caption className="sr-only">{label}</caption>}
         <THead className="bg-gray-100 dark:bg-gray-800 text-left select-none">
           <TR>
             {columns.map((col, idx) => (
@@ -118,16 +119,16 @@ export function DataTable<T>({ data, columns, loading = false, pageSize = 10, la
             Page {page + 1} of {pageCount}
           </span>
           <Button aria-label="First page" variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(0)}>
-            <ChevronsLeft className="h-4 w-4" />
+            <ChevronsLeft aria-hidden="true" className="h-4 w-4" />
           </Button>
           <Button aria-label="Previous page" variant="outline" size="sm" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft aria-hidden="true" className="h-4 w-4" />
           </Button>
           <Button aria-label="Next page" variant="outline" size="sm" disabled={page >= pageCount - 1} onClick={() => setPage((p) => p + 1)}>
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight aria-hidden="true" className="h-4 w-4" />
           </Button>
           <Button aria-label="Last page" variant="outline" size="sm" disabled={page >= pageCount - 1} onClick={() => setPage(pageCount - 1)}>
-            <ChevronsRight className="h-4 w-4" />
+            <ChevronsRight aria-hidden="true" className="h-4 w-4" />
           </Button>
         </nav>
       )}

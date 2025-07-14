@@ -44,16 +44,17 @@ export default function FontSection({
   return (
     <Card className="p-4 space-y-4">
       <div className="flex items-center gap-2 text-sm font-medium">
-        <Type className="h-4 w-4" /> Font
+        <Type aria-hidden="true" className="h-4 w-4" /> Font
       </div>
 
       {/* family + size row */}
       <div className="flex flex-wrap items-end gap-8 pl-6">
         {/* Font family */}
         <div className="space-y-1">
-          <label className="text-sm font-medium block mb-1">Font&nbsp;family</label>
+          <label htmlFor="navbar-font-select" className="text-sm font-medium block mb-1">Font&nbsp;family</label>
           <div className="relative w-60">
             <select
+              id="navbar-font-select"
               value={navbarFont}
               onChange={(e) => onNavbarFontChange(e.target.value)}
               className="flex h-10 w-60 appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 text-base font-medium text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
@@ -68,7 +69,7 @@ export default function FontSection({
                   </option>
                 ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-gray-500" />
+            <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-gray-500" />
           </div>
         </div>
 
@@ -80,19 +81,24 @@ export default function FontSection({
               <button
                 ref={triggerRef}
                 type="button"
+                aria-label="Select font size"
                 className="relative flex h-10 w-32 items-center justify-start rounded-md border border-gray-300 bg-white px-3 py-2 text-base font-medium text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
               >
                 {navbarFontSize || '—'}
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-gray-500" />
+                <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 text-gray-500" />
               </button>
             </PopoverTrigger>
 
             <PopoverContent className="p-0 w-32">
               <Command
-                filter={(value: string, search: string) =>
-                  search.toLowerCase().includes(value.toLowerCase()) ||
-                  value.toLowerCase().includes(search.toLowerCase())
-                }
+                filter={(value: string, search: string) => {
+                  // Return a ranking number: 0 means no match, higher is better match
+                  const v = value.toLowerCase();
+                  const s = search.toLowerCase();
+                  if (v.startsWith(s)) return 2; // best match
+                  if (v.includes(s)) return 1; // partial match
+                  return 0; // no match
+                }}
               >
                 <CommandInput placeholder="size…" />
                 <CommandGroup className="max-h-48 overflow-auto">
@@ -106,7 +112,7 @@ export default function FontSection({
                       }}
                       className="flex items-center gap-2"
                     >
-                      <Check
+                      <Check aria-hidden="true"
                         className={clsx(
                           'h-3 w-3',
                           size === navbarFontSize ? 'opacity-100' : 'opacity-0',

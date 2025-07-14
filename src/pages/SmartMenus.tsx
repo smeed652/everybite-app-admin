@@ -20,7 +20,7 @@ export default function SmartMenus() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="h-6 w-6 p-0">
-          <ChevronDown className="h-4 w-4" />
+          <ChevronDown aria-hidden="true" className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
@@ -41,7 +41,7 @@ export default function SmartMenus() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="h-6 w-6 p-0">
-          <ChevronDown className="h-4 w-4" />
+          <ChevronDown aria-hidden="true" className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
@@ -91,7 +91,7 @@ export default function SmartMenus() {
       },
       cell: ({ getValue }) =>
         getValue<boolean>() ? (
-          <ImageIcon data-testid="images-icon" className="h-4 w-4 text-emerald-600" />
+          <ImageIcon aria-hidden="true" data-testid="images-icon" className="h-4 w-4 text-emerald-600" />
         ) : (
           <Minus className="h-4 w-4 text-muted-foreground" />
         ),
@@ -234,7 +234,7 @@ export default function SmartMenus() {
               aria-label="Row actions"
               onClick={(e) => e.stopPropagation()}
             >
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontal aria-hidden="true" className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

@@ -41,7 +41,7 @@ export default function FooterPanel({ widget, onFieldChange }: Props) {
             />
           )}
         </div>
-        <Toggle checked={showFooter} onChange={setShowFooter} disabled={loading} />
+        <Toggle checked={showFooter} onChange={setShowFooter} disabled={loading} ariaLabel="Display footer" />
       </Card>
     </section>
   );

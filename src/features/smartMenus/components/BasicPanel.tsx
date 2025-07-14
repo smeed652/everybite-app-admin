@@ -58,8 +58,8 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
 
 
   return (
-    <Panel title="Basics" data-testid="basic-panel">
-      <FormSection title="General">
+    <Panel data-testid="basic-panel">
+      <FormSection title="Basics">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField label="Name" required>
             <Input id="name" value={name} onChange={e => handleNameChange(e.target.value)} disabled={loading} />
@@ -71,7 +71,7 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
       </FormSection>
 
       <SettingToggle
-        icon={<Activity className="h-4 w-4" />}
+        icon={<Activity aria-hidden="true" className="h-4 w-4" />}
         title="Status"
         description="Activate or deactivate this SmartMenu."
         checked={isActive}

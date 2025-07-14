@@ -31,6 +31,8 @@ interface DataTableProps<TData extends object> {
   data: TData[];
   loading?: boolean;
   pageSize?: number;
+  /** Optional accessible label for the table */
+  label?: string;
   /** Unique ID to help external tests select the table */
   id?: string;
 }
@@ -43,11 +45,10 @@ export function TanStackDataTable<TData extends object>({
   id,
   onRowClick,
   selectable = true,
-}: DataTableProps<TData> & { selectable?: boolean }) {
+  label,
+}: Omit<DataTableProps<TData>, 'label'> & { label?: string; selectable?: boolean }) {
   // Ensure we reference _pageSize so it isn't considered unused
   void _pageSize;
-  // Scrollable wrapper ref (future use)
-
   // Scrollable wrapper ref (future use)
   const wrapperRef = React.useRef<HTMLDivElement>(null);
 
@@ -67,6 +68,7 @@ export function TanStackDataTable<TData extends object>({
         enableHiding: false,
         header: ({ table }) => (
           <input
+    aria-label="Select all rows"
             type="checkbox"
             className="h-4 w-4"
             checked={table.getIsAllRowsSelected() || table.getIsSomeRowsSelected()}
@@ -76,6 +78,7 @@ export function TanStackDataTable<TData extends object>({
         ),
         cell: ({ row }) => (
           <input
+    aria-label="Select row"
             type="checkbox"
             className="h-4 w-4"
             checked={row.getIsSelected()}
@@ -130,7 +133,7 @@ export function TanStackDataTable<TData extends object>({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-1 h-8">
-              <SlidersHorizontal className="h-4 w-4" /> Columns
+              <SlidersHorizontal aria-hidden="true" className="h-4 w-4" /> Columns
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -151,7 +154,10 @@ export function TanStackDataTable<TData extends object>({
       {/* Table */}
       <div className="flex-1 overflow-auto pb-4">
         <div className="border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden">
-        <Table className="min-w-full">
+        <Table
+          aria-label={label}
+           className="min-w-full">
+            <caption className="sr-only">Data table</caption>
           <THead className="bg-gray-100 dark:bg-gray-800">
             {table.getHeaderGroups().map((headerGroup) => (
               <TR key={headerGroup.id}>

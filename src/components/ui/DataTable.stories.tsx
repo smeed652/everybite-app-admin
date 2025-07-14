@@ -31,6 +31,7 @@ const meta: Meta<typeof DataTable<Person>> = {
       },
     ],
     pageSize: 5,
+    label: 'Sample data table',
   },
 };
 export default meta;

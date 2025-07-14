@@ -185,7 +185,7 @@ export default function FeaturesPanel({
 
       {/* Build-Your-Own */}
       <SettingToggle
-        icon={<Hammer className="h-4 w-4" />}
+        icon={<Hammer aria-hidden="true" className="h-4 w-4" />}
         title="Build-Your-Own"
         description="Enable BYO for all dishes by default"
         checked={enableBuildYourOwn}
@@ -204,7 +204,7 @@ export default function FeaturesPanel({
 
       {/* Floating Feedback button */}
       <SettingToggle
-        icon={<ThumbsUp className="h-4 w-4" />}
+        icon={<ThumbsUp aria-hidden="true" className="h-4 w-4" />}
         title="Floating Feedback Button"
         description="Persistent button that opens feedback modal. Captures feedback and email."
         checked={feedbackButton}

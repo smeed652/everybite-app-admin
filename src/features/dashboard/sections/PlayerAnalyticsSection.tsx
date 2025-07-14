@@ -18,7 +18,7 @@ export function PlayerAnalyticsSection() {
   if (error) {
     return (
       <div className="p-4 flex items-center gap-2 text-red-600 text-sm">
-        <AlertTriangle className="h-4 w-4" /> Failed to load widget analytics
+        <AlertTriangle aria-hidden="true" className="h-4 w-4" /> Failed to load widget analytics
       </div>
     );
   }

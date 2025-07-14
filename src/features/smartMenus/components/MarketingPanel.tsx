@@ -30,7 +30,7 @@ export default function MarketingPanel({ widget, onFieldChange }: MarketingPanel
     
 
   return (
-    <Panel title="Call to Actions (CTA)" data-testid="marketing-panel">
+    <Panel title="Marketing" data-testid="marketing-panel">
       {/* Soft Sign-Up banner */}
       <SettingToggle
         icon={<Mail className="h-4 w-4" />}

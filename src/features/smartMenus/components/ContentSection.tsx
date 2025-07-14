@@ -29,7 +29,7 @@ export default function ContentSection({
   return (
     <Card className="p-4 space-y-4">
       <div className="flex items-center gap-2 text-sm font-medium">
-        <Paintbrush2 className="h-4 w-4" /> Content
+        <Paintbrush2 aria-hidden="true" className="h-4 w-4" /> Content
       </div>
 
       <div className="space-y-4">
@@ -45,8 +45,9 @@ export default function ContentSection({
         />
 
         <div className="space-y-1">
-          <label className="text-sm font-medium">Category Title Font</label>
+          <label htmlFor="category-font" className="text-sm font-medium">Category Title Font</label>
           <select
+            id="category-font"
             value={categoryFont}
             onChange={(e) => onCategoryFontChange(e.target.value)}
             className="border rounded px-2 py-1 text-sm w-60"

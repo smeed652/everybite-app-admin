@@ -1,15 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Inter:wght@400;700&family=Open+Sans:wght@400;700&family=Roboto:wght@400;700&display=swap");
 
+/* stylelint-disable */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* stylelint-enable */
 
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Darker gray for sufficient 4.5:1 contrast against white */
+    /* Adjusted for 4.5:1 contrast on body text */
+    --muted-foreground: 215 10% 32%;
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
     --popover: 0 0% 100%;
@@ -28,7 +32,9 @@
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
     --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    /* Slightly lighter gray for dark mode while keeping >=4.5:1 contrast against dark background */
+    /* Adjusted for 4.5:1 contrast on dark surfaces */
+    --muted-foreground: 215 15% 84%;
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
@@ -46,7 +52,9 @@
 
 /* utility to wrap pages that still need dark */
 .dark-surface {
+  /* stylelint-disable at-rule-no-unknown */
   @apply bg-gray-950 text-gray-100;
+  /* stylelint-enable */
 }
 
 /* Ensure the application fills the viewport and suppress root scrolling */

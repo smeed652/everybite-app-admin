@@ -8,7 +8,7 @@ const meta: Meta<typeof OptionToggleSection<any>> = {
   title: 'UI/Misc/OptionToggleSection',
   component: OptionToggleSection,
   args: {
-    icon: <Leaf className="h-4 w-4" />,
+    icon: <Leaf aria-hidden="true" className="h-4 w-4" />,
     title: 'Dietary Preferences',
     description: 'Enable diet filters (select at least one diet when enabled)',
     enabled: true,

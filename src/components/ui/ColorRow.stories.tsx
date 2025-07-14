@@ -10,5 +10,9 @@ export default meta;
 type Story = StoryObj<typeof ColorRow>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    label: 'Primary Color',
+    value: '#ff0000',
+    onChange: () => {},
+  },
 };

@@ -131,9 +131,9 @@ export default function HostedPageBrandingPanel({
         {/* Nav-bar header & toggle */}
         <div className="flex items-center justify-between">
           <p className="flex items-center gap-2 text-sm font-medium">
-            <ToggleLeft className="h-4 w-4" /> Navigation&nbsp;Bar
+            <ToggleLeft aria-hidden="true" className="h-4 w-4" /> Navigation&nbsp;Bar
           </p>
-          <Toggle checked={displayNavbar} onChange={setDisplayNavbar} />
+          <Toggle checked={displayNavbar} onChange={setDisplayNavbar} ariaLabel="Display navigation bar" />
         </div>
 
         {/* Always-visible sections */}

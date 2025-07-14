@@ -28,7 +28,7 @@ export function ColorRow({
       <div className="text-sm font-medium">{label}</div>
 
       {/* visual chip */}
-      <div className="relative flex items-center">
+      <label className="relative flex items-center" aria-label={`${label} color picker`}>
         <div
           className="h-8 w-8 rounded-full border cursor-pointer"
           style={{ background: safeValue }}
@@ -37,12 +37,16 @@ export function ColorRow({
           type="color"
           value={safeValue}
           onChange={(e) => onChange(e.target.value)}
+          aria-label={`${label} color value`}
           className="absolute top-0 left-0 h-8 w-8 opacity-0 cursor-pointer"
         />
-      </div>
+      </label>
 
       {/* hex input */}
+      <label className="sr-only" htmlFor={`hex-${label.replace(/\s+/g,'-').toLowerCase()}`}>{label} hex value</label>
       <Input
+        id={`hex-${label.replace(/\s+/g,'-').toLowerCase()}`}
+        aria-label={`${label} hex value`}
         value={value}
         maxLength={7}
         onChange={(e) => {

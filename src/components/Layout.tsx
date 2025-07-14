@@ -37,7 +37,7 @@ export default function Layout() {
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="sm" className="gap-2">
-              <Menu className="h-4 w-4" />
+              <Menu aria-hidden="true" className="h-4 w-4" />
               Menu
             </Button>
           </SheetTrigger>
@@ -46,7 +46,7 @@ export default function Layout() {
             <div className="h-full w-full flex flex-col">
               <div className="flex h-14 items-center px-4 text-lg font-semibold">EveryBite</div>
               <Separator />
-              <nav className="flex-1 overflow-y-auto px-3 py-4 text-sm">
+              <nav aria-label="Sidebar navigation" className="flex-1 overflow-y-auto px-3 py-4 text-sm">
                 {navSections.map((section) => (
                   <div key={section.heading} className="space-y-1">
                     <p className="mb-2 px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
@@ -65,11 +65,11 @@ export default function Layout() {
                             isActive
                               ? 'bg-accent text-accent-foreground'
                               : 'text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground',
-                            disabled && 'opacity-50 pointer-events-none',
+                            disabled && 'pointer-events-none',
                           )
                         }
                       >
-                        {Icon ? <Icon className="h-4 w-4" /> : <span className="text-lg">•</span>}
+                        {Icon ? <Icon aria-hidden="true" className="h-4 w-4" /> : <span className="text-lg">•</span>}
                         <span>{label}</span>
                       </NavLink>
                       );
@@ -94,7 +94,7 @@ export default function Layout() {
       <aside className={cn("hidden md:flex w-64 flex-col border-r bg-muted/40", "shadcn:shadow shadcn:shadow-slate-400/20")}>
         <div className="flex h-14 items-center px-4 text-lg font-semibold">EveryBite</div>
         <Separator />
-        <nav className={cn("flex-1 overflow-y-auto px-3 py-4 text-sm", "shadcn:py-4 shadcn:px-6")}>
+        <nav aria-label="Sidebar navigation" className={cn("flex-1 overflow-y-auto px-3 py-4 text-sm", "shadcn:py-4 shadcn:px-6")}>
           {navSections.map((section) => (
             <div key={section.heading} className="space-y-1">
               <p className="mb-2 px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
@@ -114,11 +114,11 @@ export default function Layout() {
                       isActive
                         ? 'bg-accent text-accent-foreground'
                         : 'text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground',
-                      disabled && 'opacity-50 pointer-events-none',
+                      disabled && 'pointer-events-none',
                     )
                   }
                 >
-                  {Icon ? <Icon className="h-4 w-4" /> : <span className="text-lg">•</span>}
+                  {Icon ? <Icon aria-hidden="true" className="h-4 w-4" /> : <span className="text-lg">•</span>}
                   <span>{label}</span>
                 </NavLink>
                 );
@@ -136,9 +136,9 @@ export default function Layout() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-hidden">
+      <section className="flex-1 overflow-hidden" aria-label="Main content">
         <Outlet />
-      </main>
+      </section>
     </div>
   );
 }

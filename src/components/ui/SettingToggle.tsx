@@ -37,7 +37,7 @@ export function SettingToggle({
     <Card className={`p-4 flex items-center justify-between ${className}`.trim()}>
       <div>
         <p className="flex items-center gap-2 text-sm font-medium">
-          {icon}
+          {icon && <span aria-hidden="true">{icon}</span>}
           {title}
           {action && <span className="ml-2 inline-flex items-center text-xs text-blue-600 underline hover:text-blue-800">{action}</span>}
         </p>

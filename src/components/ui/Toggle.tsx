@@ -13,20 +13,23 @@ interface ToggleProps {
  * Reusable toggle switch component used across the admin panel.
  */
 export function Toggle({ checked, onChange, disabled, className = '', ariaLabel = 'toggle' }: ToggleProps) {
+  // Coerce potentially undefined "checked" values to strict boolean to ensure
+  // aria-checked is always rendered (required for role="switch" a11y rule).
+  const isOn = !!checked;
   return (
     <button
       type="button"
-      onClick={() => !disabled && onChange(!checked)}
+      onClick={() => !disabled && onChange(!isOn)}
       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-        checked ? 'bg-green-500' : 'bg-gray-300'
+        isOn ? 'bg-green-500' : 'bg-gray-400'
       } ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
       role="switch"
       aria-label={ariaLabel}
-      aria-checked={checked}
+      aria-checked={isOn}
     >
       <span
         className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-          checked ? 'translate-x-6' : 'translate-x-1'
+          isOn ? 'translate-x-6' : 'translate-x-1'
         }`}
       />
     </button>

@@ -23,23 +23,23 @@ export default function LogoSection({
   return (
     <Card className="p-4 space-y-4">
       <div className="flex items-center gap-2 text-sm font-medium">
-        <Image className="h-4 w-4" /> Logo
+        <Image aria-hidden="true" className="h-4 w-4" /> Logo
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-1">
-          <label className="text-sm font-medium">Logo URL</label>
-          <Input value={logoUrl} onChange={(e) => onLogoUrlChange(e.target.value)} />
+          <label htmlFor="logo-url" className="text-sm font-medium">Logo URL</label>
+          <Input id="logo-url" value={logoUrl} onChange={(e) => onLogoUrlChange(e.target.value)} />
         </div>
 
         <div className="space-y-1">
-          <label className="text-sm font-medium">Logo width&nbsp;(px)</label>
-          <Input value={logoWidth} onChange={(e) => onLogoWidthChange(e.target.value)} />
+          <label htmlFor="logo-width" className="text-sm font-medium">Logo width&nbsp;(px)</label>
+          <Input id="logo-width" value={logoWidth} onChange={(e) => onLogoWidthChange(e.target.value)} />
         </div>
 
         <div className="space-y-1 md:col-span-2">
-          <label className="text-sm font-medium">Favicon URL</label>
-          <Input value={faviconUrl} onChange={(e) => onFaviconUrlChange(e.target.value)} />
+          <label htmlFor="favicon-url" className="text-sm font-medium">Favicon URL</label>
+          <Input id="favicon-url" value={faviconUrl} onChange={(e) => onFaviconUrlChange(e.target.value)} />
         </div>
       </div>
     </Card>

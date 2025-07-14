@@ -34,7 +34,11 @@ export default function ResourceHeader({ title, meta = [], actions, level = 1 }:
         <div className="grid grid-flow-col auto-cols-fr gap-8 border-t pt-4">
           {meta.map((m, idx) => (
             <div key={idx} className="min-w-0">
-              <h4 className="text-sm font-medium text-muted-foreground truncate" title={m.label}>{m.label}</h4>
+              {React.createElement(
+                `h${Math.min(level + 1, 6)}`,
+                { className: 'text-sm font-medium text-muted-foreground truncate', title: m.label },
+                m.label,
+              )}
               <div className="text-sm break-all">{m.value}</div>
             </div>
           ))}

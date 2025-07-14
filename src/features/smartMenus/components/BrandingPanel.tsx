@@ -46,7 +46,7 @@ export default function BrandingPanel({ widget, onFieldChange }: Props) {
       <h3 className="text-lg font-semibold">Branding</h3>
       {/* Colors */}
       <Card className="p-4 space-y-4">
-        <h4 className="flex items-center gap-2 font-medium"><Palette className="h-4 w-4" /> Colors</h4>
+        <h4 className="flex items-center gap-2 font-medium"><Palette aria-hidden="true" className="h-4 w-4" /> Colors</h4>
         <div className="space-y-3">
           <ColorInput label="Primary" value={primary} onChange={handlePrimary} />
           <ColorInput label="Secondary" value={secondary} onChange={handleSecondary} />
@@ -56,10 +56,11 @@ export default function BrandingPanel({ widget, onFieldChange }: Props) {
 
       {/* Fonts */}
       <Card className="p-4 space-y-4">
-        <h4 className="flex items-center gap-2 font-medium"><FontIcon className="h-4 w-4" /> Font</h4>
+        <h4 className="flex items-center gap-2 font-medium"><FontIcon aria-hidden="true" className="h-4 w-4" /> Font</h4>
         <div>
-          <label className="text-sm font-medium mr-3">Font family</label>
+          <label htmlFor="font-family-select" className="text-sm font-medium mr-3">Font family</label>
           <select
+            id="font-family-select"
             className="border rounded px-2 py-1 text-sm w-60"
             style={{ fontFamily: fontFamily || 'inherit' }}
             value={fontFamily}
@@ -93,19 +94,23 @@ function ColorInput({ label, value, onChange }: { label: string; value: string; 
       <div className="w-24 text-sm font-medium">{label}</div>
       <div className="relative flex items-center">
         {/* preview circle */}
-        <div
-          className="h-10 w-10 rounded-full border cursor-pointer"
-          style={{ background: safeColor }}
-        />
-        {/* transparent native color input covering the circle */}
-        <input
-          type="color"
-          value={safeColor}
-          onChange={(e) => onChange(e.target.value)}
-          className="absolute top-0 left-0 h-10 w-10 opacity-0 cursor-pointer"
-        />
+        <label className="relative flex items-center" aria-label={`${label} color value`}>
+          <div
+            className="h-10 w-10 rounded-full border cursor-pointer"
+            style={{ background: safeColor }}
+            aria-hidden="true"
+          />
+          {/* transparent native color input covering the circle */}
+          <input
+            type="color"
+            value={safeColor}
+            onChange={(e) => onChange(e.target.value)}
+            className="absolute top-0 left-0 h-10 w-10 opacity-0 cursor-pointer"
+          />
+        </label>
       </div>
       <Input
+        aria-label={`${label} hex value`}
         value={value}
         maxLength={7}
         onChange={(e) => {

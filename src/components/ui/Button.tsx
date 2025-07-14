@@ -12,7 +12,7 @@ const button = cva(
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'underline-offset-4 hover:underline text-primary',
+        link: 'underline-offset-4 hover:underline text-brand',
       },
       size: {
         default: 'h-10 py-2 px-4',
@@ -29,12 +29,22 @@ const button = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof button> {}
+    VariantProps<typeof button> {
+  /**
+   * Accessible label for icon-only buttons. Will be passed as aria-label.
+   */
+  ariaLabel?: string;
+}
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
-    return <button ref={ref} className={cn(button({ variant, size, className }))} {...props} />;
-  },
+  ({ className, variant, size, ariaLabel, ...props }, ref) => (
+    <button
+      ref={ref}
+      aria-label={ariaLabel}
+      className={cn(button({ variant, size, className }))}
+      {...props}
+    />
+  ),
 );
 Button.displayName = 'Button';
 

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import * as React from 'react';
 import { cn } from '../../lib/utils';
 
@@ -38,6 +39,7 @@ TR.displayName = 'TR';
 export const TH = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTableCellElement>>(({ className, ...props }, ref) => (
   <th
     ref={ref}
+    scope="col"
     className={cn('px-4 py-3 text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-300', className)}
     {...props}
   />

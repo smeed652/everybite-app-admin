@@ -15,7 +15,14 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: (args) => (
+    <div className="space-y-2">
+      <Label {...args} htmlFor="email" />
+      <input id="email" type="email" className="border p-1" />
+    </div>
+  ),
+};
 
 Default.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
@@ -37,4 +44,10 @@ export const Disabled: Story = {
   args: {
     className: 'opacity-50 cursor-not-allowed',
   },
+  render: (args) => (
+    <div className="space-y-2">
+      <Label {...args} htmlFor="email-disabled" />
+      <input id="email-disabled" type="email" className="border p-1" disabled aria-label="Email" />
+    </div>
+  ),
 };

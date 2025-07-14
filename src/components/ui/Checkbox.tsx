@@ -12,7 +12,7 @@ export interface CheckboxProps extends React.ComponentPropsWithoutRef<typeof Che
 }
 
 export const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root>, CheckboxProps>(
-  ({ className, ...props }, ref) => (
+  ({ className, ariaLabel, ...props }, ref) => (
     <CheckboxPrimitive.Root
       ref={ref}
       className={cn(
@@ -20,7 +20,7 @@ export const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimiti
         'data-[state=checked]:bg-brand data-[state=checked]:text-white',
         className,
       )}
-      aria-label={props.ariaLabel} {...props}
+      aria-label={ariaLabel} {...props}
     >
       <CheckboxPrimitive.Indicator className="flex items-center justify-center text-current">
         <Check className="h-3 w-3" />

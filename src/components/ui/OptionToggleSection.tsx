@@ -88,7 +88,7 @@ export function OptionToggleSection<T extends string>(props: OptionToggleSection
             <p className="text-sm text-muted-foreground">{description}</p>
           )}
         </div>
-        <Toggle checked={enabled} onChange={onToggleEnabled} />
+        <Toggle checked={enabled} onChange={onToggleEnabled} ariaLabel={title} />
       </div>
 
       {/* Options grid */}

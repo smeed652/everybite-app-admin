@@ -25,13 +25,13 @@ export default function NutrientsSection({
       <div className="flex items-center justify-between">
         <div>
           <p className="flex items-center gap-2 text-sm font-medium">
-            <Activity className="h-4 w-4" /> Nutrients
+            <Activity aria-hidden="true" className="h-4 w-4" /> Nutrients
           </p>
           <p className="text-sm text-muted-foreground">
             Enable filtering by protein, fat &amp; carb ranges
           </p>
         </div>
-        <Toggle checked={enableNutrients} onChange={onToggleNutrients} />
+        <Toggle checked={enableNutrients} onChange={onToggleNutrients} ariaLabel="Enable nutrients" />
       </div>
 
       {enableNutrients && (
@@ -42,6 +42,7 @@ export default function NutrientsSection({
               className="h-4 w-4"
               checked={enableCalories}
               onChange={() => onToggleCalories(!enableCalories)}
+              aria-label="Enable macro nutrients"
             />
             Macro&nbsp;Nutrients
           </label>
