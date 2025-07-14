@@ -16,6 +16,17 @@ const config: StorybookConfig = {
   "framework": {
     "name": "@storybook/react-vite",
     "options": {}
+  },
+  // Exclude server-only testing utilities from the preview bundle
+  viteFinal: async (config) => {
+    config.build ??= {} as any;
+    (config.build as any).rollupOptions ??= {};
+    const rollupOptions: any = (config.build as any).rollupOptions;
+    const existingExternal = rollupOptions.external ?? [];
+    rollupOptions.external = Array.isArray(existingExternal)
+      ? [...existingExternal, '@storybook/jest']
+      : ['@storybook/jest', existingExternal];
+    return config;
   }
 };
 export default config;

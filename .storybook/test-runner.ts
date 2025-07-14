@@ -1,5 +1,5 @@
-import { injectAxe, checkA11y } from '@storybook/test-runner';
-import type { Page } from '@storybook/test-runner';
+import { injectAxe, checkA11y } from 'axe-playwright';
+import type { Page } from '@playwright/test';
 
 /**
  * Storybook Test-Runner configuration that injects axe-core into each story
