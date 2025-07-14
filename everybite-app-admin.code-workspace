@@ -1,0 +1,83 @@
+{
+  "folders": [
+    {
+      "name": "everybite-app-admin",
+      "path": ".",
+    },
+  ],
+  "settings": {
+    "typescript.preferences.includePackageJsonAutoImports": "on",
+    "typescript.suggest.autoImports": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "emmet.includeLanguages": {
+      "typescript": "html",
+      "typescriptreact": "html",
+    },
+    "tailwindCSS.includeLanguages": {
+      "typescript": "html",
+      "typescriptreact": "html",
+    },
+    "tailwindCSS.experimental.classRegex": [
+      ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+      ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ],
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports": "explicit",
+    },
+    "files.associations": {
+      "*.graphql": "graphql",
+      "*.gql": "graphql",
+    },
+    "testing.automaticallyOpenPeekView": "never",
+    "vitest.enable": true,
+    "storybook.enable": true,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.rulers": [80, 100],
+    "editor.wordWrap": "on",
+    "editor.minimap.enabled": false,
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+      "*.ts": "${capture}.js",
+      "*.jsx": "${capture}.js",
+      "*.tsx": "${capture}.ts",
+      "tsconfig.json": "tsconfig.*.json",
+      "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml",
+      ".eslintrc.*": ".eslintrc.*, eslint.config.*",
+      "tailwind.config.*": "tailwind.config.*, postcss.config.*",
+      "vite.config.*": "vite.config.*, *.config.*",
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/build": true,
+      "**/.git": true,
+      "**/coverage": true,
+      "**/storybook-static": true,
+    },
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.env.osx": {
+      "NODE_ENV": "development",
+    },
+  },
+  "extensions": {
+    "recommendations": [
+      "bradlc.vscode-tailwindcss",
+      "GraphQL.vscode-graphql",
+      "eamodio.gitlens",
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "usernamehw.errorlens",
+      "PKief.material-icon-theme",
+      "enkia.tokyo-night",
+      "streetsidesoftware.code-spell-checker",
+    ],
+  },
+}
