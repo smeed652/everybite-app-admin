@@ -31,6 +31,9 @@ jobs:
       - name: Unit tests
         run: npm test -- --coverage --passWithNoTests
 
+      - name: Storybook a11y tests
+        run: npm run test:stories
+
       - name: Build frontend
         run: npm run build
 
