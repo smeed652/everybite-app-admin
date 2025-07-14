@@ -10,12 +10,12 @@ import type { Page } from '@playwright/test';
  * in CI without additional command-line options.
  */
 
-export const preRender = async (page: Page) => {
+export const preVisit = async (page: Page) => {
   // Inject axe-core before each story is rendered.
   await injectAxe(page);
 };
 
-export const postRender = async (page: Page) => {
+export const postVisit = async (page: Page) => {
   // Run axe against the story root and fail on any critical violations.
   await checkA11y(page, '#storybook-root', {
     detailedReport: true,
