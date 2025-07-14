@@ -21,7 +21,7 @@
     "prepare": "husky install",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test:stories": "storybook build --quiet && test-storybook"
+    "test:stories": "storybook build --quiet && test-storybook --index-json"
   },
   "keywords": [],
   "author": "",
