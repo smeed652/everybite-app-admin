@@ -170,15 +170,6 @@ const FeaturesPanel = memo(function FeaturesPanel({
           onToggleCalories={setEnableCalories}
         />
 
-        {/* Feedback Button */}
-        <SettingToggle
-          icon={<ThumbsUp className="h-4 w-4" />}
-          title="Feedback Button"
-          description="Show a feedback button for users to rate dishes"
-          checked={feedbackButton}
-          onChange={setFeedbackButton}
-        />
-
         {/* Build Your Own */}
         <SettingToggle
           title="Build Your Own"
@@ -195,6 +186,15 @@ const FeaturesPanel = memo(function FeaturesPanel({
           onBaseUrlChange={setBaseUrl}
           utmTags={utmTags}
           onUtmTagsChange={setUtmTags}
+        />
+
+        {/* Feedback Button */}
+        <SettingToggle
+          icon={<ThumbsUp className="h-4 w-4" />}
+          title="Feedback Button"
+          description="Show a feedback button for users to rate dishes"
+          checked={feedbackButton}
+          onChange={setFeedbackButton}
         />
       </div>
     </Panel>
