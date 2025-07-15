@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { Widget } from "../../../../generated/graphql";
-import { FeaturesPanel } from "../FeaturesPanel";
+import FeaturesPanel from "../FeaturesPanel";
 
 // Mock the GraphQL enums that FeaturesPanel uses
 vi.mock("../../../../generated/graphql", () => ({
@@ -58,8 +58,10 @@ function makeWidget(partial: Partial<Widget>): Widget {
 
 describe("FeaturesPanel – enum normalisation", () => {
   const widget = makeWidget({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     supportedDietaryPreferences: ["Vegetarian" as any],
-    supportedAllergens: ["TreeNut", "Wheat"] as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    supportedAllergens: ["TreeNut" as any, "Wheat" as any],
   });
 
   it("pre-selects checkboxes based on API values (including CamelCase)", () => {
@@ -94,7 +96,8 @@ describe("FeaturesPanel – timing issue fix", () => {
     const onFieldChange = vi.fn();
     const widget = makeWidget({
       supportedDietaryPreferences: [],
-      supportedAllergens: ["Wheat"],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      supportedAllergens: ["Wheat" as any],
     });
 
     render(<FeaturesPanel widget={widget} onFieldChange={onFieldChange} />);

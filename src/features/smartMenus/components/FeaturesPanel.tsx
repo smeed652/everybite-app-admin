@@ -1,69 +1,45 @@
-import { Hammer, ThumbsUp } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { ThumbsUp } from "lucide-react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { Panel } from "../../../components/ui/Panel";
 import { SettingToggle } from "../../../components/ui/SettingToggle";
 import type { Widget } from "../../../generated/graphql";
 import { AllergenType, DietType } from "../../../generated/graphql";
 import { logger } from "../../../lib/logger";
-
 import AllergensSection from "./AllergensSection";
 import DietarySection from "./DietarySection";
 import NutrientsSection from "./NutrientsSection";
 import OrderingSection from "./OrderingSection";
 
-/* ------------------------------------------------------------------ */
-/* Types                                                               */
-/* ------------------------------------------------------------------ */
-export interface FeaturesPanelProps {
+interface FeaturesPanelProps {
   widget: Widget;
-  onFieldChange: (diff: Record<string, unknown>) => void;
+  onFieldChange: (changes: Record<string, unknown>) => void;
 }
 
-/* ------------------------------------------------------------------ */
-/* Helpers                                                             */
-/* ------------------------------------------------------------------ */
-const toggleArrayItem = <T,>(arr: T[], v: T): T[] =>
-  arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
-
-/* ------------------------------------------------------------------ */
-/* Constants                                                           */
-/* ------------------------------------------------------------------ */
-const DIET_OPTIONS: DietType[] = Object.values(DietType);
-const ALLERGEN_OPTIONS: AllergenType[] = Object.values(AllergenType);
-
-/* ------------------------------------------------------------------ */
-/* Component                                                           */
-/* ------------------------------------------------------------------ */
-export default function FeaturesPanel({
+const FeaturesPanel = memo(function FeaturesPanel({
   widget,
   onFieldChange,
 }: FeaturesPanelProps) {
-  /* ---------- diets / ingredients ---------------------------------- */
-  const normalizeEnum = (v: string) => v as DietType;
-  const [selectedDiets, setSelectedDiets] = useState<DietType[]>(
-    widget.supportedDietaryPreferences &&
-      widget.supportedDietaryPreferences.length > 0
-      ? (widget.supportedDietaryPreferences.map(normalizeEnum) as DietType[])
-      : []
+  /* ------------------------------------------------------------------
+   * State
+   * ------------------------------------------------------------------ */
+  const [enableDiets, setEnableDiets] = useState(
+    (widget.supportedDietaryPreferences?.length ?? 0) > 0
   );
-  const [enableDiets, setEnableDiets] = useState(selectedDiets.length > 0);
+  const [selectedDiets, setSelectedDiets] = useState<DietType[]>(
+    widget.supportedDietaryPreferences ?? []
+  );
 
   const [enableIngredients, setEnableIngredients] = useState(
     widget.displayIngredients
   );
 
-  /* ---------- allergens ------------------------------------------- */
-  const normalizeAllergen = (v: string) => v as AllergenType;
-  const [selectedAllergens, setSelectedAllergens] = useState<AllergenType[]>(
-    widget.supportedAllergens && widget.supportedAllergens.length > 0
-      ? (widget.supportedAllergens.map(normalizeAllergen) as AllergenType[])
-      : []
-  );
   const [enableAllergens, setEnableAllergens] = useState(
-    widget.supportedAllergens && widget.supportedAllergens.length > 0
+    (widget.supportedAllergens?.length ?? 0) > 0
+  );
+  const [selectedAllergens, setSelectedAllergens] = useState<AllergenType[]>(
+    widget.supportedAllergens ?? []
   );
 
-  /* ---------- nutrients ------------------------------------------- */
   const [enableNutrients, setEnableNutrients] = useState(
     widget.displayNutrientPreferences
   );
@@ -71,30 +47,30 @@ export default function FeaturesPanel({
     widget.displayMacronutrients
   );
 
-  /* ---------- feedback button ------------------------------------- */
   const [feedbackButton, setFeedbackButton] = useState(
-    widget.displayFeedbackButton ?? false
+    widget.displayFeedbackButton
   );
 
-  /* ---------- build-your-own -------------------------------------- */
   const [enableBuildYourOwn, setEnableBuildYourOwn] = useState(
     widget.isByoEnabled
   );
 
-  /* ---------- ordering -------------------------------------------- */
   const [enableOrdering, setEnableOrdering] = useState(
     widget.isOrderButtonEnabled
   );
   const [baseUrl, setBaseUrl] = useState(widget.orderUrl?.split("?")[0] ?? "");
   const [utmTags, setUtmTags] = useState(widget.orderUrl?.split("?")[1] ?? "");
 
-  const fullUrl = useMemo(
-    () =>
-      enableOrdering && baseUrl
-        ? `${baseUrl}${utmTags ? `?${utmTags}` : ""}`
-        : "",
-    [enableOrdering, baseUrl, utmTags]
-  );
+  /* ------------------------------------------------------------------
+   * Memoized values
+   * ------------------------------------------------------------------ */
+  const fullUrl = useMemo(() => {
+    if (!enableOrdering || !baseUrl) return null;
+    return `${baseUrl}${utmTags ? `?${utmTags}` : ""}`;
+  }, [enableOrdering, baseUrl, utmTags]);
+
+  const allergenOptions = useMemo(() => Object.values(AllergenType), []);
+  const dietOptions = useMemo(() => Object.values(DietType), []);
 
   /* ------------------------------------------------------------------
    * Emit diff upward whenever any setting changes
@@ -144,7 +120,6 @@ export default function FeaturesPanel({
     }
 
     if (Object.keys(diff).length) onFieldChange(diff);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     enableDiets,
     selectedDiets,
@@ -156,72 +131,74 @@ export default function FeaturesPanel({
     feedbackButton,
     enableBuildYourOwn,
     enableOrdering,
-    baseUrl,
-    utmTags,
+    fullUrl,
+    widget,
+    onFieldChange,
   ]);
 
-  /* ---------- JSX -------------------------------------------------- */
   return (
-    <Panel title="Features" data-testid="features-panel">
-      {/* Diets & Ingredients */}
-      <DietarySection
-        dietOptions={DIET_OPTIONS}
-        enableDiets={enableDiets}
-        onToggleDiets={setEnableDiets}
-        selectedDiets={selectedDiets}
-        onChangeSelectedDiets={setSelectedDiets}
-        enableIngredients={enableIngredients}
-        onToggleIngredients={setEnableIngredients}
-        toggleArrayItem={toggleArrayItem}
-      />
+    <Panel
+      title="Features"
+      description="Configure which features are enabled for your SmartMenu"
+    >
+      <div className="space-y-6">
+        {/* Dietary Preferences & Ingredients */}
+        <DietarySection
+          dietOptions={dietOptions}
+          enableDiets={enableDiets}
+          onToggleDiets={setEnableDiets}
+          selectedDiets={selectedDiets}
+          onChangeSelectedDiets={setSelectedDiets}
+          enableIngredients={enableIngredients}
+          onToggleIngredients={setEnableIngredients}
+        />
 
-      {/* Allergens */}
-      <AllergensSection
-        allergenOptions={ALLERGEN_OPTIONS}
-        enableAllergens={enableAllergens}
-        onToggleAllergens={setEnableAllergens}
-        selectedAllergens={selectedAllergens}
-        onChangeSelectedAllergens={setSelectedAllergens}
-        toggleArrayItem={toggleArrayItem}
-      />
+        {/* Allergens */}
+        <AllergensSection
+          allergenOptions={allergenOptions}
+          enableAllergens={enableAllergens}
+          onToggleAllergens={setEnableAllergens}
+          selectedAllergens={selectedAllergens}
+          onChangeSelectedAllergens={setSelectedAllergens}
+        />
 
-      {/* Nutrients */}
-      <NutrientsSection
-        enableNutrients={enableNutrients}
-        onToggleNutrients={setEnableNutrients}
-        enableCalories={enableCalories}
-        onToggleCalories={setEnableCalories}
-      />
+        {/* Nutrients */}
+        <NutrientsSection
+          enableNutrients={enableNutrients}
+          onToggleNutrients={setEnableNutrients}
+          enableCalories={enableCalories}
+          onToggleCalories={setEnableCalories}
+        />
 
-      {/* Build-Your-Own */}
-      <SettingToggle
-        icon={<Hammer aria-hidden="true" className="h-4 w-4" />}
-        title="Build-Your-Own"
-        description="Enable BYO for all dishes by default"
-        checked={enableBuildYourOwn}
-        onChange={setEnableBuildYourOwn}
-      />
+        {/* Feedback Button */}
+        <SettingToggle
+          icon={<ThumbsUp className="h-4 w-4" />}
+          title="Feedback Button"
+          description="Show a feedback button for users to rate dishes"
+          checked={feedbackButton}
+          onChange={setFeedbackButton}
+        />
 
-      {/* Ordering */}
-      <OrderingSection
-        enableOrdering={enableOrdering}
-        onToggleOrdering={setEnableOrdering}
-        baseUrl={baseUrl}
-        onBaseUrlChange={setBaseUrl}
-        utmTags={utmTags}
-        onUtmTagsChange={setUtmTags}
-      />
+        {/* Build Your Own */}
+        <SettingToggle
+          title="Build Your Own"
+          description="Allow users to customize their orders"
+          checked={enableBuildYourOwn}
+          onChange={setEnableBuildYourOwn}
+        />
 
-      {/* Floating Feedback button */}
-      <SettingToggle
-        icon={<ThumbsUp aria-hidden="true" className="h-4 w-4" />}
-        title="Floating Feedback Button"
-        description="Persistent button that opens feedback modal. Captures feedback and email."
-        checked={feedbackButton}
-        onChange={setFeedbackButton}
-      />
+        {/* Ordering */}
+        <OrderingSection
+          enableOrdering={enableOrdering}
+          onToggleOrdering={setEnableOrdering}
+          baseUrl={baseUrl}
+          onBaseUrlChange={setBaseUrl}
+          utmTags={utmTags}
+          onUtmTagsChange={setUtmTags}
+        />
+      </div>
     </Panel>
   );
-}
+});
 
-export { FeaturesPanel };
+export default FeaturesPanel;
