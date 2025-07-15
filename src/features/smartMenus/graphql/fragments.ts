@@ -107,6 +107,7 @@ export const WIDGET_BASIC_FIELDS = gql`
     orderUrl
     updatedAt
     publishedAt
+    isSyncEnabled
     __typename
   }
 `;
