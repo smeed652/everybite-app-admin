@@ -79,7 +79,7 @@ validate_amplify_compatibility() {
     print_status "Checking for unescaped colons in npm scripts..."
     
     # Look for URLs with colons that aren't properly quoted
-    local unescaped_urls=$(grep -n '"test:stories"' package.json | grep -E 'http://[^"]*:[^"]*' | grep -v "'http://" | grep -v '"http://')
+    local unescaped_urls=$(grep -n '"test-stories"' package.json | grep -E 'http://[^"]*:[^"]*' | grep -v "'http://" | grep -v '"http://')
     
     if [ -n "$unescaped_urls" ]; then
         print_error "Found unescaped URLs with colons in package.json:"

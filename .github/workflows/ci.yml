@@ -32,7 +32,7 @@ jobs:
         run: npm test -- --coverage --passWithNoTests
 
       - name: Storybook a11y tests
-        run: npm run test:stories
+        run: npm run test-stories
 
       - name: Build frontend
         run: npm run build
@@ -42,7 +42,7 @@ jobs:
         with:
           start: npx vercel@latest dev --listen 3000 --yes --token ${{ secrets.VERCEL_TOKEN }}
           spec: cypress/e2e/smoke.cy.ts
-          wait-on: 'http://localhost:3000'
+          wait-on: "http://localhost:3000"
           wait-on-timeout: 120
 
         env:
@@ -60,7 +60,6 @@ jobs:
         with:
           name: cypress-screenshots
           path: cypress/screenshots
-
 
   full-e2e:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -89,7 +88,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           start: npx vercel@latest dev --listen 3000 --yes --token ${{ secrets.VERCEL_TOKEN }}
-          wait-on: 'http://localhost:3000'
+          wait-on: "http://localhost:3000"
           wait-on-timeout: 120
         env:
           VITE_AWS_REGION: ${{ secrets.VITE_AWS_REGION }}

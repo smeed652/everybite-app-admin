@@ -20,10 +20,10 @@ CustomerError: The commands provided in the buildspec are malformed. Please ensu
 
 ```json
 // ❌ WRONG - Unescaped colons
-"test:stories": "storybook build --quiet && npx start-server-and-test 'http-server storybook-static -p 7007' http://127.0.0.1:7007 'test-storybook --url http://127.0.0.1:7007'"
+"test-stories": "storybook build --quiet && npx start-server-and-test 'http-server storybook-static -p 7007' http://127.0.0.1:7007 'test-storybook --url http://127.0.0.1:7007'"
 
 // ✅ CORRECT - Properly quoted
-"test:stories": "storybook build --quiet && npx start-server-and-test 'http-server storybook-static -p 7007' 'http://127.0.0.1:7007' 'test-storybook --url \"http://127.0.0.1:7007\"'"
+"test-stories": "storybook build --quiet && npx start-server-and-test 'http-server storybook-static -p 7007' 'http://127.0.0.1:7007' 'test-storybook --url \"http://127.0.0.1:7007\"'"
 ```
 
 ### 2. URL Quoting Strategy
@@ -41,7 +41,7 @@ When dealing with URLs in npm scripts:
 ```json
 // Always quote URLs with colons
 "dev": "vite --port 3000",  // ✅ No colons, no problem
-"test:stories": "storybook --url 'http://localhost:6006'",  // ✅ Quoted URL
+"test-stories": "storybook --url 'http://localhost:6006'",  // ✅ Quoted URL
 ```
 
 #### Port Numbers
@@ -74,7 +74,7 @@ To validate YAML syntax locally:
 
 ```bash
 # Test the package.json scripts
-npm run test:stories
+npm run test-stories
 
 # Validate amplify.yml syntax
 yamllint amplify.yml  # If you have yamllint installed
@@ -94,7 +94,7 @@ yamllint amplify.yml  # If you have yamllint installed
 ```json
 {
   "scripts": {
-    "test:stories": "storybook build && npx start-server-and-test 'http-server -p 7007' http://127.0.0.1:7007 'test-storybook --url http://127.0.0.1:7007'"
+    "test-stories": "storybook build && npx start-server-and-test 'http-server -p 7007' http://127.0.0.1:7007 'test-storybook --url http://127.0.0.1:7007'"
   }
 }
 ```
@@ -104,7 +104,7 @@ yamllint amplify.yml  # If you have yamllint installed
 ```json
 {
   "scripts": {
-    "test:stories": "storybook build && npx start-server-and-test 'http-server -p 7007' 'http://127.0.0.1:7007' 'test-storybook --url \"http://127.0.0.1:7007\"'"
+    "test-stories": "storybook build && npx start-server-and-test 'http-server -p 7007' 'http://127.0.0.1:7007' 'test-storybook --url \"http://127.0.0.1:7007\"'"
   }
 }
 ```
