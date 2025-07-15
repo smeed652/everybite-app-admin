@@ -78,9 +78,9 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 const variantStyles: Record<string, string> = {
-  default: "bg-white text-gray-900 border",
-  success: "bg-green-50 text-green-800 border-green-300 shadow-lg",
-  error: "bg-red-50 text-red-800 border-red-200",
+  default: "bg-white text-gray-900 border-gray-300 shadow-lg",
+  success: "bg-green-50 text-green-700 border-green-500 shadow-lg",
+  error: "bg-red-50 text-red-700 border-red-500 shadow-lg",
 };
 
 function ToastItem({
@@ -91,12 +91,13 @@ function ToastItem({
   onDismiss: () => void;
 }) {
   const isSuccess = toast.variant === "success";
+  const isError = toast.variant === "error";
 
   return (
     <div
       role="status"
       className={cn(
-        "relative flex items-center gap-3 rounded-lg border p-4 shadow-md animate-in slide-in-from-bottom-2 fade-in",
+        "relative flex items-center gap-3 rounded-lg border-2 p-4 shadow-lg animate-in slide-in-from-bottom-2 fade-in",
         variantStyles[toast.variant ?? "default"]
       )}
     >
@@ -107,18 +108,28 @@ function ToastItem({
           </div>
         </div>
       )}
+      {isError && (
+        <div className="flex-shrink-0">
+          <div className="w-6 h-6 rounded-full border-2 border-red-600 flex items-center justify-center bg-red-50">
+            <X className="h-4 w-4 text-red-600" />
+          </div>
+        </div>
+      )}
       <div className="flex-1">
-        <p className="font-medium">{toast.title}</p>
+        <p className="font-semibold">{toast.title}</p>
         {toast.description && (
-          <p className="text-sm mt-1 opacity-80">{toast.description}</p>
+          <p className="text-sm mt-1 opacity-90">{toast.description}</p>
         )}
       </div>
       <button
         aria-label="Dismiss"
         onClick={onDismiss}
         className={cn(
-          "flex-shrink-0 rounded p-1 hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-brand transition-colors",
-          isSuccess && "text-green-600 hover:bg-green-100"
+          "flex-shrink-0 rounded p-1 hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors",
+          isSuccess && "text-green-600 hover:bg-green-100 focus:ring-green-500",
+          isError && "text-red-600 hover:bg-red-100 focus:ring-red-500",
+          toast.variant === "default" &&
+            "text-gray-600 hover:bg-gray-100 focus:ring-gray-500"
         )}
       >
         <X className="h-4 w-4" />

@@ -3,7 +3,7 @@ import { Button } from "./Button";
 import { ToastProvider, useToast } from "./ToastProvider";
 
 const meta: Meta<typeof ToastProvider> = {
-  title: "UI/ToastProvider",
+  title: "ui/overlay/ToastProvider",
   component: ToastProvider,
   parameters: {
     layout: "fullscreen",
