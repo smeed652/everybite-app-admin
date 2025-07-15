@@ -25,6 +25,8 @@
     "build-storybook": "storybook build",
     "test-stories": "storybook build --quiet && npx playwright install --with-deps && npx start-server-and-test 'http-server storybook-static -p 7007' 'http://127.0.0.1:7007' 'test-storybook --maxWorkers=1 --testTimeout 30000 --url \"http://127.0.0.1:7007\" --index-json'",
     "deploy:validate": "./scripts/deploy-validation.sh",
+    "validate:amplify": "./scripts/validate-amplify-comprehensive.sh",
+    "validate:amplify:quick": "./scripts/validate-amplify-yaml.sh",
     "deploy:staging": "./scripts/git-workflow.sh deploy-staging",
     "deploy:production": "./scripts/git-workflow.sh deploy-production",
     "workflow:status": "./scripts/git-workflow.sh status",
