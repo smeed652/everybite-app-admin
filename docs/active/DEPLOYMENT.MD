@@ -1,155 +1,209 @@
 # Deployment Guide
 
-## Environments
+## Overview
 
-### Development
+This project uses a Git Flow workflow with automated deployments to AWS Amplify. The deployment process includes validation, testing, and descriptive commit messages.
 
-- **URL**: [dev-url]
-- **Branch**: `develop`
-- **Deployment**: Automatic on push
-- **Validation**: Basic tests and build checks
+## Deployment Environments
 
-### Staging
+### Staging Environment
 
-- **URL**: [staging-url]
 - **Branch**: `staging`
-- **Deployment**: Manual via `npm run deploy:staging`
-- **Validation**: Full test suite, build validation, environment checks
+- **URL**: [Staging URL]
+- **Purpose**: Testing and validation before production
+- **Deployment**: Automatic via AWS Amplify on push to `staging` branch
 
-### Production
+### Production Environment
 
-- **URL**: [production-url]
 - **Branch**: `production`
-- **Deployment**: Manual via `npm run deploy:production`
-- **Validation**: Complete validation including security checks
+- **URL**: [Production URL]
+- **Purpose**: Live application
+- **Deployment**: Automatic via AWS Amplify on push to `production` branch
 
-## Deployment Process
+## Deployment Workflow
 
-### Prerequisites
-
-- Access to deployment platform
-- Required environment variables set
-- Sufficient permissions
-- All tests passing
-
-### Quick Deployment Commands
+### Standard Deployment
 
 ```bash
 # Deploy to staging
-npm run deploy:staging
+./scripts/git-workflow.sh deploy-staging
 
-# Deploy to production
-npm run deploy:production
-
-# Validate deployment (any environment)
-npm run deploy:validate [environment]
-
-# Check workflow status
-npm run workflow:status
+# Deploy to production (from staging)
+./scripts/git-workflow.sh deploy-production
 ```
 
-### Manual Deployment Steps
+### Custom Deployment with Description
 
-1. **Prepare Release**
-   - Create release branch from `develop`
-   - Update version in `package.json`
-   - Update CHANGELOG.md
-   - Create pull request to `staging`
+```bash
+# Deploy to staging with custom description
+./scripts/git-workflow.sh deploy-staging-custom "Fix Amplify YAML parsing issues"
 
-2. **Deploy to Staging**
-   - Run validation: `npm run deploy:validate staging`
-   - Deploy: `npm run deploy:staging`
-   - Verify deployment in staging environment
-   - Run smoke tests: `npm run test:e2e:smoke`
+# Deploy to production with custom description
+./scripts/git-workflow.sh deploy-production-custom "Release SmartMenus feature"
+```
 
-3. **Deploy to Production**
-   - Run validation: `npm run deploy:validate production`
-   - Deploy: `npm run deploy:production`
-   - Verify production deployment
-   - Monitor for any issues
+## Deployment Commit Messages
 
-## Rollback Procedure
+The deployment script now generates descriptive commit messages that include:
 
-1. Identify the last known good version
-2. Create hotfix branch: `./scripts/git-workflow.sh create-hotfix rollback-<version>`
-3. Revert to previous deployment
-4. Deploy hotfix: `./scripts/git-workflow.sh finish-hotfix rollback-<version>`
-5. Verify system stability
-6. Document the rollback
+### Standard Deployment Format
 
-## Environment Variables
+```
+deploy(environment): from source - X commits
 
-| Variable                     | Required | Description                   | Example                             |
-| ---------------------------- | -------- | ----------------------------- | ----------------------------------- |
-| `VITE_GRAPHQL_URI`           | Yes      | GraphQL API endpoint          | `https://api.everybite.com/graphql` |
-| `VITE_AWS_REGION`            | Yes      | AWS region for Cognito        | `us-west-1`                         |
-| `VITE_COGNITO_USER_POOL_ID`  | Yes      | Cognito User Pool ID          | `us-west-1_XXXXXXX`                 |
-| `VITE_COGNITO_APP_CLIENT_ID` | Yes      | Cognito App Client ID         | `abcd1234abcd1234abcd1234`          |
-| `VITE_LOG_LEVEL`             | No       | Logging level                 | `info`                              |
-| `VITE_SENTRY_DSN`            | No       | Sentry DSN for error tracking | `https://...`                       |
+Recent changes:
+  - commit message 1
+  - commit message 2
+  - commit message 3
+  - commit message 4
+  - commit message 5
 
-## Monitoring
+Environment: staging/production
+Source: develop/staging
+Timestamp: 2025-07-15 06:35:00 UTC
+```
 
-- [Link to monitoring dashboard]
-- Error tracking: Sentry
-- Performance monitoring: AWS CloudWatch
-- Log aggregation: AWS CloudWatch Logs
+### Custom Deployment Format
 
-## Maintenance Windows
+```
+deploy(environment): custom description
 
-- Regular maintenance: [Day] [Time] [Time Zone]
-- Emergency maintenance: As needed with notification
+Recent changes:
+  - commit message 1
+  - commit message 2
+  - commit message 3
+  - commit message 4
+  - commit message 5
+
+Environment: staging/production
+Source: develop/staging
+Description: custom description
+Timestamp: 2025-07-15 06:35:00 UTC
+```
+
+### Hotfix Deployment Format
+
+```
+hotfix(environment): hotfix name
+
+Environment: production/staging/develop
+Type: urgent fix
+Timestamp: 2025-07-15 06:35:00 UTC
+```
+
+## Deployment Validation
+
+Before each deployment, the system runs validation checks:
+
+1. **Amplify Compatibility Check**: Validates YAML syntax and npm scripts
+2. **Unit Tests**: Runs all unit tests with Vitest
+3. **Integration Tests**: Runs API smoke tests
+4. **Build Check**: Verifies the application builds successfully
+5. **Environment Variables**: Checks required environment variables
+
+### Running Validation Manually
+
+```bash
+# Validate staging deployment
+./scripts/deploy-validation.sh staging
+
+# Validate production deployment
+./scripts/deploy-validation.sh production
+```
+
+## Deployment Process
+
+### 1. Staging Deployment
+
+1. Ensure you're on the `develop` branch
+2. Run: `./scripts/git-workflow.sh deploy-staging`
+3. The script will:
+   - Validate the deployment
+   - Update both `develop` and `staging` branches
+   - Generate a descriptive commit message
+   - Push to `staging` branch
+   - Trigger AWS Amplify deployment
+
+### 2. Production Deployment
+
+1. Ensure you're on the `staging` branch
+2. Run: `./scripts/git-workflow.sh deploy-production`
+3. The script will:
+   - Validate the deployment
+   - Update both `staging` and `production` branches
+   - Generate a descriptive commit message
+   - Push to `production` branch
+   - Trigger AWS Amplify deployment
+
+### 3. Hotfix Deployment
+
+1. Create hotfix branch: `./scripts/git-workflow.sh create-hotfix <name>`
+2. Make your urgent fixes
+3. Deploy hotfix: `./scripts/git-workflow.sh finish-hotfix <name>`
+4. The script will deploy to all environments (production, staging, develop)
+
+## Monitoring Deployments
+
+### AWS Amplify Console
+
+- Monitor deployment progress in the AWS Amplify console
+- View build logs and deployment history
+- Check deployment status and any errors
+
+### Deployment History
+
+The deployment history shows:
+
+- Deployment name and status
+- Build duration
+- Commit message (now descriptive)
+- Start time
 
 ## Troubleshooting
 
-1. **Deployment Fails**
-   - Check CI/CD logs
-   - Verify environment variables
-   - Check resource limits
-   - Run validation locally: `npm run deploy:validate`
+### Common Issues
 
-2. **Application Not Starting**
-   - Check application logs
-   - Verify database connection
-   - Check for port conflicts
-   - Verify environment configuration
+1. **YAML Parsing Errors**
+   - Check for unescaped colons in npm scripts
+   - Use the validation script: `./scripts/deploy-validation.sh staging`
 
-3. **Validation Fails**
+2. **Test Failures**
    - Run tests locally: `npm test`
-   - Check build: `npm run build`
-   - Verify environment variables
-   - Check for linting errors: `npm run lint`
+   - Check for environment variable issues
 
-## Contact
+3. **Build Failures**
+   - Check build logs in Amplify console
+   - Verify all dependencies are installed
 
-For deployment issues, contact:
+### Validation Failures
 
-- [Team Email]
-- [Slack Channel]
-- [On-call Schedule]
+If validation fails, the deployment will be blocked. Common causes:
+
+- Unit test failures
+- Integration test failures
+- Missing environment variables
+- YAML syntax errors in package.json scripts
 
 ## Best Practices
 
-### Before Deployment
+1. **Always test on staging first**
+   - Deploy to staging before production
+   - Verify functionality in staging environment
 
-- [ ] All tests pass locally
-- [ ] Code review completed
-- [ ] Environment variables verified
-- [ ] Documentation updated
-- [ ] Rollback plan prepared
+2. **Use descriptive commit messages**
+   - Use the custom deployment options for important changes
+   - Include context about what the deployment includes
 
-### During Deployment
+3. **Monitor deployments**
+   - Check Amplify console for deployment status
+   - Review build logs for any issues
 
-- [ ] Monitor deployment logs
-- [ ] Verify health checks
-- [ ] Run smoke tests
-- [ ] Check error rates
-- [ ] Monitor performance
+4. **Use hotfixes for urgent issues**
+   - Create hotfix branches for critical bugs
+   - Deploy hotfixes to all environments
 
-### After Deployment
+## Related Documentation
 
-- [ ] Verify all features work
-- [ ] Monitor error rates
-- [ ] Check performance metrics
-- [ ] Update deployment documentation
-- [ ] Archive deployment artifacts
+- [Amplify YAML Rules](./AMPLIFY-YAML-RULES.md)
+- [Development Guide](./DEVELOPMENT-GUIDE.MD)
+- [Git Workflow](./GIT_WORKFLOW.md)

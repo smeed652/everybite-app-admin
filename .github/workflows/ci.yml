@@ -32,7 +32,7 @@ jobs:
         run: npm test -- --coverage --passWithNoTests
 
       - name: Storybook a11y tests
-        run: npm run test:stories
+        run: npm run test-stories
 
       - name: Build frontend
         run: npm run build
