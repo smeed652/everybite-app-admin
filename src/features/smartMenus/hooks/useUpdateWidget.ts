@@ -113,6 +113,12 @@ export function useUpdateWidget() {
       }
     `;
 
+    // Log the actual GraphQL mutation being sent
+    console.log(
+      "[useUpdateWidget] GraphQL Mutation:",
+      MUTATION.loc?.source.body
+    );
+
     return client
       .mutate<{ updateWidget: Widget }, { input: UpdateWidget }>({
         mutation: MUTATION,
@@ -142,6 +148,16 @@ export function useUpdateWidget() {
           networkError: error.networkError,
           input: { id, ...allowed },
         });
+
+        // Log the full error response if available
+        if (error.networkError) {
+          console.error("[useUpdateWidget] Network Error Details:", {
+            statusCode: error.networkError.statusCode,
+            bodyText: error.networkError.bodyText,
+            result: error.networkError.result,
+          });
+        }
+
         throw error;
       });
   };
