@@ -28,6 +28,7 @@
     "validate:amplify": "./scripts/validate-amplify-comprehensive.sh",
     "validate:amplify:quick": "./scripts/validate-amplify-yaml.sh",
     "deploy:staging": "./scripts/git-workflow.sh deploy-staging",
+    "deploy:staging:safe": "./scripts/git-workflow.sh deploy-staging-from-develop",
     "deploy:production": "./scripts/git-workflow.sh deploy-production",
     "workflow:status": "./scripts/git-workflow.sh status",
     "workflow:help": "./scripts/git-workflow.sh help"
