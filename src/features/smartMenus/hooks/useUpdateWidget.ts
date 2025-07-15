@@ -56,39 +56,78 @@ export function useUpdateWidget() {
 
     if (Object.keys(allowed).length === 0) return Promise.resolve();
 
-    // build mutation on the fly so selection set mirrors input keys
-    const keys = Object.keys(allowed) as (keyof Widget)[];
-    const selection = ["id", ...keys, "__typename"].join("\n      ");
-    const MUTATION = gql`mutation UpdateWidget($input: UpdateWidget!) {\n  updateWidget(input: $input) {\n      ${selection}\n  }\n}`;
-
     // Debug logging to see what's being sent
     console.log("[useUpdateWidget] Sending mutation with:", {
       id,
       allowed,
-      keys,
+      keys: Object.keys(allowed),
       input: { id, ...allowed },
     });
 
-    return client.mutate<{ updateWidget: Widget }, { input: UpdateWidget }>({
-      mutation: MUTATION,
-      variables: {
-        input: { id, ...allowed } as UpdateWidget,
-      },
-      optimisticResponse: {
-        updateWidget: (() => {
-          const existing = client.readFragment<Widget>({
-            id: client.cache.identify({ __typename: "Widget", id }),
-            fragment: WIDGET_FIELDS,
-          }) as Widget | null;
-          return {
-            __typename: "Widget",
-            ...(existing ?? { id }),
-            ...data,
-            updatedAt: new Date().toISOString(),
-          } as Widget;
-        })(),
-      },
-    });
+    // Use a fixed mutation with all possible fields to avoid dynamic construction issues
+    const MUTATION = gql`
+      mutation UpdateWidget($input: UpdateWidget!) {
+        updateWidget(input: $input) {
+          id
+          name
+          slug
+          layout
+          displayImages
+          isActive
+          isOrderButtonEnabled
+          primaryBrandColor
+          highlightColor
+          backgroundColor
+          orderUrl
+          supportedDietaryPreferences
+          displayIngredients
+          supportedAllergens
+          displayNutrientPreferences
+          displayMacronutrients
+          isByoEnabled
+          displaySoftSignUp
+          displayNotifyMeBanner
+          displayGiveFeedbackBanner
+          displayFeedbackButton
+          displayDishDetailsLink
+          updatedAt
+          publishedAt
+          __typename
+        }
+      }
+    `;
+
+    return client
+      .mutate<{ updateWidget: Widget }, { input: UpdateWidget }>({
+        mutation: MUTATION,
+        variables: {
+          input: { id, ...allowed } as UpdateWidget,
+        },
+        optimisticResponse: {
+          updateWidget: (() => {
+            const existing = client.readFragment<Widget>({
+              id: client.cache.identify({ __typename: "Widget", id }),
+              fragment: WIDGET_FIELDS,
+            }) as Widget | null;
+            return {
+              __typename: "Widget",
+              ...(existing ?? { id }),
+              ...data,
+              updatedAt: new Date().toISOString(),
+            } as Widget;
+          })(),
+        },
+      })
+      .catch((error) => {
+        console.error("[useUpdateWidget] GraphQL Error:", {
+          error,
+          message: error.message,
+          graphQLErrors: error.graphQLErrors,
+          networkError: error.networkError,
+          input: { id, ...allowed },
+        });
+        throw error;
+      });
   };
 
   return { updateWidgetFields };
