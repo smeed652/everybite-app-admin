@@ -19,7 +19,7 @@
 ### Production
 
 - **URL**: [production-url]
-- **Branch**: `main`
+- **Branch**: `production`
 - **Deployment**: Manual via `npm run deploy:production`
 - **Validation**: Complete validation including security checks
 
