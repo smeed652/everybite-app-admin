@@ -1,37 +1,24 @@
 import { gql, useApolloClient } from "@apollo/client";
 import type { UpdateWidget, Widget } from "../../../generated/graphql";
 
-// GraphQL fragment to get widget fields - aligned with the actual GraphQL schema
+// GraphQL fragment to get widget fields
 const WIDGET_FIELDS = gql`
   fragment WidgetFields on Widget {
     id
-    name
-    slug
-    layout
-    displayImages
-    isActive
-    isOrderButtonEnabled
     primaryBrandColor
     highlightColor
     backgroundColor
-    orderUrl
-    supportedDietaryPreferences
+    displayFeedbackButton
     displayIngredients
+    supportedDietaryPreferences
     supportedAllergens
     displayNutrientPreferences
     displayMacronutrients
     isByoEnabled
-    displaySoftSignUp
-    displayNotifyMeBanner
-    displayGiveFeedbackBanner
-    displayFeedbackButton
-    displayDishDetailsLink
-    displayFooter
-    displayNavbar
-    usePagination
-    publishedAt
-    updatedAt
+    isOrderButtonEnabled
+    orderUrl
     __typename
+    updatedAt
   }
 `;
 
@@ -77,41 +64,10 @@ export function useUpdateWidget() {
       input: { id, ...allowed },
     });
 
-    // Use a fixed mutation that matches our WIDGET_FIELDS fragment
-    const MUTATION = gql`
-      mutation UpdateWidget($input: UpdateWidget!) {
-        updateWidget(input: $input) {
-          id
-          name
-          slug
-          layout
-          displayImages
-          isActive
-          isOrderButtonEnabled
-          primaryBrandColor
-          highlightColor
-          backgroundColor
-          orderUrl
-          supportedDietaryPreferences
-          displayIngredients
-          supportedAllergens
-          displayNutrientPreferences
-          displayMacronutrients
-          isByoEnabled
-          displaySoftSignUp
-          displayNotifyMeBanner
-          displayGiveFeedbackBanner
-          displayFeedbackButton
-          displayDishDetailsLink
-          displayFooter
-          displayNavbar
-          usePagination
-          publishedAt
-          updatedAt
-          __typename
-        }
-      }
-    `;
+    // build mutation on the fly so selection set mirrors input keys
+    const keys = Object.keys(allowed) as (keyof Widget)[];
+    const selection = ["id", ...keys, "__typename"].join("\n      ");
+    const MUTATION = gql`mutation UpdateWidget($input: UpdateWidget!) {\n  updateWidget(input: $input) {\n      ${selection}\n  }\n}`;
 
     // Log the actual GraphQL mutation being sent
     console.log(
@@ -155,8 +111,17 @@ export function useUpdateWidget() {
             statusCode: error.networkError.statusCode,
             bodyText: error.networkError.bodyText,
             result: error.networkError.result,
+            name: error.networkError.name,
+            message: error.networkError.message,
+            stack: error.networkError.stack,
           });
         }
+
+        // Also log the full error object to see what's available
+        console.error(
+          "[useUpdateWidget] Full Error Object:",
+          JSON.stringify(error, null, 2)
+        );
 
         throw error;
       });
