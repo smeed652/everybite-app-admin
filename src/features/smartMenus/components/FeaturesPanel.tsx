@@ -1,13 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
-import type { Widget, DietType, AllergenType } from '../../../generated/graphql';
-import { SettingToggle } from '../../../components/ui/SettingToggle';
-import { Panel } from '../../../components/ui/Panel';
-import { Hammer, ThumbsUp } from 'lucide-react';
+import { Hammer, ThumbsUp } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Panel } from "../../../components/ui/Panel";
+import { SettingToggle } from "../../../components/ui/SettingToggle";
+import type { Widget } from "../../../generated/graphql";
+import { AllergenType, DietType } from "../../../generated/graphql";
 
-import DietarySection from './DietarySection';
-import AllergensSection from './AllergensSection';
-import NutrientsSection from './NutrientsSection';
-import OrderingSection from './OrderingSection';
+import AllergensSection from "./AllergensSection";
+import DietarySection from "./DietarySection";
+import NutrientsSection from "./NutrientsSection";
+import OrderingSection from "./OrderingSection";
 
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
@@ -26,22 +27,8 @@ const toggleArrayItem = <T,>(arr: T[], v: T): T[] =>
 /* ------------------------------------------------------------------ */
 /* Constants                                                           */
 /* ------------------------------------------------------------------ */
-const DIET_OPTIONS: DietType[] = [
-  'VEGETARIAN' as DietType,
-  'PESCATARIAN' as DietType,
-  'VEGAN' as DietType,
-];
-
-const ALLERGEN_OPTIONS: AllergenType[] = [
-  'WHEAT' as AllergenType,
-  'DAIRY' as AllergenType,
-  'EGG' as AllergenType,
-  'FISH' as AllergenType,
-  'SHELLFISH' as AllergenType,
-  'TREE_NUT' as AllergenType,
-  'PEANUT' as AllergenType,
-  'SESAME' as AllergenType,
-];
+const DIET_OPTIONS: DietType[] = Object.values(DietType);
+const ALLERGEN_OPTIONS: AllergenType[] = Object.values(AllergenType);
 
 /* ------------------------------------------------------------------ */
 /* Component                                                           */
@@ -51,14 +38,10 @@ export default function FeaturesPanel({
   onFieldChange,
 }: FeaturesPanelProps) {
   /* ---------- diets / ingredients ---------------------------------- */
-  const toSnakeUpper = (v: string) =>
-    v
-      .replace(/([a-z])([A-Z])/g, '$1_$2') // insert underscore before capitals in CamelCase
-      .replace(/\s+/g, '_')
-      .toUpperCase();
-  const normalizeEnum = (v: string) => toSnakeUpper(v) as unknown as DietType;
+  const normalizeEnum = (v: string) => v as DietType;
   const [selectedDiets, setSelectedDiets] = useState<DietType[]>(
-    widget.supportedDietaryPreferences && widget.supportedDietaryPreferences.length > 0
+    widget.supportedDietaryPreferences &&
+      widget.supportedDietaryPreferences.length > 0
       ? (widget.supportedDietaryPreferences.map(normalizeEnum) as DietType[])
       : []
   );
@@ -69,13 +52,15 @@ export default function FeaturesPanel({
   );
 
   /* ---------- allergens ------------------------------------------- */
-  const normalizeAllergen = (v: string) => toSnakeUpper(v) as unknown as AllergenType;
+  const normalizeAllergen = (v: string) => v as AllergenType;
   const [selectedAllergens, setSelectedAllergens] = useState<AllergenType[]>(
     widget.supportedAllergens && widget.supportedAllergens.length > 0
       ? (widget.supportedAllergens.map(normalizeAllergen) as AllergenType[])
-      : ALLERGEN_OPTIONS
+      : []
   );
-  const [enableAllergens, setEnableAllergens] = useState(true);
+  const [enableAllergens, setEnableAllergens] = useState(
+    widget.supportedAllergens && widget.supportedAllergens.length > 0
+  );
 
   /* ---------- nutrients ------------------------------------------- */
   const [enableNutrients, setEnableNutrients] = useState(
@@ -86,7 +71,9 @@ export default function FeaturesPanel({
   );
 
   /* ---------- feedback button ------------------------------------- */
-  const [feedbackButton, setFeedbackButton] = useState(widget.displayFeedbackButton ?? false);
+  const [feedbackButton, setFeedbackButton] = useState(
+    widget.displayFeedbackButton ?? false
+  );
 
   /* ---------- build-your-own -------------------------------------- */
   const [enableBuildYourOwn, setEnableBuildYourOwn] = useState(
@@ -97,14 +84,14 @@ export default function FeaturesPanel({
   const [enableOrdering, setEnableOrdering] = useState(
     widget.isOrderButtonEnabled
   );
-  const [baseUrl, setBaseUrl] = useState(widget.orderUrl?.split('?')[0] ?? '');
-  const [utmTags, setUtmTags] = useState(widget.orderUrl?.split('?')[1] ?? '');
+  const [baseUrl, setBaseUrl] = useState(widget.orderUrl?.split("?")[0] ?? "");
+  const [utmTags, setUtmTags] = useState(widget.orderUrl?.split("?")[1] ?? "");
 
   const fullUrl = useMemo(
     () =>
       enableOrdering && baseUrl
-        ? `${baseUrl}${utmTags ? `?${utmTags}` : ''}`
-        : '',
+        ? `${baseUrl}${utmTags ? `?${utmTags}` : ""}`
+        : "",
     [enableOrdering, baseUrl, utmTags]
   );
 
@@ -129,10 +116,32 @@ export default function FeaturesPanel({
     const diff: Record<string, unknown> = {};
     Object.entries(raw).forEach(([k, v]) => {
       // @ts-expect-error – dynamic widget field access
-      if (JSON.stringify(v) !== JSON.stringify(widget[k])) {
-        diff[k] = v;
+      const originalValue = widget[k];
+
+      // Special handling for allergens and dietary preferences to account for normalization
+      if (k === "supportedAllergens" || k === "supportedDietaryPreferences") {
+        // No normalization needed since we're using the correct enum values
+        if (JSON.stringify(v) !== JSON.stringify(originalValue)) {
+          diff[k] = v;
+        }
+      } else {
+        if (JSON.stringify(v) !== JSON.stringify(originalValue)) {
+          diff[k] = v;
+        }
       }
     });
+
+    // Debug logging for timing issues
+    if (Object.keys(diff).length > 0) {
+      console.debug("[FeaturesPanel] emitting diff:", diff);
+      console.debug(
+        "[FeaturesPanel] widget allergens:",
+        widget.supportedAllergens
+      );
+      console.debug("[FeaturesPanel] selected allergens:", selectedAllergens);
+      console.debug("[FeaturesPanel] enable allergens:", enableAllergens);
+    }
+
     if (Object.keys(diff).length) onFieldChange(diff);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [

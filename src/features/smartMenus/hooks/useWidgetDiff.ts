@@ -217,7 +217,14 @@ export function useWidgetDiff<T extends { id?: string }>(
     setFormKey((k) => k + 1);
   };
 
-  // Debug logging removed to reduce console spam
+  // Debug logging for troubleshooting timing issues
+  console.debug("[useWidgetDiff] current state:", {
+    formKey,
+    pendingChanges,
+    dirty: Object.keys(pendingChanges).length > 0,
+    originalWidget: originalRef.current,
+    currentWidget: widget,
+  });
 
   /* --------------------------- snapshot -------------------------------- */
 
