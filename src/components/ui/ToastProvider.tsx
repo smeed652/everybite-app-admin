@@ -66,7 +66,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
     <ToastContext.Provider value={value}>
       {children}
       {createPortal(
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 w-96 max-w-full">
+        <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 w-96 max-w-full">
           {toasts.map((t) => (
             <ToastItem key={t.id} toast={t} onDismiss={() => remove(t.id)} />
           ))}
