@@ -64,34 +64,24 @@ export function useUpdateWidget() {
       input: { id, ...allowed },
     });
 
-    // Use a fixed mutation with all possible fields to avoid dynamic construction issues
+    // Use a fixed mutation with only the fields that are actually in our fragment
     const MUTATION = gql`
       mutation UpdateWidget($input: UpdateWidget!) {
         updateWidget(input: $input) {
           id
-          name
-          slug
-          layout
-          displayImages
-          isActive
-          isOrderButtonEnabled
           primaryBrandColor
           highlightColor
           backgroundColor
-          orderUrl
-          supportedDietaryPreferences
+          displayFeedbackButton
           displayIngredients
+          supportedDietaryPreferences
           supportedAllergens
           displayNutrientPreferences
           displayMacronutrients
           isByoEnabled
-          displaySoftSignUp
-          displayNotifyMeBanner
-          displayGiveFeedbackBanner
-          displayFeedbackButton
-          displayDishDetailsLink
+          isOrderButtonEnabled
+          orderUrl
           updatedAt
-          publishedAt
           __typename
         }
       }
@@ -112,7 +102,7 @@ export function useUpdateWidget() {
             return {
               __typename: "Widget",
               ...(existing ?? { id }),
-              ...data,
+              ...allowed, // Only use the fields that are actually being sent
               updatedAt: new Date().toISOString(),
             } as Widget;
           })(),
