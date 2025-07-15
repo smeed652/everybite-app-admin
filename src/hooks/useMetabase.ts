@@ -3,11 +3,18 @@ import { DashboardMetrics, MetabaseUsersResponse } from "../types/metabase";
 
 // Get API base URL from environment variables
 const getApiBaseUrl = () => {
-  return (
+  const apiUrl =
     import.meta.env.VITE_METABASE_API_URL ||
     import.meta.env.REACT_APP_METABASE_API_URL ||
-    ""
-  );
+    "";
+
+  console.log("🔍 [useMetabase] Environment check:", {
+    VITE_METABASE_API_URL: import.meta.env.VITE_METABASE_API_URL,
+    REACT_APP_METABASE_API_URL: import.meta.env.REACT_APP_METABASE_API_URL,
+    resolved: apiUrl,
+  });
+
+  return apiUrl;
 };
 
 // Hook to fetch Metabase dashboard metrics
@@ -62,6 +69,8 @@ export const useMetabaseUsers = () => {
       }
 
       const endpoint = `${apiBaseUrl.replace(/\/$/, "")}/metabase/users`;
+      console.log("🔍 [useMetabase] Fetching users from:", endpoint);
+
       const response = await fetch(endpoint);
       if (!response.ok) {
         throw new Error("Failed to fetch Metabase users");
