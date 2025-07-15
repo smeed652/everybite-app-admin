@@ -101,7 +101,12 @@ export default function Layout() {
               </nav>
               <Separator />
               <div className="p-4">
-                <Button variant="outline" className="w-full" onClick={logout}>
+                <Button
+                  data-cy="logout-btn"
+                  variant="outline"
+                  className="w-full"
+                  onClick={logout}
+                >
                   Log out
                 </Button>
               </div>

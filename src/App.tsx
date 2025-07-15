@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -62,7 +63,14 @@ export default function App() {
               }
             >
               <Route index element={<Dashboard />} />
-              <Route path="users" element={<Users />} />
+              <Route
+                path="users"
+                element={
+                  <ProtectedRoute allowedRoles={["ADMIN"]}>
+                    <Users />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="smartmenus" element={<SmartMenus />} />
               <Route
                 path="smartmenus/:widgetId"
@@ -79,6 +87,7 @@ export default function App() {
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Toaster />
         </ToastProvider>
       </AuthProvider>
     </ThemeProvider>

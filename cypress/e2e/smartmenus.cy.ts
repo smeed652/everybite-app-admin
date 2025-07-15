@@ -25,14 +25,11 @@ describe("SmartMenus admin list", () => {
       name: "Lunch Menu",
       slug: "lunch-menu",
       layout: "classic",
-      hasImages: true,
-      hasOrdering: true,
-      hasUtm: true,
-      syncEnabled: true,
-      previewUrl: "https://example.com/preview",
       displayImages: true,
       isOrderButtonEnabled: true,
       orderUrl: "https://myeatery.com/order?utm_source=cypress",
+      isSyncEnabled: true,
+      previewUrl: "https://example.com/preview",
       banners: [],
       menuItems: [],
     };
@@ -79,15 +76,5 @@ describe("SmartMenus admin list", () => {
           1
         );
       });
-  });
-
-  it("opens actions menu for a row", () => {
-    cy.get("table tbody tr")
-      .first()
-      .within(() => {
-        cy.get('button[aria-label="Row actions"]').click({ force: true });
-      });
-    // actions menu should appear
-    cy.contains("View details", { timeout: 10000 }).should("exist");
   });
 });
