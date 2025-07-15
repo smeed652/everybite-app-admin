@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { logger } from "../../../lib/logger";
 
 /* ------------------------------------------------------------------------- */
 /* Types                                                                     */
@@ -72,11 +73,11 @@ export function useWidgetDiff<T extends { id?: string }>(
     // Genuine navigation between widgets – clear edits.
     const currentId = (originalRef.current as { id?: string } | null)?.id;
     if (currentId !== widget.id) {
-      console.debug(
+      logger.debug(
         "[useWidgetDiff] nav effect detected id change, clearing diffs"
       );
       originalRef.current = deepClone(widget);
-      console.debug(
+      logger.debug(
         "[useWidgetDiff] nav clear caller",
         new Error().stack?.split("\n")[2] ?? ""
       );
@@ -116,7 +117,7 @@ export function useWidgetDiff<T extends { id?: string }>(
   /* ------------------------- field change ------------------------------ */
 
   const handleFieldChange = (changes: Record<string, unknown>): void => {
-    console.debug(
+    logger.debug(
       "[useWidgetDiff] handleFieldChange incoming",
       changes,
       "origin",
@@ -173,9 +174,9 @@ export function useWidgetDiff<T extends { id?: string }>(
 
       /* Avoid an unnecessary state update when nothing actually changed.
          React will bail out when the same reference is returned, so we can
-         signal “no-op” by giving back the previous object. */
+         signal "no-op" by giving back the previous object. */
       const result = changed ? next : prev;
-      console.debug("[useWidgetDiff] pendingChanges next", result);
+      logger.debug("[useWidgetDiff] pendingChanges next", result);
       return result;
     });
   };
@@ -191,15 +192,15 @@ export function useWidgetDiff<T extends { id?: string }>(
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { flushSync } = require("react-dom");
       flushSync(() => {
-        console.debug("[useWidgetDiff] reset flushSync clearing diffs");
-        console.debug(
+        logger.debug("[useWidgetDiff] reset flushSync clearing diffs");
+        logger.debug(
           "[useWidgetDiff] reset clear caller",
           new Error().stack?.split("\n")[2] ?? ""
         );
         setPendingChanges({});
       });
     } catch {
-      console.debug(
+      logger.debug(
         "[useWidgetDiff] reset non-sync clear caller",
         new Error().stack?.split("\n")[2] ?? ""
       );
@@ -218,7 +219,7 @@ export function useWidgetDiff<T extends { id?: string }>(
   };
 
   // Debug logging for troubleshooting timing issues
-  console.debug("[useWidgetDiff] current state:", {
+  logger.debug("[useWidgetDiff] current state:", {
     formKey,
     pendingChanges,
     dirty: Object.keys(pendingChanges).length > 0,
@@ -232,7 +233,7 @@ export function useWidgetDiff<T extends { id?: string }>(
   const refreshSnapshot = (): void => {
     if (widget) {
       originalRef.current = { ...widget, ...pendingChanges } as T;
-      console.debug("[useWidgetDiff] refreshSnapshot clearing diffs");
+      logger.debug("[useWidgetDiff] refreshSnapshot clearing diffs");
       setPendingChanges({});
     }
   };

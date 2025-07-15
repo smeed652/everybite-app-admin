@@ -1,5 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import type { UpdateWidget, Widget } from "../../../generated/graphql";
+import { logger } from "../../../lib/logger";
 import { WIDGET_FIELDS } from "../graphql/fragments";
 
 export function useUpdateWidget() {
@@ -18,7 +19,7 @@ export function useUpdateWidget() {
     if (Object.keys(allowed).length === 0) return Promise.resolve();
 
     // Debug logging to see what's being sent
-    console.log("[useUpdateWidget] Sending mutation with:", {
+    logger.debug("[useUpdateWidget] Sending mutation with:", {
       id,
       allowed,
       keys: Object.keys(allowed),
@@ -31,7 +32,7 @@ export function useUpdateWidget() {
     const MUTATION = gql`mutation UpdateWidget($input: UpdateWidget!) {\n  updateWidget(input: $input) {\n      ${selection}\n  }\n}`;
 
     // Log the actual GraphQL mutation being sent
-    console.log(
+    logger.debug(
       "[useUpdateWidget] GraphQL Mutation:",
       MUTATION.loc?.source.body
     );
@@ -58,7 +59,7 @@ export function useUpdateWidget() {
         },
       })
       .catch((error) => {
-        console.error("[useUpdateWidget] GraphQL Error:", {
+        logger.error("[useUpdateWidget] GraphQL Error:", {
           error,
           message: error.message,
           graphQLErrors: error.graphQLErrors,
@@ -68,7 +69,7 @@ export function useUpdateWidget() {
 
         // Log the full error response if available
         if (error.networkError) {
-          console.error("[useUpdateWidget] Network Error Details:", {
+          logger.error("[useUpdateWidget] Network Error Details:", {
             statusCode: error.networkError.statusCode,
             bodyText: error.networkError.bodyText,
             result: error.networkError.result,
@@ -79,7 +80,7 @@ export function useUpdateWidget() {
         }
 
         // Also log the full error object to see what's available
-        console.error(
+        logger.error(
           "[useUpdateWidget] Full Error Object:",
           JSON.stringify(error, null, 2)
         );

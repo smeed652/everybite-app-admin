@@ -4,6 +4,7 @@ import { Panel } from "../../../components/ui/Panel";
 import { SettingToggle } from "../../../components/ui/SettingToggle";
 import type { Widget } from "../../../generated/graphql";
 import { AllergenType, DietType } from "../../../generated/graphql";
+import { logger } from "../../../lib/logger";
 
 import AllergensSection from "./AllergensSection";
 import DietarySection from "./DietarySection";
@@ -133,13 +134,13 @@ export default function FeaturesPanel({
 
     // Debug logging for timing issues
     if (Object.keys(diff).length > 0) {
-      console.debug("[FeaturesPanel] emitting diff:", diff);
-      console.debug(
+      logger.debug("[FeaturesPanel] emitting diff:", diff);
+      logger.debug(
         "[FeaturesPanel] widget allergens:",
         widget.supportedAllergens
       );
-      console.debug("[FeaturesPanel] selected allergens:", selectedAllergens);
-      console.debug("[FeaturesPanel] enable allergens:", enableAllergens);
+      logger.debug("[FeaturesPanel] selected allergens:", selectedAllergens);
+      logger.debug("[FeaturesPanel] enable allergens:", enableAllergens);
     }
 
     if (Object.keys(diff).length) onFieldChange(diff);

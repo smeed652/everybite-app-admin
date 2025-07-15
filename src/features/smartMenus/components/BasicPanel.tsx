@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
-import { Widget } from '../../../generated/graphql';
-import { Panel } from '../../../components/ui/Panel';
-import FormSection from '../../../components/ui/FormSection';
-import FormField from '../../../components/ui/FormField';
-import { SettingToggle } from '../../../components/ui/SettingToggle';
-import { Activity } from 'lucide-react';
-import { Input } from '../../../components/ui/Input';
+import { Activity } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import FormField from "../../../components/ui/FormField";
+import FormSection from "../../../components/ui/FormSection";
+import { Input } from "../../../components/ui/Input";
+import { Panel } from "../../../components/ui/Panel";
+import { SettingToggle } from "../../../components/ui/SettingToggle";
+import { Widget } from "../../../generated/graphql";
+import { logger } from "../../../lib/logger";
 
 interface Props {
   widget: Widget;
@@ -42,11 +43,12 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
     }
     if (Object.keys(diff).length) {
       // log every diff in test/dev
-      // eslint-disable-next-line no-console
-      console.debug('[BasicPanel diff]', diff);
-      if (import.meta.env.MODE === 'development' || import.meta.env.VITE_LOG_LEVEL === 'debug') {
-        // eslint-disable-next-line no-console
-        console.debug('[BasicPanel] emit', diff);
+      logger.debug("[BasicPanel diff]", diff);
+      if (
+        import.meta.env.MODE === "development" ||
+        import.meta.env.VITE_LOG_LEVEL === "debug"
+      ) {
+        logger.debug("[BasicPanel] emit", diff);
       }
       onFieldChange(diff);
       if (diff.isActive !== undefined) {
@@ -56,16 +58,25 @@ export default function BasicPanel({ widget, onFieldChange }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, slug, isActive]);
 
-
   return (
     <Panel data-testid="basic-panel">
       <FormSection title="Basics">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField label="Name" required>
-            <Input id="name" value={name} onChange={e => handleNameChange(e.target.value)} disabled={loading} />
+            <Input
+              id="name"
+              value={name}
+              onChange={(e) => handleNameChange(e.target.value)}
+              disabled={loading}
+            />
           </FormField>
           <FormField label="Slug" required>
-            <Input id="slug" value={slug} onChange={e => handleSlugChange(e.target.value)} disabled={loading} />
+            <Input
+              id="slug"
+              value={slug}
+              onChange={(e) => handleSlugChange(e.target.value)}
+              disabled={loading}
+            />
           </FormField>
         </div>
       </FormSection>
