@@ -5,9 +5,10 @@ frontend:
       commands:
         - echo "Installing dependencies..."
         - npm ci
+        - npm run codegen
     build:
       commands:
-        - echo "Building application..."
+        - echo "Building for environment: $AWS_BRANCH"
         - npm run build
   artifacts:
     baseDirectory: dist
@@ -16,3 +17,15 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
+      - .amplify/**/*
+  customHeaders:
+    - pattern: "**/*"
+      headers:
+        - key: "Strict-Transport-Security"
+          value: "max-age=31536000; includeSubDomains"
+        - key: "X-Frame-Options"
+          value: "DENY"
+        - key: "X-Content-Type-Options"
+          value: "nosniff"
+        - key: "Referrer-Policy"
+          value: "strict-origin-when-cross-origin"

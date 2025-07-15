@@ -15,6 +15,7 @@
     "codegen": "npm run generate",
     "test": "vitest run",
     "test:unit": "vitest run",
+    "test:integration": "vitest run --config test-runner.config.ts",
     "test:e2e": "cypress run",
     "test:e2e:smoke": "cypress run --spec \"cypress/e2e/smoke.cy.ts\"",
     "test:e2e:open": "cypress open",
@@ -22,7 +23,12 @@
     "prepare": "husky install",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test:stories": "storybook build --quiet && npx playwright install --with-deps && npx start-server-and-test 'http-server storybook-static -p 7007' http://127.0.0.1:7007 'test-storybook --maxWorkers=1 --testTimeout 30000 --url http://127.0.0.1:7007 --index-json'"
+    "test:stories": "storybook build --quiet && npx playwright install --with-deps && npx start-server-and-test 'http-server storybook-static -p 7007' http://127.0.0.1:7007 'test-storybook --maxWorkers=1 --testTimeout 30000 --url http://127.0.0.1:7007 --index-json'",
+    "deploy:validate": "./scripts/deploy-validation.sh",
+    "deploy:staging": "./scripts/git-workflow.sh deploy-staging",
+    "deploy:production": "./scripts/git-workflow.sh deploy-production",
+    "workflow:status": "./scripts/git-workflow.sh status",
+    "workflow:help": "./scripts/git-workflow.sh help"
   },
   "keywords": [],
   "author": "",

@@ -98,9 +98,9 @@ vi.mock("@apollo/client", () => ({
 // helper to render given element under router providing widgetId param
 function renderWithRouter(ui: React.ReactElement) {
   return render(
-    <MemoryRouter initialEntries={["/smart-menus/widget-123"]}>
+    <MemoryRouter initialEntries={["/smartmenus/widget-123"]}>
       <Routes>
-        <Route path="/smart-menus/:widgetId" element={ui} />
+        <Route path="/smartmenus/:widgetId" element={ui} />
       </Routes>
     </MemoryRouter>
   );

@@ -120,6 +120,10 @@ deploy_staging() {
     check_branch "develop"
     check_clean_working_dir
     
+    # Run deployment validation
+    print_status "Running deployment validation..."
+    ./scripts/deploy-validation.sh staging
+    
     # Update develop
     git pull origin develop
     
@@ -142,6 +146,10 @@ deploy_production() {
     
     check_branch "staging"
     check_clean_working_dir
+    
+    # Run deployment validation
+    print_status "Running deployment validation..."
+    ./scripts/deploy-validation.sh production
     
     # Update staging
     git pull origin staging
