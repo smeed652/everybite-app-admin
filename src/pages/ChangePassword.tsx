@@ -1,9 +1,9 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Label } from "../components/ui/Label";
+import { useToast } from "../components/ui/ToastProvider";
 import { useAuth } from "../context/AuthContext";
 import { completeNewPassword, currentSession } from "../lib/auth";
 
@@ -16,6 +16,7 @@ export default function ChangePassword() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { login } = useAuth();
+  const { showToast } = useToast();
   const { cognitoUser, email } = (state || {}) as LocationState;
 
   const [password, setPassword] = useState("");
@@ -42,7 +43,7 @@ export default function ChangePassword() {
       const idToken = session.tokens?.idToken?.toString();
       if (!idToken) throw new Error("No id token");
       login({ accessToken: idToken });
-      toast.success("Password updated");
+      showToast({ title: "Password updated", variant: "success" });
       navigate("/");
     } catch (err: unknown) {
       let message = "Failed to update password";

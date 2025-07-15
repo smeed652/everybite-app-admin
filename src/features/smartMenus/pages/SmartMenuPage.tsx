@@ -1,11 +1,11 @@
 import { ReactNode, useState } from "react";
-import { toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 
 import { RefreshCcw } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { Card } from "../../../components/ui/Card";
 import { Skeleton } from "../../../components/ui/Skeleton";
+import { useToast } from "../../../components/ui/ToastProvider";
 import type { Widget } from "../../../generated/graphql";
 import SmartMenuHeader from "../components/SmartMenuHeader";
 import { useSyncWidget } from "../hooks/useSyncWidget";
@@ -36,6 +36,7 @@ export default function SmartMenuPage({
 }: Props) {
   const params = useParams();
   const id = widgetId ?? (params.widgetId as string);
+  const { showToast } = useToast();
 
   const { widget, loading, error } = useWidget(id);
   const { updateWidgetFields } = useUpdateWidget();
@@ -79,7 +80,7 @@ export default function SmartMenuPage({
       } else {
         await updateWidgetFields(widget.id, pendingChanges as Partial<Widget>);
       }
-      toast.success("Changes saved");
+      showToast({ title: "Changes saved", variant: "success" });
       refreshSnapshot();
     } finally {
       setSaving(false);
@@ -95,9 +96,9 @@ export default function SmartMenuPage({
   const handleSyncNow = async () => {
     try {
       await sync(widget.id);
-      toast.success("Sync started");
+      showToast({ title: "Sync started", variant: "success" });
     } catch {
-      toast.error("Sync failed");
+      showToast({ title: "Sync failed", variant: "error" });
     }
   };
 
