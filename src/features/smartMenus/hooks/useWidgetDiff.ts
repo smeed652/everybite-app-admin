@@ -88,8 +88,30 @@ export function useWidgetDiff<T extends { id?: string }>(
   /* ---------------------------- helpers -------------------------------- */
   const deepClone = <K>(o: K): K => JSON.parse(JSON.stringify(o));
 
-  const isEqual = (a: unknown, b: unknown) =>
-    JSON.stringify(a) === JSON.stringify(b);
+  // Helper: normalize arrays for comparison (undefined → [], sorted)
+  const normalizeArray = (arr: unknown): unknown => {
+    if (Array.isArray(arr)) {
+      // Sort array for stable comparison (string/number only)
+      return [...arr].sort();
+    }
+    if (arr === undefined) return [];
+    return arr;
+  };
+
+  const isEqual = (a: unknown, b: unknown) => {
+    // If both are arrays or undefined, normalize and compare
+    if (
+      Array.isArray(a) ||
+      Array.isArray(b) ||
+      a === undefined ||
+      b === undefined
+    ) {
+      return (
+        JSON.stringify(normalizeArray(a)) === JSON.stringify(normalizeArray(b))
+      );
+    }
+    return JSON.stringify(a) === JSON.stringify(b);
+  };
 
   /* ------------------------- field change ------------------------------ */
 

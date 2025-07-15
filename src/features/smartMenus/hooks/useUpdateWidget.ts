@@ -1,26 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import type { UpdateWidget, Widget } from "../../../generated/graphql";
-
-// GraphQL fragment to get widget fields
-const WIDGET_FIELDS = gql`
-  fragment WidgetFields on Widget {
-    id
-    primaryBrandColor
-    highlightColor
-    backgroundColor
-    displayFeedbackButton
-    displayIngredients
-    supportedDietaryPreferences
-    supportedAllergens
-    displayNutrientPreferences
-    displayMacronutrients
-    isByoEnabled
-    isOrderButtonEnabled
-    orderUrl
-    __typename
-    updatedAt
-  }
-`;
+import { WIDGET_FIELDS } from "../graphql/fragments";
 
 export function useUpdateWidget() {
   const client = useApolloClient();
@@ -31,28 +11,9 @@ export function useUpdateWidget() {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete (data as Partial<Widget> & { isSyncEnabled?: unknown })
       .isSyncEnabled;
-    const allowed: Partial<Widget> = {};
-    const cacheId = client.cache.identify({ __typename: "Widget", id });
-
-    // Read existing data from cache using a proper fragment
-    const existing = cacheId
-      ? (client.readFragment<Widget>({
-          id: cacheId,
-          fragment: WIDGET_FIELDS,
-        }) as Widget | null)
-      : null;
-
-    type WidgetKey = keyof Widget;
-    Object.entries(data).forEach(([k, v]) => {
-      if (v === undefined) return;
-      const prev = existing
-        ? (existing as Record<string, unknown>)[k]
-        : undefined;
-      // Only include the field if it's actually different from the existing value
-      if (JSON.stringify(v) !== JSON.stringify(prev)) {
-        (allowed as Partial<Widget>)[k as WidgetKey] = v as Widget[WidgetKey];
-      }
-    });
+    // The data passed in is already filtered by useWidgetDiff to only include changed fields
+    // No need to do additional comparison here
+    const allowed = data;
 
     if (Object.keys(allowed).length === 0) return Promise.resolve();
 

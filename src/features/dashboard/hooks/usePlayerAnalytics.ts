@@ -1,16 +1,13 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql, useQuery } from "@apollo/client";
+import { WIDGET_ANALYTICS_FIELDS } from "../../smartMenus/graphql/fragments";
 
-export const GET_ALL_WIDGETS_BASICS = gql/* GraphQL */`
+export const GET_ALL_WIDGETS_BASICS = gql`
   query GetAllWidgetsBasics {
     widgets {
-      id
-      publishedAt
-      displayImages
-      layout
-      isOrderButtonEnabled
-      isByoEnabled
+      ...WidgetAnalyticsFields
     }
   }
+  ${WIDGET_ANALYTICS_FIELDS}
 `;
 
 type WidgetBasics = {
@@ -24,7 +21,7 @@ type WidgetBasics = {
 
 export function usePlayerAnalytics() {
   const { data, loading, error } = useQuery(GET_ALL_WIDGETS_BASICS, {
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: "cache-and-network",
   });
 
   const widgets = (data?.widgets ?? []) as WidgetBasics[];
@@ -32,7 +29,9 @@ export function usePlayerAnalytics() {
   const totalActive = active.length || 1;
 
   const withImages = active.filter((w) => w.displayImages).length;
-  const withCardLayout = active.filter((w) => (w.layout || '').toUpperCase() === 'CARD').length;
+  const withCardLayout = active.filter(
+    (w) => (w.layout || "").toUpperCase() === "CARD"
+  ).length;
   const withOrdering = active.filter((w) => w.isOrderButtonEnabled).length;
   const withByo = active.filter((w) => w.isByoEnabled).length;
 
