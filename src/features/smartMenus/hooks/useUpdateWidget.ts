@@ -32,13 +32,26 @@ export function useUpdateWidget() {
     delete (data as Partial<Widget> & { isSyncEnabled?: unknown })
       .isSyncEnabled;
     const allowed: Partial<Widget> = {};
+    const cacheId = client.cache.identify({ __typename: "Widget", id });
+
+    // Read existing data from cache using a proper fragment
+    const existing = cacheId
+      ? (client.readFragment<Widget>({
+          id: cacheId,
+          fragment: WIDGET_FIELDS,
+        }) as Widget | null)
+      : null;
 
     type WidgetKey = keyof Widget;
     Object.entries(data).forEach(([k, v]) => {
       if (v === undefined) return;
-      // Always include the field if it's explicitly set, regardless of cache comparison
-      // This ensures the mutation works even if cache is stale
-      (allowed as Partial<Widget>)[k as WidgetKey] = v as Widget[WidgetKey];
+      const prev = existing
+        ? (existing as Record<string, unknown>)[k]
+        : undefined;
+      // Only include the field if it's actually different from the existing value
+      if (JSON.stringify(v) !== JSON.stringify(prev)) {
+        (allowed as Partial<Widget>)[k as WidgetKey] = v as Widget[WidgetKey];
+      }
     });
 
     if (Object.keys(allowed).length === 0) return Promise.resolve();
