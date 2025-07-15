@@ -154,14 +154,14 @@ deploy_production() {
     # Update staging
     git pull origin staging
     
-    # Update main
-    update_branch "main"
+    # Update production
+    update_branch "production"
     
-    # Merge staging into main
+    # Merge staging into production
     git merge --no-ff staging -m "chore: deploy to production"
     
-    # Push to main
-    git push origin main
+    # Push to production
+    git push origin production
     
     print_status "Successfully deployed to production"
     print_status "AWS Amplify will automatically deploy the production environment"
@@ -178,8 +178,8 @@ create_hotfix() {
     
     print_header "Creating hotfix branch"
     
-    # Ensure we're on main and it's up to date
-    update_branch "main"
+    # Ensure we're on production and it's up to date
+    update_branch "production"
     
     # Create and checkout hotfix branch
     local hotfix_branch="hotfix/$hotfix_name"
@@ -210,10 +210,10 @@ finish_hotfix() {
     
     check_clean_working_dir
     
-    # Update main
-    update_branch "main"
+    # Update production
+    update_branch "production"
     
-    # Merge hotfix into main
+    # Merge hotfix into production
     git merge --no-ff $hotfix_branch -m "fix: hotfix $hotfix_name"
     
     # Update staging
@@ -232,7 +232,7 @@ finish_hotfix() {
     git branch -d $hotfix_branch
     
     # Push all branches
-    git push origin main
+    git push origin production
     git push origin staging
     git push origin develop
     
@@ -249,7 +249,7 @@ show_status() {
     
     echo "Branch status:"
     git for-each-ref --format='%(refname:short) %(upstream:short) %(upstream:track)' refs/heads | while read branch upstream track; do
-        if [ "$branch" = "main" ] || [ "$branch" = "staging" ] || [ "$branch" = "develop" ]; then
+        if [ "$branch" = "production" ] || [ "$branch" = "staging" ] || [ "$branch" = "develop" ]; then
             if [ -n "$track" ]; then
                 echo "  $branch -> $upstream $track"
             else
@@ -273,7 +273,7 @@ show_help() {
     echo "  finish-feature <name>    - Merge feature branch into develop"
     echo "  deploy-staging          - Deploy develop to staging"
     echo "  deploy-production       - Deploy staging to production"
-    echo "  create-hotfix <name>    - Create a hotfix branch from main"
+    echo "  create-hotfix <name>    - Create a hotfix branch from production"
     echo "  finish-hotfix <name>    - Deploy hotfix to all environments"
     echo "  status                  - Show current git status"
     echo "  help                    - Show this help message"
