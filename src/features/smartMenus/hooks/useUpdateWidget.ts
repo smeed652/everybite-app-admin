@@ -61,6 +61,14 @@ export function useUpdateWidget() {
     const selection = ["id", ...keys, "__typename"].join("\n      ");
     const MUTATION = gql`mutation UpdateWidget($input: UpdateWidget!) {\n  updateWidget(input: $input) {\n      ${selection}\n  }\n}`;
 
+    // Debug logging to see what's being sent
+    console.log("[useUpdateWidget] Sending mutation with:", {
+      id,
+      allowed,
+      keys,
+      input: { id, ...allowed },
+    });
+
     return client.mutate<{ updateWidget: Widget }, { input: UpdateWidget }>({
       mutation: MUTATION,
       variables: {
