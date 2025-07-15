@@ -1,6 +1,6 @@
-import { AlertCircle } from 'lucide-react';
-import { AllergenType } from '../../../generated/graphql';
-import { OptionToggleSection } from '../../../components/ui/OptionToggleSection';
+import { AlertCircle } from "lucide-react";
+import { OptionToggleSection } from "../../../components/ui/OptionToggleSection";
+import { AllergenType } from "../../../generated/graphql";
 
 interface Props {
   allergenOptions: AllergenType[];
@@ -9,7 +9,7 @@ interface Props {
   selectedAllergens: AllergenType[];
   onChangeSelectedAllergens: (v: AllergenType[]) => void;
   // toggleArrayItem is still accepted for backward compatibility but ignored.
-  toggleArrayItem?: <T,>(arr: T[], v: T) => T[];
+  toggleArrayItem?: <T>(arr: T[], v: T) => T[];
 }
 
 /**
@@ -22,8 +22,12 @@ export default function AllergensSection({
   selectedAllergens,
   onChangeSelectedAllergens,
 }: Props) {
-  const formatLabel = (a: AllergenType) =>
-    a.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  const formatLabel = (a: AllergenType) => {
+    // Handle CamelCase by inserting spaces before capitals
+    const withSpaces = a.replace(/([a-z])([A-Z])/g, "$1 $2");
+    // Capitalize first letter of each word
+    return withSpaces.replace(/\b\w/g, (c) => c.toUpperCase());
+  };
 
   return (
     <OptionToggleSection<AllergenType>

@@ -26,11 +26,17 @@
   },
   "rules": {
     "react/react-in-jsx-scope": "off",
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^React$" }],
-    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^React$" }
+    ],
+    "@typescript-eslint/no-explicit-any": "error",
     "react/prop-types": "off",
-    "react-hooks/exhaustive-deps": "off",
-    "max-lines": ["warn", { "max": 250, "skipBlankLines": true, "skipComments": true }]
+    "react-hooks/exhaustive-deps": "warn",
+    "max-lines": [
+      "warn",
+      { "max": 250, "skipBlankLines": true, "skipComments": true }
+    ]
   },
   "ignorePatterns": ["cypress/**/*"],
   "overrides": [
@@ -44,10 +50,10 @@
       }
     },
     {
-      "files": ["*.ts", "*.tsx"],
+      "files": ["src/lib/sentry.ts", "src/lib/auth.ts", "src/generated/**/*"],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-unused-vars": "off"
+        "@typescript-eslint/ban-ts-comment": "off"
       }
     }
   ]

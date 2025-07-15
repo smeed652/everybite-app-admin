@@ -1,24 +1,14 @@
-import { gql, useQuery } from '@apollo/client';
-import { Widget } from '../../../generated/graphql';
+import { gql, useQuery } from "@apollo/client";
+import { Widget } from "../../../generated/graphql";
+import { WIDGET_BASIC_FIELDS } from "../graphql/fragments";
 
 export const GET_SMART_MENUS = gql`
   query GetSmartMenus {
     widgets {
-      id
-      name
-      slug
-      updatedAt
-      publishedAt
-      displayImages
-      isSyncEnabled
-      isOrderButtonEnabled
-      layout
-      primaryBrandColor
-      highlightColor
-      backgroundColor
-      orderUrl
+      ...WidgetBasicFields
     }
   }
+  ${WIDGET_BASIC_FIELDS}
 `;
 
 interface UseSmartMenusResult {
@@ -28,7 +18,9 @@ interface UseSmartMenusResult {
 }
 
 export function useSmartMenus(): UseSmartMenusResult {
-  const { data, loading, error } = useQuery(GET_SMART_MENUS, { fetchPolicy: 'cache-and-network' });
+  const { data, loading, error } = useQuery(GET_SMART_MENUS, {
+    fetchPolicy: "cache-and-network",
+  });
   return {
     loading,
     error: error as Error | undefined,

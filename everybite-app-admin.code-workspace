@@ -66,6 +66,17 @@
     "terminal.integrated.env.osx": {
       "NODE_ENV": "development",
     },
+    "cSpell.words": [
+      "shadcn",
+      "Everybite",
+      "smartmenu",
+      "smartmenus",
+      "Pescatarian",
+      "pescatarian",
+      "everybite",
+      "SmartMenu",
+      "SmartMenus",
+    ],
   },
   "extensions": {
     "recommendations": [

@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Input } from '../components/ui/Input';
-import { Button } from '../components/ui/Button';
-import { Label } from '../components/ui/Label';
-import toast from 'react-hot-toast';
-import { completeNewPassword, currentSession } from '../lib/auth';
-import { useAuth } from '../context/AuthContext';
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Button } from "../components/ui/Button";
+import { Input } from "../components/ui/Input";
+import { Label } from "../components/ui/Label";
+import { useAuth } from "../context/AuthContext";
+import { completeNewPassword, currentSession } from "../lib/auth";
 
 interface LocationState {
   cognitoUser: unknown; // object returned from Auth.signIn
@@ -18,20 +18,20 @@ export default function ChangePassword() {
   const { login } = useAuth();
   const { cognitoUser, email } = (state || {}) as LocationState;
 
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
-  const [error, setError] = useState('');
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
 
   // If this page was hit directly without required state, bounce to login
   if (!cognitoUser) {
-    navigate('/login');
+    navigate("/login");
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     if (password !== confirm) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
@@ -40,12 +40,21 @@ export default function ChangePassword() {
       // Retrieve session + log user in
       const session = await currentSession();
       const idToken = session.tokens?.idToken?.toString();
-      if (!idToken) throw new Error('No id token');
+      if (!idToken) throw new Error("No id token");
       login({ accessToken: idToken });
-      toast.success('Password updated');
-      navigate('/');
-    } catch (err: any) {
-      setError(err.message || 'Failed to update password');
+      toast.success("Password updated");
+      navigate("/");
+    } catch (err: unknown) {
+      let message = "Failed to update password";
+      if (
+        err &&
+        typeof err === "object" &&
+        "message" in err &&
+        typeof (err as { message?: unknown }).message === "string"
+      ) {
+        message = (err as { message: string }).message;
+      }
+      setError(message);
     }
   };
 
@@ -77,7 +86,9 @@ export default function ChangePassword() {
             required
           />
         </div>
-        <Button type="submit" className="w-full">Update Password</Button>
+        <Button type="submit" className="w-full">
+          Update Password
+        </Button>
       </form>
     </div>
   );

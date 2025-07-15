@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { FeaturesPanel } from './FeaturesPanel';
-import { makeWidget } from '../../../__tests__/factories/widget';
+import type { Meta, StoryObj } from "@storybook/react";
+import { makeWidget } from "../../../__tests__/factories/widget";
+import FeaturesPanel from "./FeaturesPanel";
 
 const meta: Meta<typeof FeaturesPanel> = {
-  title: 'UI/Misc/FeaturesPanel',
+  title: "UI/Misc/FeaturesPanel",
   component: FeaturesPanel,
 };
 export default meta;
