@@ -31,6 +31,7 @@
     "deploy:staging:safe": "./scripts/git-workflow.sh deploy-staging-from-develop",
     "deploy:production": "./scripts/git-workflow.sh deploy-production",
     "deploy:production:safe": "./scripts/git-workflow.sh deploy-production-from-staging",
+    "deploy:simple": "./scripts/simple-workflow.sh deploy-production",
     "workflow:status": "./scripts/git-workflow.sh status",
     "workflow:help": "./scripts/git-workflow.sh help"
   },

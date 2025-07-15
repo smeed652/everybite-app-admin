@@ -508,7 +508,14 @@ deploy_production_from_staging() {
     update_branch "production"
     
     # Create descriptive commit message
-    local commit_message="deploy(production): from staging - $commit_count commits\n\nRecent changes:\n$changes_summary\n\nEnvironment: production\nSource: staging\nTimestamp: $(date -u +\"%Y-%m-%d %H:%M:%S UTC\")"
+    local commit_message="deploy(production): from staging - $commit_count commits
+
+Recent changes:
+$changes_summary
+
+Environment: production
+Source: staging
+Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
     
     # Merge staging into production
     git merge --no-ff staging -m "$commit_message"
@@ -536,7 +543,7 @@ show_help() {
     echo "  deploy-staging                  - Deploy develop to staging (must be on develop)"
     echo "  deploy-staging-from-develop     - Deploy develop to staging (works from any branch)"
     echo "  deploy-staging-custom <desc>    - Deploy to staging with custom description"
-    echo "  deploy-production               - Deploy staging to production"
+    echo "  deploy-production               - Deploy staging to production (must be on staging)"
     echo "  deploy-production-from-staging  - Deploy staging to production (works from any branch)"
     echo "  deploy-production-custom <desc> - Deploy to production with custom description"
     echo "  create-hotfix <name>            - Create a hotfix branch from production"
@@ -571,6 +578,9 @@ case "$1" in
         ;;
     "deploy-production")
         deploy_production
+        ;;
+    "deploy-production-from-staging")
+        deploy_production_from_staging
         ;;
     "deploy-production-custom")
         deploy_production_custom "$2"
