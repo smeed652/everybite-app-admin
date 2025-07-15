@@ -66,6 +66,7 @@
     "terminal.integrated.env.osx": {
       "NODE_ENV": "development",
     },
+    "cSpell.words": ["shadcn"],
   },
   "extensions": {
     "recommendations": [
