@@ -5,7 +5,6 @@ const config: StorybookConfig = {
   addons: [
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
-    "@storybook/addon-a11y",
     "@storybook/addon-viewport",
   ],
   // @ts-expect-error — not yet in Storybook types but supported at runtime
