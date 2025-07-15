@@ -8,7 +8,7 @@ frontend:
         - npm run codegen
     build:
       commands:
-        - echo "Building for environment: $AWS_BRANCH"
+        - echo "Building for environment $AWS_BRANCH"
         - npm run build
   artifacts:
     baseDirectory: dist
