@@ -10,6 +10,9 @@ export default defineConfig({
   build: {
     sourcemap: true,
   },
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
+  },
   // Vitest configuration for unit tests
   test: {
     // run every *.test or *.spec file inside src
