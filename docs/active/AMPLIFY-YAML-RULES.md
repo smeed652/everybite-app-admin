@@ -1,122 +1,139 @@
-# Amplify YAML Parsing Rules
+# Amplify YAML Rules and Best Practices
 
 ## Overview
 
-AWS Amplify uses YAML parsing for buildspec files and npm scripts. Understanding these rules is crucial to prevent deployment failures.
+AWS Amplify uses a YAML parser that is sensitive to certain characters, particularly colons (`:`) in specific contexts. This document outlines the rules and best practices for writing `amplify.yml` files that work reliably with Amplify.
 
-## Key Rules
+## Colon Usage Rules
 
-### 1. Colon Character Escaping
+### ✅ ACCEPTABLE Colons (These are fine)
 
-**Rule**: Any command containing a `:` character must be properly quoted in YAML context.
+- **YAML key-value pairs**: `version: 1`, `frontend:`, `phases:`
+- **Environment variables**: `$AWS_BRANCH:`, `$NODE_ENV:`
+- **Quoted strings containing colons**: `"npm run test-stories"`
 
-**Problem**: Unescaped colons in URLs or commands cause YAML parsing errors:
+### ❌ PROBLEMATIC Colons (These cause parsing errors)
 
-```
-CustomerError: The commands provided in the buildspec are malformed. Please ensure that you have properly escaped reserved YAML characters. If you have a ':' character in your command, encapsulate the command within quotes
-```
+- **Colons in comments**: `# Example: This comment has a colon`
+- **Unquoted URLs**: `npm run test --url http://localhost:6006`
+- **NPM script names with colons**: `npm run test:stories` (use `test-stories` instead)
 
-**Solution**: Always quote URLs and commands containing colons:
+## Common Issues and Solutions
 
-```json
-// ❌ WRONG - Unescaped colons
-"test-stories": "storybook build --quiet && npx start-server-and-test 'http-server storybook-static -p 7007' http://127.0.0.1:7007 'test-storybook --url http://127.0.0.1:7007'"
+### Issue 1: Colons in Comments
 
-// ✅ CORRECT - Properly quoted
-"test-stories": "storybook build --quiet && npx start-server-and-test 'http-server storybook-static -p 7007' 'http://127.0.0.1:7007' 'test-storybook --url \"http://127.0.0.1:7007\"'"
-```
+**Problem:**
 
-### 2. URL Quoting Strategy
-
-When dealing with URLs in npm scripts:
-
-1. **Single quotes for the entire command segment**: `'http://127.0.0.1:7007'`
-2. **Double quotes for URLs within command arguments**: `--url "http://127.0.0.1:7007"`
-3. **Escape inner quotes**: Use `\"` for double quotes inside single-quoted strings
-
-### 3. Common Patterns to Watch For
-
-#### URLs in Commands
-
-```json
-// Always quote URLs with colons
-"dev": "vite --port 3000",  // ✅ No colons, no problem
-"test-stories": "storybook --url 'http://localhost:6006'",  // ✅ Quoted URL
+```yaml
+# Example: This comment has a colon
+- npm run build
 ```
 
-#### Port Numbers
+**Solution:**
 
-```json
-// Port numbers in commands need quoting
-"storybook": "storybook dev -p 6006",  // ✅ No colons in port flag
-"server": "http-server -p 8080",  // ✅ No colons in port flag
+```yaml
+# Example - This comment uses a dash instead
+- npm run build
 ```
 
-#### Environment Variables
+### Issue 2: Unquoted URLs in Commands
 
-```json
-// Environment variables with colons need special handling
-"dev": "vite --port $PORT",  // ✅ Environment variable, no direct colons
+**Problem:**
+
+```yaml
+- npm run test --url http://localhost:6006
 ```
 
-## Validation Checklist
+**Solution:**
 
-Before pushing to staging/production, verify:
+```yaml
+- "npm run test --url http://localhost:6006"
+```
 
-- [ ] All URLs in npm scripts are properly quoted
-- [ ] No unescaped colons in command strings
-- [ ] Port numbers in commands don't contain colons
-- [ ] Environment variables are properly handled
+### Issue 3: NPM Script Names with Colons
 
-## Testing Locally
+**Problem:**
 
-To validate YAML syntax locally:
+```yaml
+- npm run test:stories
+```
+
+**Solution:**
+
+```yaml
+- npm run test-stories
+```
+
+## Validation Script
+
+Use the included validation script to check your `amplify.yml` before deployment:
 
 ```bash
-# Test the package.json scripts
-npm run test-stories
-
-# Validate amplify.yml syntax
-yamllint amplify.yml  # If you have yamllint installed
+./scripts/validate-amplify-yaml.sh
 ```
 
-## Common Mistakes
+This script will:
 
-1. **Forgetting to quote URLs in complex commands**
-2. **Mixing quote styles incorrectly**
-3. **Not escaping inner quotes**
-4. **Assuming port flags don't need quoting**
+- Check for problematic colons in comments
+- Identify unquoted URLs
+- Flag npm scripts with colons
+- Validate basic YAML structure
 
-## Example Fixes
+## Best Practices
 
-### Before (Broken)
+1. **Always quote commands containing URLs**
+2. **Use dashes instead of colons in comments**
+3. **Avoid colons in npm script names**
+4. **Run the validation script before pushing**
+5. **Test locally before deploying to Amplify**
 
-```json
-{
-  "scripts": {
-    "test-stories": "storybook build && npx start-server-and-test 'http-server -p 7007' http://127.0.0.1:7007 'test-storybook --url http://127.0.0.1:7007'"
-  }
-}
+## Examples
+
+### ✅ Good amplify.yml
+
+```yaml
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Building for environment: $AWS_BRANCH"
+        - npm install
+    build:
+      commands:
+        - npm run build
+        - "npm run test-stories"
 ```
 
-### After (Fixed)
+### ❌ Bad amplify.yml
 
-```json
-{
-  "scripts": {
-    "test-stories": "storybook build && npx start-server-and-test 'http-server -p 7007' 'http://127.0.0.1:7007' 'test-storybook --url \"http://127.0.0.1:7007\"'"
-  }
-}
+```yaml
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # Example: This comment has a colon
+        - echo "Building for environment: $AWS_BRANCH"
+        - npm install
+    build:
+      commands:
+        - npm run build
+        - npm run test:stories
+        - npm run test --url http://localhost:6006
 ```
+
+## Troubleshooting
+
+If you encounter YAML parsing errors:
+
+1. Run the validation script: `./scripts/validate-amplify-yaml.sh`
+2. Check for colons in comments
+3. Ensure URLs are properly quoted
+4. Verify npm script names don't contain colons
+5. Test with a minimal `amplify.yml` to isolate the issue
 
 ## Related Files
 
-- `amplify.yml` - Main buildspec file
-- `package.json` - Contains npm scripts that Amplify parses
-- `scripts/deploy-validation.sh` - Pre-deployment validation
-
-## Resources
-
-- [AWS Amplify Buildspec Reference](https://docs.aws.amazon.com/amplify/latest/userguide/build-settings.html)
-- [YAML Syntax Guide](https://yaml.org/spec/1.2/spec.html)
-- [npm Scripts Documentation](https://docs.npmjs.com/cli/v8/using-npm/scripts)
+- `scripts/validate-amplify-yaml.sh` - Validation script
+- `scripts/debug-amplify-yaml.sh` - Debug script for complex issues
