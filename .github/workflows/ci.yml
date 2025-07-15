@@ -37,11 +37,11 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: Cypress smoke tests
+      - name: Cypress tests
         uses: cypress-io/github-action@v6
         with:
           start: npx vercel@latest dev --listen 3000 --yes --token ${{ secrets.VERCEL_TOKEN }}
-          spec: cypress/e2e/smoke.cy.ts
+          spec: ${{ github.event_name == 'pull_request' && 'cypress/e2e/smoke.cy.ts' || 'cypress/e2e/**/*.cy.ts' }}
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
 

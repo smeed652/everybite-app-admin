@@ -1,8 +1,8 @@
 # Fail commit if lint or unit tests fail
 npm run lint || exit 1
 npm run test:unit || exit 1
-# Cypress smoke e2e
-npm run test:e2e:smoke || exit 1
+# Cypress e2e tests
+npm run test:e2e || exit 1
 
 # Fix staged files
 npx --no-install lint-staged
