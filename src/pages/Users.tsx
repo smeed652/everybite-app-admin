@@ -13,6 +13,7 @@ interface CognitoUserRow {
   status: string;
   enabled: boolean;
   created: string;
+  groups: string[];
 }
 
 interface UsersResponse {
@@ -185,6 +186,7 @@ export default function Users() {
               <TH>Email</TH>
               <TH>Status</TH>
               <TH>Created</TH>
+              <TH>Groups</TH>
               <TH>Actions</TH>
             </TR>
           </THead>
@@ -207,6 +209,18 @@ export default function Users() {
                   </span>
                 </TD>
                 <TD>{new Date(user.created).toLocaleDateString()}</TD>
+                <TD>
+                  <div className="flex flex-wrap gap-1">
+                    {user.groups.map((group) => (
+                      <span
+                        key={group}
+                        className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs"
+                      >
+                        {group}
+                      </span>
+                    ))}
+                  </div>
+                </TD>
                 <TD>
                   <div className="relative">
                     <Button
