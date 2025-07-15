@@ -120,7 +120,11 @@ export default function Users() {
         body: JSON.stringify({ username }),
       });
       if (res.ok) {
-        toast.success(`User ${action}d successfully`);
+        toast.success(
+          action === "reset-password"
+            ? "User reset-password successfully"
+            : `User ${action}d successfully`
+        );
         fetchUsers(); // refresh list
       } else {
         toast.error(`Failed to ${action} user`);

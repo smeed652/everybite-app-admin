@@ -416,6 +416,64 @@ Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
     print_status "Description: $description"
 }
 
+# Function to deploy to staging from any branch (safely)
+deploy_staging_from_develop() {
+    print_header "Deploying to staging from develop (safe mode)"
+    
+    local current_branch=$(git branch --show-current)
+    print_status "Current branch: $current_branch"
+    
+    check_clean_working_dir
+    
+    # Run deployment validation
+    print_status "Running deployment validation..."
+    ./scripts/deploy-validation.sh staging
+    
+    # Update develop from remote
+    print_status "Updating develop from remote..."
+    git fetch origin
+    git checkout develop
+    git pull origin develop
+    
+    # Get recent changes summary
+    local changes_summary=$(git log --oneline develop ^staging | head -5 | sed 's/^/  - /' | tr '\n' ' ')
+    local commit_count=$(git rev-list --count develop ^staging)
+    
+    if [ "$commit_count" -eq 0 ]; then
+        print_warning "No new commits to deploy from develop to staging"
+        print_status "Returning to original branch: $current_branch"
+        git checkout $current_branch
+        return 0
+    fi
+    
+    # Update staging
+    update_branch "staging"
+    
+    # Create descriptive commit message
+    local commit_message="deploy(staging): from develop - $commit_count commits
+
+Recent changes:
+$changes_summary
+
+Environment: staging
+Source: develop
+Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+    
+    # Merge develop into staging
+    git merge --no-ff develop -m "$commit_message"
+    
+    # Push to staging
+    git push origin staging
+    
+    print_status "Successfully deployed to staging"
+    print_status "AWS Amplify will automatically deploy the staging environment"
+    print_status "Deployment includes $commit_count commits from develop"
+    
+    # Return to original branch
+    print_status "Returning to original branch: $current_branch"
+    git checkout $current_branch
+}
+
 # Function to show help
 show_help() {
     print_header "Git Workflow Commands"
@@ -424,7 +482,8 @@ show_help() {
     echo ""
     echo "  create-feature <name>           - Create a new feature branch from develop"
     echo "  finish-feature <name>           - Merge feature branch into develop"
-    echo "  deploy-staging                  - Deploy develop to staging"
+    echo "  deploy-staging                  - Deploy develop to staging (must be on develop)"
+    echo "  deploy-staging-from-develop     - Deploy develop to staging (works from any branch)"
     echo "  deploy-staging-custom <desc>    - Deploy to staging with custom description"
     echo "  deploy-production               - Deploy staging to production"
     echo "  deploy-production-custom <desc> - Deploy to production with custom description"
@@ -451,6 +510,9 @@ case "$1" in
         ;;
     "deploy-staging")
         deploy_staging
+        ;;
+    "deploy-staging-from-develop")
+        deploy_staging_from_develop
         ;;
     "deploy-staging-custom")
         deploy_staging_custom "$2"
