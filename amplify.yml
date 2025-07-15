@@ -10,7 +10,7 @@ frontend:
       commands:
         - echo "Building for environment: $AWS_BRANCH"
         - npm run build
-        # Example: To run storybook tests, use a fully quoted command:
+        # Example - To run storybook tests, use a fully quoted command
         # - "npm run test-stories"
   artifacts:
     baseDirectory: dist
