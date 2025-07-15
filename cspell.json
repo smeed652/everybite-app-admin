@@ -21,7 +21,12 @@
     "authorised",
     "everybiteAuth",
     "Qbnewb",
-    "refetches"
+    "refetches",
+    "shadcn",
+    "Pageable",
+    "Macronutrients",
+    "Prefs",
+    "Newb"
   ],
   "ignorePaths": [
     "node_modules/**",
