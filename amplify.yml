@@ -10,6 +10,10 @@ frontend:
       commands:
         - echo "Building for environment $AWS_BRANCH"
         - npm run build
+    test:
+      commands:
+        - echo "Running E2E tests..."
+        - npm run test:e2e
   artifacts:
     baseDirectory: dist
     files:
