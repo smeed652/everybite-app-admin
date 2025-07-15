@@ -1,5 +1,5 @@
-import { gql, useApolloClient } from '@apollo/client';
-import type { Widget, UpdateWidget } from '../../../generated/graphql';
+import { gql, useApolloClient } from "@apollo/client";
+import type { UpdateWidget, Widget } from "../../../generated/graphql";
 
 // GraphQL fragment to get widget fields
 const WIDGET_FIELDS = gql`
@@ -8,6 +8,15 @@ const WIDGET_FIELDS = gql`
     primaryBrandColor
     highlightColor
     backgroundColor
+    displayFeedbackButton
+    displayIngredients
+    supportedDietaryPreferences
+    supportedAllergens
+    displayNutrientPreferences
+    displayMacronutrients
+    isByoEnabled
+    isOrderButtonEnabled
+    orderUrl
     __typename
     updatedAt
   }
@@ -20,26 +29,25 @@ export function useUpdateWidget() {
     // backend uses dedicated mutations for sync
     // remove isSyncEnabled if present
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete (data as Partial<Widget> & { isSyncEnabled?: unknown }).isSyncEnabled;
+    delete (data as Partial<Widget> & { isSyncEnabled?: unknown })
+      .isSyncEnabled;
     const allowed: Partial<Widget> = {};
-    const cacheId = client.cache.identify({ __typename: 'Widget', id });
-    const existing = cacheId
-      ? (client.readFragment<Widget>({ id: cacheId, fragment: gql`fragment _Compare on Widget { ${Object.keys(data).join(' ')} }` }) as Widget | null)
-      : null;
 
     type WidgetKey = keyof Widget;
     Object.entries(data).forEach(([k, v]) => {
       if (v === undefined) return;
-      const prev = existing ? (existing as Record<string, unknown>)[k] : undefined;
-      if (v !== prev) {
-        (allowed as Partial<Widget>)[k as WidgetKey] = v as Widget[WidgetKey];
-      }
+      // Always include the field if it's explicitly set, regardless of cache comparison
+      // This ensures the mutation works even if cache is stale
+      (allowed as Partial<Widget>)[k as WidgetKey] = v as Widget[WidgetKey];
     });
+
     if (Object.keys(allowed).length === 0) return Promise.resolve();
+
     // build mutation on the fly so selection set mirrors input keys
     const keys = Object.keys(allowed) as (keyof Widget)[];
-    const selection = ['id', ...keys, '__typename'].join('\n      ');
+    const selection = ["id", ...keys, "__typename"].join("\n      ");
     const MUTATION = gql`mutation UpdateWidget($input: UpdateWidget!) {\n  updateWidget(input: $input) {\n      ${selection}\n  }\n}`;
+
     return client.mutate<{ updateWidget: Widget }, { input: UpdateWidget }>({
       mutation: MUTATION,
       variables: {
@@ -48,11 +56,11 @@ export function useUpdateWidget() {
       optimisticResponse: {
         updateWidget: (() => {
           const existing = client.readFragment<Widget>({
-            id: client.cache.identify({ __typename: 'Widget', id }),
+            id: client.cache.identify({ __typename: "Widget", id }),
             fragment: WIDGET_FIELDS,
           }) as Widget | null;
           return {
-            __typename: 'Widget',
+            __typename: "Widget",
             ...(existing ?? { id }),
             ...data,
             updatedAt: new Date().toISOString(),
