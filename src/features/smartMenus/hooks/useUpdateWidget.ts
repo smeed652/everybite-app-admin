@@ -1,24 +1,37 @@
 import { gql, useApolloClient } from "@apollo/client";
 import type { UpdateWidget, Widget } from "../../../generated/graphql";
 
-// GraphQL fragment to get widget fields
+// GraphQL fragment to get widget fields - aligned with the actual GraphQL schema
 const WIDGET_FIELDS = gql`
   fragment WidgetFields on Widget {
     id
+    name
+    slug
+    layout
+    displayImages
+    isActive
+    isOrderButtonEnabled
     primaryBrandColor
     highlightColor
     backgroundColor
-    displayFeedbackButton
-    displayIngredients
+    orderUrl
     supportedDietaryPreferences
+    displayIngredients
     supportedAllergens
     displayNutrientPreferences
     displayMacronutrients
     isByoEnabled
-    isOrderButtonEnabled
-    orderUrl
-    __typename
+    displaySoftSignUp
+    displayNotifyMeBanner
+    displayGiveFeedbackBanner
+    displayFeedbackButton
+    displayDishDetailsLink
+    displayFooter
+    displayNavbar
+    usePagination
+    publishedAt
     updatedAt
+    __typename
   }
 `;
 
@@ -64,23 +77,36 @@ export function useUpdateWidget() {
       input: { id, ...allowed },
     });
 
-    // Use a fixed mutation with only the fields that are actually in our fragment
+    // Use a fixed mutation that matches our WIDGET_FIELDS fragment
     const MUTATION = gql`
       mutation UpdateWidget($input: UpdateWidget!) {
         updateWidget(input: $input) {
           id
+          name
+          slug
+          layout
+          displayImages
+          isActive
+          isOrderButtonEnabled
           primaryBrandColor
           highlightColor
           backgroundColor
-          displayFeedbackButton
-          displayIngredients
+          orderUrl
           supportedDietaryPreferences
+          displayIngredients
           supportedAllergens
           displayNutrientPreferences
           displayMacronutrients
           isByoEnabled
-          isOrderButtonEnabled
-          orderUrl
+          displaySoftSignUp
+          displayNotifyMeBanner
+          displayGiveFeedbackBanner
+          displayFeedbackButton
+          displayDishDetailsLink
+          displayFooter
+          displayNavbar
+          usePagination
+          publishedAt
           updatedAt
           __typename
         }
