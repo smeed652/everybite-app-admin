@@ -1,19 +1,16 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useMetabaseUsers } from "../hooks/useMetabase";
 
 // Mock fetch globally
-global.fetch = vi.fn();
-
-const mockFetch = fetch as vi.MockedFunction<typeof fetch>;
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
 
 // Mock environment variables
-vi.mock("import.meta.env", () => ({
-  env: {
-    VITE_METABASE_API_URL:
-      "https://ldfubm7l7k2hj4ln3pxtqylcwe0isjau.lambda-url.us-west-1.on.aws",
-  },
-}));
+vi.stubEnv(
+  "VITE_METABASE_API_URL",
+  "https://ldfubm7l7k2hj4ln3pxtqylcwe0isjau.lambda-url.us-west-1.on.aws"
+);
 
 describe("useMetabaseUsers", () => {
   beforeEach(() => {
@@ -135,12 +132,27 @@ describe("useMetabaseUsers", () => {
   });
 
   it("handles JSON parsing errors", async () => {
-    mockFetch.mockResolvedValueOnce({
+    const mockResponse = {
       ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: new Headers(),
+      redirected: false,
+      type: "default" as ResponseType,
+      url: "",
       json: async () => {
         throw new Error("Invalid JSON");
       },
-    } as Response);
+      clone: () => mockResponse,
+      body: null,
+      bodyUsed: false,
+      arrayBuffer: async () => new ArrayBuffer(0),
+      blob: async () => new Blob(),
+      formData: async () => new FormData(),
+      text: async () => "",
+    } as unknown as Response;
+
+    mockFetch.mockResolvedValueOnce(mockResponse);
 
     const { result } = renderHook(() => useMetabaseUsers());
 
@@ -153,12 +165,12 @@ describe("useMetabaseUsers", () => {
   });
 
   it("sets loading state correctly during fetch", async () => {
-    let resolveFetch: (value: any) => void;
-    const fetchPromise = new Promise((resolve) => {
+    let resolveFetch: (value: Response) => void;
+    const fetchPromise = new Promise<Response>((resolve) => {
       resolveFetch = resolve;
     });
 
-    mockFetch.mockReturnValueOnce(fetchPromise as any);
+    mockFetch.mockReturnValueOnce(fetchPromise);
 
     const { result } = renderHook(() => useMetabaseUsers());
 
@@ -168,8 +180,14 @@ describe("useMetabaseUsers", () => {
     // Resolve the fetch
     resolveFetch!({
       ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: new Headers(),
+      redirected: false,
+      type: "default",
+      url: "",
       json: async () => ({ users: [], total: 0 }),
-    });
+    } as Response);
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);

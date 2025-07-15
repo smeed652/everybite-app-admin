@@ -1,5 +1,6 @@
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import { render, RenderOptions } from "@testing-library/react";
+import { DocumentNode } from "graphql";
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { ThemeProvider } from "../context/ThemeContext";
@@ -111,7 +112,11 @@ export const customRender = (
 };
 
 // Mock fetch responses
-export const createMockFetchResponse = (data: any, ok = true, status = 200) => {
+export const createMockFetchResponse = (
+  data: unknown,
+  ok = true,
+  status = 200
+) => {
   return Promise.resolve({
     ok,
     status,
@@ -145,7 +150,11 @@ export const waitForLoadingToFinish = async () => {
 };
 
 // Helper to create GraphQL mocks
-export const createGraphQLMock = (query: any, data: any, error?: any) => {
+export const createGraphQLMock = (
+  query: DocumentNode,
+  data: unknown,
+  error?: Error
+) => {
   if (error) {
     return {
       request: { query },

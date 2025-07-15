@@ -19,7 +19,9 @@
     "Vitest",
     "testuser",
     "authorised",
-    "everybiteAuth"
+    "everybiteAuth",
+    "Qbnewb",
+    "refetches"
   ],
   "ignorePaths": [
     "node_modules/**",
