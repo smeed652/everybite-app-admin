@@ -474,6 +474,57 @@ Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
     git checkout $current_branch
 }
 
+# Function to deploy to production from any branch (safely)
+deploy_production_from_staging() {
+    print_header "Deploying to production from staging (safe mode)"
+    
+    local current_branch=$(git branch --show-current)
+    print_status "Current branch: $current_branch"
+    
+    check_clean_working_dir
+    
+    # Run deployment validation
+    print_status "Running deployment validation..."
+    ./scripts/deploy-validation.sh production
+    
+    # Update staging from remote
+    print_status "Updating staging from remote..."
+    git fetch origin
+    git checkout staging
+    git pull origin staging
+    
+    # Get recent changes summary
+    local changes_summary=$(git log --oneline staging ^production | head -5 | sed 's/^/  - /' | tr '\n' ' ')
+    local commit_count=$(git rev-list --count staging ^production)
+    
+    if [ "$commit_count" -eq 0 ]; then
+        print_warning "No new commits to deploy from staging to production"
+        print_status "Returning to original branch: $current_branch"
+        git checkout $current_branch
+        return 0
+    fi
+    
+    # Update production
+    update_branch "production"
+    
+    # Create descriptive commit message
+    local commit_message="deploy(production): from staging - $commit_count commits\n\nRecent changes:\n$changes_summary\n\nEnvironment: production\nSource: staging\nTimestamp: $(date -u +\"%Y-%m-%d %H:%M:%S UTC\")"
+    
+    # Merge staging into production
+    git merge --no-ff staging -m "$commit_message"
+    
+    # Push to production
+    git push origin production
+    
+    print_status "Successfully deployed to production"
+    print_status "AWS Amplify will automatically deploy the production environment"
+    print_status "Deployment includes $commit_count commits from staging"
+    
+    # Return to original branch
+    print_status "Returning to original branch: $current_branch"
+    git checkout $current_branch
+}
+
 # Function to show help
 show_help() {
     print_header "Git Workflow Commands"
@@ -486,6 +537,7 @@ show_help() {
     echo "  deploy-staging-from-develop     - Deploy develop to staging (works from any branch)"
     echo "  deploy-staging-custom <desc>    - Deploy to staging with custom description"
     echo "  deploy-production               - Deploy staging to production"
+    echo "  deploy-production-from-staging  - Deploy staging to production (works from any branch)"
     echo "  deploy-production-custom <desc> - Deploy to production with custom description"
     echo "  create-hotfix <name>            - Create a hotfix branch from production"
     echo "  finish-hotfix <name>            - Deploy hotfix to all environments"
@@ -522,6 +574,9 @@ case "$1" in
         ;;
     "deploy-production-custom")
         deploy_production_custom "$2"
+        ;;
+    "deploy-production-from-staging")
+        deploy_production_from_staging
         ;;
     "create-hotfix")
         create_hotfix "$2"
