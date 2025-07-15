@@ -6,7 +6,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "vite --port $PORT",
+    "dev": "vite --port ${PORT:-3000}",
     "dev:ci": "vite --port 3000",
     "build": "vite build",
     "preview": "vite preview",

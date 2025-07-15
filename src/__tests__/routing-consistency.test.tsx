@@ -1,11 +1,43 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import App from "../App";
 import SmartMenuDetail from "../pages/SmartMenuDetail";
 import SmartMenuFeatures from "../pages/SmartMenuFeatures";
 import SmartMenuMarketing from "../pages/SmartMenuMarketing";
 import SmartMenus from "../pages/SmartMenus";
+
+// Mock AWS Amplify for all tests in this file
+vi.mock("aws-amplify/auth", () => ({
+  fetchAuthSession: vi.fn().mockResolvedValue({
+    tokens: {
+      accessToken: {
+        toString: () => "valid-access-token",
+        payload: { "cognito:groups": ["ADMIN"] },
+      },
+      idToken: {
+        toString: () => "valid-id-token",
+        payload: { "cognito:groups": ["ADMIN"] },
+      },
+    },
+    credentials: { accessKeyId: "a", secretAccessKey: "b" },
+    identityId: "test-identity",
+    userSub: "test-user",
+  }),
+}));
+
+// Mock React Router's Navigate
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    Navigate: ({ to }: { to: string }) => {
+      mockNavigate(to);
+      return null;
+    },
+  };
+});
 
 // Mock authentication to bypass login
 vi.mock("../context/AuthContext", () => ({
@@ -171,24 +203,28 @@ describe("Routing Consistency", () => {
   });
 
   describe("404 Handling", () => {
-    it("should show 404 for invalid SmartMenus routes", () => {
+    it("should show 404 for invalid SmartMenus routes", async () => {
       render(
         <MemoryRouter initialEntries={["/smart-menus"]}>
           <App />
         </MemoryRouter>
       );
 
-      expect(screen.getByText("404 - Page Not Found")).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText(/404 - Page Not Found/i)).toBeInTheDocument();
+      });
     });
 
-    it("should show 404 for malformed SmartMenus routes", () => {
+    it("should show 404 for malformed SmartMenus routes", async () => {
       render(
         <MemoryRouter initialEntries={["/smartmenus/invalid/route"]}>
           <App />
         </MemoryRouter>
       );
 
-      expect(screen.getByText("404 - Page Not Found")).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText(/404 - Page Not Found/i)).toBeInTheDocument();
+      });
     });
   });
 });

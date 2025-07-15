@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { Route, Routes } from "react-router-dom";
+import { AuthConfigCheck } from "./components/AuthConfigCheck";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ToastProvider } from "./components/ui/ToastProvider";
@@ -9,6 +10,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import Dashboard from "./pages/Dashboard";
 import Forbidden from "./pages/Forbidden";
 import Login from "./pages/Login";
+import MetabaseUsers from "./pages/MetabaseUsers";
 import NotFound from "./pages/NotFound";
 import SmartMenuDetail from "./pages/SmartMenuDetail";
 import SmartMenuFeatures from "./pages/SmartMenuFeatures";
@@ -43,6 +45,7 @@ export default function App() {
     <ThemeProvider>
       <AuthProvider>
         <ToastProvider>
+          <AuthConfigCheck />
           {/* Skip link for accessibility */}
           <a
             href="#main-content"
@@ -55,7 +58,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/403" element={<Forbidden />} />
             <Route
-              path="/"
+              path="/*"
               element={
                 <ProtectedRoute>
                   <Layout />
@@ -68,6 +71,14 @@ export default function App() {
                 element={
                   <ProtectedRoute allowedRoles={["ADMIN"]}>
                     <Users />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="metabase-users"
+                element={
+                  <ProtectedRoute allowedRoles={["ADMIN"]}>
+                    <MetabaseUsers />
                   </ProtectedRoute>
                 }
               />
@@ -84,8 +95,8 @@ export default function App() {
                 path="smartmenus/:widgetId/marketing"
                 element={<SmartMenuMarketing />}
               />
+              <Route path="*" element={<NotFound />} />
             </Route>
-            <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
         </ToastProvider>

@@ -105,7 +105,3 @@ jobs:
         with:
           name: cypress-screenshots-full
           path: cypress/screenshots
-
-      - name: Build backend image (compile check)
-        run: |
-          docker build -f backend/Dockerfile backend

@@ -1,0 +1,117 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Lambda Function resource stack for metabaseProxy",
+  "Parameters": {
+    "env": {
+      "Type": "String"
+    },
+    "s3Key": {
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "LambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "FunctionName": {
+          "Fn::Join": [
+            "",
+            [
+              "metabaseProxy",
+              "-",
+              {
+                "Ref": "env"
+              }
+            ]
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "ENV": {
+              "Ref": "env"
+            },
+            "METABASE_URL": {
+              "Ref": "METABASE_URL"
+            },
+            "METABASE_USERNAME": {
+              "Ref": "METABASE_USERNAME"
+            },
+            "METABASE_PASSWORD": {
+              "Ref": "METABASE_PASSWORD"
+            }
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": ["LambdaExecutionRole", "Arn"]
+        },
+        "Code": {
+          "S3Bucket": {
+            "Ref": "S3DeploymentBucket"
+          },
+          "S3Key": {
+            "Ref": "s3Key"
+          }
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30
+      }
+    },
+    "LambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        ]
+      }
+    },
+    "LambdaInvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "LambdaFunction"
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com"
+      }
+    }
+  },
+  "Outputs": {
+    "Name": {
+      "Description": "Name of the Lambda function",
+      "Value": {
+        "Ref": "LambdaFunction"
+      }
+    },
+    "Arn": {
+      "Description": "ARN of the Lambda function",
+      "Value": {
+        "Fn::GetAtt": ["LambdaFunction", "Arn"]
+      }
+    },
+    "Region": {
+      "Description": "AWS Region",
+      "Value": {
+        "Ref": "AWS::Region"
+      }
+    },
+    "LambdaExecutionRole": {
+      "Description": "Lambda execution role",
+      "Value": {
+        "Ref": "LambdaExecutionRole"
+      }
+    }
+  }
+}

@@ -23,7 +23,7 @@ This document outlines a comprehensive strategy to prevent AWS Amplify YAML pars
 #### Secondary Files (Indirect Impact)
 
 - `.github/workflows/ci.yml` - May reference problematic scripts
-- `docker-compose.yml` - May contain npm run commands
+- `vercel.json` - Vercel deployment configuration
 - `vercel.json` - Deployment configuration
 - `cypress.env.json` - Test environment variables
 

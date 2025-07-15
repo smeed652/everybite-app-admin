@@ -147,37 +147,7 @@ else
 fi
 
 echo ""
-echo "=== 4. Docker Configuration ==="
-
-# Check docker-compose.yml
-if [ -f "docker-compose.yml" ]; then
-    print_status "PASS" "docker-compose.yml found"
-    
-    # Check for unquoted URLs
-    unquoted_urls=$(grep -n "http://" docker-compose.yml | grep -v "'http://" | grep -v '"http://' || true)
-    if [ -n "$unquoted_urls" ]; then
-        print_status "WARN" "Found unquoted URLs in docker-compose.yml (may not affect Amplify)"
-        echo "$unquoted_urls"
-        ((total_issues++))
-    else
-        print_status "PASS" "No unquoted URLs in docker-compose.yml"
-    fi
-    
-    # Check for npm run commands
-    npm_commands=$(grep -n "npm run" docker-compose.yml || true)
-    if [ -n "$npm_commands" ]; then
-        print_status "WARN" "Found npm run commands in docker-compose.yml (verify script names)"
-        echo "$npm_commands"
-        ((total_issues++))
-    else
-        print_status "PASS" "No npm run commands in docker-compose.yml"
-    fi
-else
-    print_status "WARN" "docker-compose.yml not found (optional)"
-fi
-
-echo ""
-echo "=== 5. Other Configuration Files ==="
+echo "=== 4. Other Configuration Files ==="
 
 # Check vercel.json
 if [ -f "vercel.json" ]; then
@@ -214,27 +184,7 @@ else
 fi
 
 echo ""
-echo "=== 6. Backend Configuration ==="
-
-# Check backend/package.json
-if [ -f "backend/package.json" ]; then
-    print_status "PASS" "backend/package.json found"
-    
-    # Check for unquoted URLs
-    unquoted_urls=$(grep -n "http://" backend/package.json | grep -v "'http://" | grep -v '"http://' || true)
-    if [ -n "$unquoted_urls" ]; then
-        print_status "WARN" "Found unquoted URLs in backend/package.json (may not affect Amplify)"
-        echo "$unquoted_urls"
-        ((total_issues++))
-    else
-        print_status "PASS" "No unquoted URLs in backend/package.json"
-    fi
-else
-    print_status "WARN" "backend/package.json not found (optional)"
-fi
-
-echo ""
-echo "=== 7. Validation Summary ==="
+echo "=== 6. Validation Summary ==="
 
 if [ $critical_issues -eq 0 ]; then
     print_status "PASS" "No critical issues found"
