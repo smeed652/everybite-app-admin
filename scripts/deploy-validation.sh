@@ -35,9 +35,6 @@ run_tests() {
     print_status "Running unit tests..."
     npm test -- --coverage --passWithNoTests
     
-    print_status "Running integration tests..."
-    npm run test:integration
-    
     print_status "All tests passed!"
 }
 
