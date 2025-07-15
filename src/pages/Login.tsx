@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
@@ -9,10 +9,20 @@ import { logger } from "../lib/logger";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, accessToken } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (accessToken) {
+      navigate("/", { replace: true });
+    } else {
+      setIsLoading(false);
+    }
+  }, [accessToken, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,6 +65,14 @@ export default function Login() {
       }
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="max-w-sm mx-auto mt-10 p-6 border rounded shadow-sm bg-white">
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-sm mx-auto mt-10 p-6 border rounded shadow-sm bg-white">

@@ -1,4 +1,4 @@
-import { Gauge, Menu, Users } from "lucide-react";
+import { Database, Gauge, Menu, Users } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import SmartMenusNav from "../features/smartMenus/components/SmartMenusNav";
 import { Button } from "./ui/Button";
@@ -27,6 +27,7 @@ export default function Layout() {
       items: [
         { label: "Dashboard", to: "/" },
         { label: "Users", to: "/users" },
+        { label: "Metabase Users", to: "/metabase-users" },
       ],
     },
     {
@@ -68,9 +69,11 @@ export default function Layout() {
                           ? Gauge
                           : label === "Users"
                             ? Users
-                            : label === "SmartMenus"
-                              ? Menu
-                              : undefined;
+                            : label === "Metabase Users"
+                              ? Database
+                              : label === "SmartMenus"
+                                ? Menu
+                                : undefined;
                       return (
                         <NavLink
                           key={label}
@@ -101,7 +104,12 @@ export default function Layout() {
               </nav>
               <Separator />
               <div className="p-4">
-                <Button variant="outline" className="w-full" onClick={logout}>
+                <Button
+                  data-cy="logout-btn"
+                  variant="outline"
+                  className="w-full"
+                  onClick={logout}
+                >
                   Log out
                 </Button>
               </div>
@@ -141,9 +149,11 @@ export default function Layout() {
                     ? Gauge
                     : label === "Users"
                       ? Users
-                      : label === "SmartMenus"
-                        ? Menu
-                        : undefined;
+                      : label === "Metabase Users"
+                        ? Database
+                        : label === "SmartMenus"
+                          ? Menu
+                          : undefined;
                 return (
                   <NavLink
                     key={label}

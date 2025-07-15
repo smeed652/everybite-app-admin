@@ -1,11 +1,13 @@
 # MERN Stack with TypeScript
 
 ## Overview
+
 This document outlines the MERN (MongoDB, Express, React, Node.js) stack with TypeScript implementation details.
 
 ## Core Technologies
 
 ### Frontend
+
 - **Framework**: React 18+
 - **Language**: TypeScript 5.0+
 - **Styling**: Tailwind CSS 3.0+
@@ -19,6 +21,7 @@ This document outlines the MERN (MongoDB, Express, React, Node.js) stack with Ty
 - **E2E Testing**: Cypress / Playwright
 
 ### Backend
+
 - **Runtime**: Node.js 18+
 - **Framework**: Express.js 4.18+
 - **Language**: TypeScript 5.0+
@@ -31,12 +34,13 @@ This document outlines the MERN (MongoDB, Express, React, Node.js) stack with Ty
 - **API Documentation**: Swagger/OpenAPI
 
 ### Development Tools
+
 - **Package Manager**: pnpm / yarn
 - **Bundler**: Vite / Webpack
 - **Linting**: ESLint + TypeScript ESLint
 - **Formatting**: Prettier
 - **Git Hooks**: Husky + lint-staged
-- **Containerization**: Docker + Docker Compose
+- **Deployment**: Vercel (Frontend), AWS Lambda (API Proxy)
 - **CI/CD**: GitHub Actions / GitLab CI
 
 ## Project Structure
@@ -73,11 +77,13 @@ src/
 ## Development Workflow
 
 ### Prerequisites
+
 - Node.js 18+
 - MongoDB 6.0+
 - pnpm 8.0+ (recommended)
 
 ### Setup
+
 ```bash
 # Install dependencies
 pnpm install
@@ -87,6 +93,7 @@ pnpm dev
 ```
 
 ### Scripts
+
 ```json
 {
   "dev": "concurrently \"pnpm dev:server\" \"pnpm dev:client\"",
@@ -108,6 +115,7 @@ pnpm dev
 ## Best Practices
 
 ### TypeScript
+
 - Enable strict mode
 - Use type guards and type predicates
 - Prefer interfaces for public API definitions
@@ -115,6 +123,7 @@ pnpm dev
 - Avoid using `any` type
 
 ### React
+
 - Use functional components with hooks
 - Follow React Hooks rules
 - Use React.memo() for performance optimization
@@ -122,6 +131,7 @@ pnpm dev
 - Keep components small and focused
 
 ### State Management
+
 - Use Redux Toolkit for global state
 - Use React Query for server state
 - Keep local state close to where it's used
@@ -129,6 +139,7 @@ pnpm dev
 - Use Redux DevTools for debugging
 
 ### Styling
+
 - Use Tailwind's utility classes first
 - Extract repeated styles with @apply
 - Use CSS variables for theming
@@ -136,6 +147,7 @@ pnpm dev
 - Follow BEM naming for custom components
 
 ### Testing
+
 - Write unit tests for utilities and hooks
 - Write integration tests for components
 - Use Mock Service Worker for API mocking
@@ -145,6 +157,7 @@ pnpm dev
 ## Deployment
 
 ### Production Build
+
 ```bash
 # Build both client and server
 pnpm build
@@ -154,6 +167,7 @@ pnpm start
 ```
 
 ### Environment Variables
+
 ```env
 # Server
 NODE_ENV=production
@@ -167,12 +181,14 @@ VITE_SENTRY_DSN=your_sentry_dsn
 ```
 
 ## Monitoring
+
 - **Error Tracking**: Sentry
 - **Performance**: Lighthouse CI
 - **Logging**: Winston + ELK Stack
 - **APM**: New Relic / Datadog
 
 ## Resources
+
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
 - [React Documentation](https://reactjs.org/docs/getting-started.html)
 - [Redux Toolkit Documentation](https://redux-toolkit.js.org/)

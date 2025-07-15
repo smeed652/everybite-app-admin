@@ -127,17 +127,32 @@ deploy_staging() {
     # Update develop
     git pull origin develop
     
+    # Get recent changes summary
+    local changes_summary=$(git log --oneline develop ^staging | head -5 | sed 's/^/  - /' | tr '\n' ' ')
+    local commit_count=$(git rev-list --count develop ^staging)
+    
     # Update staging
     update_branch "staging"
     
+    # Create descriptive commit message
+    local commit_message="deploy(staging): from develop - $commit_count commits
+
+Recent changes:
+$changes_summary
+
+Environment: staging
+Source: develop
+Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+    
     # Merge develop into staging
-    git merge --no-ff develop -m "chore: deploy to staging"
+    git merge --no-ff develop -m "$commit_message"
     
     # Push to staging
     git push origin staging
     
     print_status "Successfully deployed to staging"
     print_status "AWS Amplify will automatically deploy the staging environment"
+    print_status "Deployment includes $commit_count commits from develop"
 }
 
 # Function to deploy to production
@@ -154,17 +169,32 @@ deploy_production() {
     # Update staging
     git pull origin staging
     
+    # Get recent changes summary
+    local changes_summary=$(git log --oneline staging ^production | head -5 | sed 's/^/  - /' | tr '\n' ' ')
+    local commit_count=$(git rev-list --count staging ^production)
+    
     # Update production
     update_branch "production"
     
+    # Create descriptive commit message
+    local commit_message="deploy(production): from staging - $commit_count commits
+
+Recent changes:
+$changes_summary
+
+Environment: production
+Source: staging
+Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+    
     # Merge staging into production
-    git merge --no-ff staging -m "chore: deploy to production"
+    git merge --no-ff staging -m "$commit_message"
     
     # Push to production
     git push origin production
     
     print_status "Successfully deployed to production"
     print_status "AWS Amplify will automatically deploy the production environment"
+    print_status "Deployment includes $commit_count commits from staging"
 }
 
 # Function to create hotfix
@@ -213,20 +243,41 @@ finish_hotfix() {
     # Update production
     update_branch "production"
     
+    # Create descriptive hotfix commit message
+    local hotfix_message="hotfix(production): $hotfix_name
+
+Environment: production
+Type: urgent fix
+Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+    
     # Merge hotfix into production
-    git merge --no-ff $hotfix_branch -m "fix: hotfix $hotfix_name"
+    git merge --no-ff $hotfix_branch -m "$hotfix_message"
     
     # Update staging
     update_branch "staging"
     
+    # Create staging hotfix message
+    local staging_hotfix_message="hotfix(staging): $hotfix_name
+
+Environment: staging
+Type: urgent fix
+Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+    
     # Merge hotfix into staging
-    git merge --no-ff $hotfix_branch -m "fix: hotfix $hotfix_name"
+    git merge --no-ff $hotfix_branch -m "$staging_hotfix_message"
     
     # Update develop
     update_branch "develop"
     
+    # Create develop hotfix message
+    local develop_hotfix_message="hotfix(develop): $hotfix_name
+
+Environment: develop
+Type: urgent fix
+Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+    
     # Merge hotfix into develop
-    git merge --no-ff $hotfix_branch -m "fix: hotfix $hotfix_name"
+    git merge --no-ff $hotfix_branch -m "$develop_hotfix_message"
     
     # Delete hotfix branch
     git branch -d $hotfix_branch
@@ -263,24 +314,248 @@ show_status() {
     git log --oneline -5 --graph --all
 }
 
+# Function to deploy to staging with custom description
+deploy_staging_custom() {
+    local description=$1
+    
+    if [ -z "$description" ]; then
+        print_error "Description is required. Usage: ./scripts/git-workflow.sh deploy-staging-custom \"<description>\""
+        exit 1
+    fi
+    
+    print_header "Deploying to staging with custom description"
+    
+    check_branch "develop"
+    check_clean_working_dir
+    
+    # Run deployment validation
+    print_status "Running deployment validation..."
+    ./scripts/deploy-validation.sh staging
+    
+    # Update develop
+    git pull origin develop
+    
+    # Get recent changes summary
+    local changes_summary=$(git log --oneline develop ^staging | head -5 | sed 's/^/  - /' | tr '\n' ' ')
+    local commit_count=$(git rev-list --count develop ^staging)
+    
+    # Update staging
+    update_branch "staging"
+    
+    # Create descriptive commit message
+    local commit_message="deploy(staging): $description
+
+Recent changes:
+$changes_summary
+
+Environment: staging
+Source: develop
+Description: $description
+Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+    
+    # Merge develop into staging
+    git merge --no-ff develop -m "$commit_message"
+    
+    # Push to staging
+    git push origin staging
+    
+    print_status "Successfully deployed to staging"
+    print_status "AWS Amplify will automatically deploy the staging environment"
+    print_status "Deployment includes $commit_count commits from develop"
+    print_status "Description: $description"
+}
+
+# Function to deploy to production with custom description
+deploy_production_custom() {
+    local description=$1
+    
+    if [ -z "$description" ]; then
+        print_error "Description is required. Usage: ./scripts/git-workflow.sh deploy-production-custom \"<description>\""
+        exit 1
+    fi
+    
+    print_header "Deploying to production with custom description"
+    
+    check_branch "staging"
+    check_clean_working_dir
+    
+    # Run deployment validation
+    print_status "Running deployment validation..."
+    ./scripts/deploy-validation.sh production
+    
+    # Update staging
+    git pull origin staging
+    
+    # Get recent changes summary
+    local changes_summary=$(git log --oneline staging ^production | head -5 | sed 's/^/  - /' | tr '\n' ' ')
+    local commit_count=$(git rev-list --count staging ^production)
+    
+    # Update production
+    update_branch "production"
+    
+    # Create descriptive commit message
+    local commit_message="deploy(production): $description
+
+Recent changes:
+$changes_summary
+
+Environment: production
+Source: staging
+Description: $description
+Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+    
+    # Merge staging into production
+    git merge --no-ff staging -m "$commit_message"
+    
+    # Push to production
+    git push origin production
+    
+    print_status "Successfully deployed to production"
+    print_status "AWS Amplify will automatically deploy the production environment"
+    print_status "Deployment includes $commit_count commits from staging"
+    print_status "Description: $description"
+}
+
+# Function to deploy to staging from any branch (safely)
+deploy_staging_from_develop() {
+    print_header "Deploying to staging from develop (safe mode)"
+    
+    local current_branch=$(git branch --show-current)
+    print_status "Current branch: $current_branch"
+    
+    check_clean_working_dir
+    
+    # Run deployment validation
+    print_status "Running deployment validation..."
+    ./scripts/deploy-validation.sh staging
+    
+    # Update develop from remote
+    print_status "Updating develop from remote..."
+    git fetch origin
+    git checkout develop
+    git pull origin develop
+    
+    # Get recent changes summary
+    local changes_summary=$(git log --oneline develop ^staging | head -5 | sed 's/^/  - /' | tr '\n' ' ')
+    local commit_count=$(git rev-list --count develop ^staging)
+    
+    if [ "$commit_count" -eq 0 ]; then
+        print_warning "No new commits to deploy from develop to staging"
+        print_status "Returning to original branch: $current_branch"
+        git checkout $current_branch
+        return 0
+    fi
+    
+    # Update staging
+    update_branch "staging"
+    
+    # Create descriptive commit message
+    local commit_message="deploy(staging): from develop - $commit_count commits
+
+Recent changes:
+$changes_summary
+
+Environment: staging
+Source: develop
+Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+    
+    # Merge develop into staging
+    git merge --no-ff develop -m "$commit_message"
+    
+    # Push to staging
+    git push origin staging
+    
+    print_status "Successfully deployed to staging"
+    print_status "AWS Amplify will automatically deploy the staging environment"
+    print_status "Deployment includes $commit_count commits from develop"
+    
+    # Return to original branch
+    print_status "Returning to original branch: $current_branch"
+    git checkout $current_branch
+}
+
+# Function to deploy to production from any branch (safely)
+deploy_production_from_staging() {
+    print_header "Deploying to production from staging (safe mode)"
+    
+    local current_branch=$(git branch --show-current)
+    print_status "Current branch: $current_branch"
+    
+    check_clean_working_dir
+    
+    # Run deployment validation
+    print_status "Running deployment validation..."
+    ./scripts/deploy-validation.sh production
+    
+    # Update staging from remote
+    print_status "Updating staging from remote..."
+    git fetch origin
+    git checkout staging
+    git pull origin staging
+    
+    # Get recent changes summary
+    local changes_summary=$(git log --oneline staging ^production | head -5 | sed 's/^/  - /' | tr '\n' ' ')
+    local commit_count=$(git rev-list --count staging ^production)
+    
+    if [ "$commit_count" -eq 0 ]; then
+        print_warning "No new commits to deploy from staging to production"
+        print_status "Returning to original branch: $current_branch"
+        git checkout $current_branch
+        return 0
+    fi
+    
+    # Update production
+    update_branch "production"
+    
+    # Create descriptive commit message
+    local commit_message="deploy(production): from staging - $commit_count commits
+
+Recent changes:
+$changes_summary
+
+Environment: production
+Source: staging
+Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+    
+    # Merge staging into production
+    git merge --no-ff staging -m "$commit_message"
+    
+    # Push to production
+    git push origin production
+    
+    print_status "Successfully deployed to production"
+    print_status "AWS Amplify will automatically deploy the production environment"
+    print_status "Deployment includes $commit_count commits from staging"
+    
+    # Return to original branch
+    print_status "Returning to original branch: $current_branch"
+    git checkout $current_branch
+}
+
 # Function to show help
 show_help() {
     print_header "Git Workflow Commands"
     
     echo "Available commands:"
     echo ""
-    echo "  create-feature <name>    - Create a new feature branch from develop"
-    echo "  finish-feature <name>    - Merge feature branch into develop"
-    echo "  deploy-staging          - Deploy develop to staging"
-    echo "  deploy-production       - Deploy staging to production"
-    echo "  create-hotfix <name>    - Create a hotfix branch from production"
-    echo "  finish-hotfix <name>    - Deploy hotfix to all environments"
-    echo "  status                  - Show current git status"
-    echo "  help                    - Show this help message"
+    echo "  create-feature <name>           - Create a new feature branch from develop"
+    echo "  finish-feature <name>           - Merge feature branch into develop"
+    echo "  deploy-staging                  - Deploy develop to staging (must be on develop)"
+    echo "  deploy-staging-from-develop     - Deploy develop to staging (works from any branch)"
+    echo "  deploy-staging-custom <desc>    - Deploy to staging with custom description"
+    echo "  deploy-production               - Deploy staging to production (must be on staging)"
+    echo "  deploy-production-from-staging  - Deploy staging to production (works from any branch)"
+    echo "  deploy-production-custom <desc> - Deploy to production with custom description"
+    echo "  create-hotfix <name>            - Create a hotfix branch from production"
+    echo "  finish-hotfix <name>            - Deploy hotfix to all environments"
+    echo "  status                          - Show current git status"
+    echo "  help                            - Show this help message"
     echo ""
     echo "Examples:"
     echo "  ./scripts/git-workflow.sh create-feature user-authentication"
     echo "  ./scripts/git-workflow.sh deploy-staging"
+    echo "  ./scripts/git-workflow.sh deploy-staging-custom \"Fix Amplify YAML parsing issues\""
+    echo "  ./scripts/git-workflow.sh deploy-production-custom \"Release SmartMenus feature\""
     echo "  ./scripts/git-workflow.sh create-hotfix critical-bug-fix"
 }
 
@@ -295,8 +570,20 @@ case "$1" in
     "deploy-staging")
         deploy_staging
         ;;
+    "deploy-staging-from-develop")
+        deploy_staging_from_develop
+        ;;
+    "deploy-staging-custom")
+        deploy_staging_custom "$2"
+        ;;
     "deploy-production")
         deploy_production
+        ;;
+    "deploy-production-from-staging")
+        deploy_production_from_staging
+        ;;
+    "deploy-production-custom")
+        deploy_production_custom "$2"
         ;;
     "create-hotfix")
         create_hotfix "$2"

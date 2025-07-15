@@ -1,0 +1,40 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "smartmenus",
+    "SmartMenus",
+    "Metabase",
+    "metabase",
+    "everybite",
+    "Everybite",
+    "cognito",
+    "amplify",
+    "Amplify",
+    "aws",
+    "AWS",
+    "vite",
+    "VITE",
+    "vitest",
+    "Vitest",
+    "testuser",
+    "authorised",
+    "everybiteAuth",
+    "Qbnewb",
+    "refetches",
+    "shadcn",
+    "Pageable",
+    "Macronutrients",
+    "Prefs",
+    "Newb"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    "dist/**",
+    "coverage/**",
+    "storybook-static/**",
+    "*.min.js",
+    "package-lock.json",
+    "amplify/backend/function/metabaseProxy/metabaseProxy-cloudformation-template.json"
+  ]
+}

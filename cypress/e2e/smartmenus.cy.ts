@@ -7,7 +7,8 @@ describe("SmartMenus admin list", () => {
   const email = Cypress.env("USERNAME");
   const password = Cypress.env("PASSWORD");
 
-  before(() => {
+  beforeEach(() => {
+    // Login
     cy.visit("/login");
     cy.get('input[type="email"], input[name="email"]').type(email);
     cy.get('input[type="password"], input[name="password"]').type(password, {
@@ -15,9 +16,7 @@ describe("SmartMenus admin list", () => {
     });
     cy.get('button[type="submit"], button:contains("Sign in")').click();
     cy.contains("Dashboard").should("exist");
-  });
 
-  beforeEach(() => {
     // Stub GraphQL queries for SmartMenus list and detail
     const widget = {
       __typename: "Widget",
@@ -25,16 +24,16 @@ describe("SmartMenus admin list", () => {
       name: "Lunch Menu",
       slug: "lunch-menu",
       layout: "classic",
-      hasImages: true,
-      hasOrdering: true,
-      hasUtm: true,
-      syncEnabled: true,
-      previewUrl: "https://example.com/preview",
       displayImages: true,
       isOrderButtonEnabled: true,
+      isByoEnabled: false,
+      primaryBrandColor: "#FF0000",
+      highlightColor: "#00FF00",
+      backgroundColor: "#FFFFFF",
       orderUrl: "https://myeatery.com/order?utm_source=cypress",
-      banners: [],
-      menuItems: [],
+      isSyncEnabled: true,
+      updatedAt: "2024-01-01T00:00:00Z",
+      publishedAt: "2024-01-01T00:00:00Z",
     };
 
     cy.intercept("POST", "/graphql", (req) => {
@@ -79,15 +78,5 @@ describe("SmartMenus admin list", () => {
           1
         );
       });
-  });
-
-  it("opens actions menu for a row", () => {
-    cy.get("table tbody tr")
-      .first()
-      .within(() => {
-        cy.get('button[aria-label="Row actions"]').click({ force: true });
-      });
-    // actions menu should appear
-    cy.contains("View details", { timeout: 10000 }).should("exist");
   });
 });

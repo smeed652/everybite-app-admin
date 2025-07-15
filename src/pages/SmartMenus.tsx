@@ -53,7 +53,7 @@ export default function SmartMenus() {
             {row.original.displayImages ? (
               <ImageIcon
                 className="h-4 w-4 text-blue-500"
-                data-testid="camera-icon"
+                data-testid="images-icon"
               />
             ) : (
               <span className="text-gray-400">—</span>
@@ -216,6 +216,7 @@ export default function SmartMenus() {
         onRowClick={(row) => navigate(`/smartmenus/${row.id}`)}
         label="SmartMenus list"
         data-testid="smartmenus-table"
+        id="smartmenus-table"
       />
     </div>
   );

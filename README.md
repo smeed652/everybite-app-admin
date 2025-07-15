@@ -1,8 +1,8 @@
 # everybite-app-admin
 
-Admin panel for configuring EveryBite’s SmartMenu widgets.
+Admin panel for configuring EveryBite's SmartMenu widgets.
 
-This repository includes a React (Vite) frontend, Node/Express backend, and infrastructure for GraphQL code-generation, testing, CI, and deployment.
+This repository includes a React (Vite) frontend, AWS Lambda functions for API proxying, and infrastructure for GraphQL code-generation, testing, CI, and deployment.
 
 ---
 
@@ -10,6 +10,7 @@ This repository includes a React (Vite) frontend, Node/Express backend, and infr
 
 1. Copy `.env.example` to `.env.local` and fill in values.
 2. Configure AWS credentials locally:
+
    ```bash
    mkdir -p ~/.aws
    # edit ~/.aws/credentials
@@ -18,31 +19,38 @@ This repository includes a React (Vite) frontend, Node/Express backend, and infr
    aws_secret_access_key = <YOUR_SECRET_ACCESS_KEY>
    region = us-west-1
    ```
+
    Then load the profile when running local dev:
+
    ```bash
    export AWS_SDK_LOAD_CONFIG=1
    export AWS_PROFILE=everybite-admin
    vercel dev
    ```
 
-3. **Project linking**: The `.vercel` directory (which stores the Vercel project/org IDs) is committed to the repo. After cloning, running `vercel dev` should start immediately. If you ever see the interactive "Set up and develop..." prompt, make sure you're in the project root and that the `.vercel` folder is present. If it was removed, recreate it with `vercel link`. 
+3. **Project linking**: The `.vercel` directory (which stores the Vercel project/org IDs) is committed to the repo. After cloning, running `vercel dev` should start immediately. If you ever see the interactive "Set up and develop..." prompt, make sure you're in the project root and that the `.vercel` folder is present. If it was removed, recreate it with `vercel link`.
 
-## Docker
+## API Integration
 
-### Development
+The application uses AWS Lambda functions to proxy API calls to external services (like Metabase). The Lambda functions are deployed separately and referenced via environment variables.
 
-```bash
-# start dev container with hot-reload on http://localhost:5173
-docker compose up app
-```
+- **Metabase Integration**: Uses Lambda function at `https://ldfubm7l7k2hj4ln3pxtqylcwe0isjau.lambda-url.us-west-1.on.aws/`
+- **Environment Variable**: `VITE_METABASE_API_URL` should point to the Lambda function URL
 
-### Production preview
+## Development
 
 ```bash
-# build and serve static bundle on http://localhost:8080
-docker compose up prod
-```
+# Install dependencies
+npm install
 
-Images are pinned to stable versions (`node:18-alpine`, `nginx:stable-alpine`).
+# Start development server
+npm run dev
+
+# Run tests
+npm test
+
+# Build for production
+npm run build
+```
 
 For development instructions and roadmap see `docs/`.

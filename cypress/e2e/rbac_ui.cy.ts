@@ -1,41 +1,35 @@
 /// <reference types="cypress" />
 
-import * as auth from 'aws-amplify/auth';
-
-const stubGroups = (groups: string | string[]) => {
-
-  cy.stub(auth, 'fetchAuthSession').resolves({
-    accessToken: { payload: { 'cognito:groups': groups } },
-    idToken: { payload: { 'cognito:groups': groups } },
-    tokens: {
-      accessToken: { payload: { 'cognito:groups': groups } },
-      idToken: { payload: { 'cognito:groups': groups } },
-    },
-  });
-};
-
-describe('RBAC – UI redirects', () => {
-  afterEach(() => {
-    // restore the stubbed method between tests
-    // @ts-ignore
-    auth.fetchAuthSession.restore && auth.fetchAuthSession.restore();
-  });
-
-  it('redirects non-admin user to /403', () => {
-    cy.visit('/users', {
-      onBeforeLoad() {
-        stubGroups(['USER']);
+describe("RBAC – UI redirects", () => {
+  it("redirects non-admin user to /403", () => {
+    cy.visit("/users", {
+      onBeforeLoad(win) {
+        win.localStorage.setItem(
+          "everybiteAuth",
+          JSON.stringify({
+            accessToken: "stub-access",
+            idToken: "stub-id",
+            groups: ["USER"],
+          })
+        );
       },
     });
-    cy.url().should('include', '/login');
+    cy.url().should("include", "/403");
   });
 
-  it('allows ADMIN user to view Users page', () => {
-    cy.visit('/users', {
-      onBeforeLoad() {
-        stubGroups('ADMIN');
+  it("allows ADMIN user to view Users page", () => {
+    cy.visit("/users", {
+      onBeforeLoad(win) {
+        win.localStorage.setItem(
+          "everybiteAuth",
+          JSON.stringify({
+            accessToken: "stub-access",
+            idToken: "stub-id",
+            groups: ["ADMIN"],
+          })
+        );
       },
     });
-    cy.url().should('include', '/users');
+    cy.url().should("include", "/users");
   });
 });
