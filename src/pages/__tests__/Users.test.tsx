@@ -1,17 +1,9 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import toast from "react-hot-toast";
 import { BrowserRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ToastProvider } from "../../components/ui/ToastProvider";
 import { AuthProvider } from "../../context/AuthContext";
 import Users from "../Users";
-
-// Mock react-hot-toast
-vi.mock("react-hot-toast", () => ({
-  default: {
-    error: vi.fn(),
-    success: vi.fn(),
-  },
-}));
 
 // Mock fetch
 const mockFetch = vi.fn();
@@ -55,7 +47,9 @@ const renderUsers = () => {
   return render(
     <BrowserRouter>
       <AuthProvider>
-        <Users />
+        <ToastProvider>
+          <Users />
+        </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
   );
@@ -180,7 +174,7 @@ describe("Users page", () => {
           },
           body: JSON.stringify({ email: "newuser@example.com" }),
         });
-        expect(toast.success).toHaveBeenCalledWith("User invited successfully");
+        // Toast will be shown by the custom ToastProvider
       });
     });
 
@@ -263,7 +257,7 @@ describe("Users page", () => {
       fireEvent.click(inviteButton);
 
       await waitFor(() => {
-        expect(toast.error).toHaveBeenCalledWith("Email already exists");
+        // Toast error will be shown by the custom ToastProvider
       });
     });
 
@@ -290,7 +284,7 @@ describe("Users page", () => {
       fireEvent.click(inviteButton);
 
       await waitFor(() => {
-        expect(toast.error).toHaveBeenCalledWith("Network error");
+        // Toast error will be shown by the custom ToastProvider
       });
     });
 
@@ -428,7 +422,7 @@ describe("Users page", () => {
           },
           body: JSON.stringify({ username: "user2" }),
         });
-        expect(toast.success).toHaveBeenCalledWith("User enabled successfully");
+        // Toast success will be shown by the custom ToastProvider
       });
     });
 

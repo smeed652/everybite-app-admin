@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Skeleton } from "../components/ui/Skeleton";
 import { Table, TBody, TD, TH, THead, TR } from "../components/ui/Table";
+import { useToast } from "../components/ui/ToastProvider";
 import { useAuth } from "../context/AuthContext";
 
 interface CognitoUserRow {
@@ -32,6 +32,7 @@ interface InviteUserResponse {
 
 export default function Users() {
   const { accessToken } = useAuth();
+  const { showToast } = useToast();
   const [users, setUsers] = useState<CognitoUserRow[]>([]);
   const [listLoading, setListLoading] = useState(false);
   const [nextToken, setNextToken] = useState<string | undefined>(undefined);
@@ -67,7 +68,7 @@ export default function Users() {
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : "Error loading users";
-      toast.error(errorMessage);
+      showToast({ title: errorMessage, variant: "error" });
     } finally {
       setListLoading(false);
     }
@@ -94,16 +95,19 @@ export default function Users() {
       });
       const data: InviteUserResponse = await res.json();
       if (data.success) {
-        toast.success("User invited successfully");
+        showToast({ title: "User invited successfully", variant: "success" });
         setInviteEmail("");
         fetchUsers(); // refresh list
       } else {
-        toast.error(data.message || "Failed to invite user");
+        showToast({
+          title: data.message || "Failed to invite user",
+          variant: "error",
+        });
       }
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to invite user";
-      toast.error(errorMessage);
+      showToast({ title: errorMessage, variant: "error" });
     } finally {
       setInviteLoading(false);
     }
@@ -120,19 +124,21 @@ export default function Users() {
         body: JSON.stringify({ username }),
       });
       if (res.ok) {
-        toast.success(
-          action === "reset-password"
-            ? "User reset-password successfully"
-            : `User ${action}d successfully`
-        );
+        showToast({
+          title:
+            action === "reset-password"
+              ? "User reset-password successfully"
+              : `User ${action}d successfully`,
+          variant: "success",
+        });
         fetchUsers(); // refresh list
       } else {
-        toast.error(`Failed to ${action} user`);
+        showToast({ title: `Failed to ${action} user`, variant: "error" });
       }
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : `Failed to ${action} user`;
-      toast.error(errorMessage);
+      showToast({ title: errorMessage, variant: "error" });
     }
     setMenuOpen(null);
   };

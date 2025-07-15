@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
 import { Route, Routes } from "react-router-dom";
 import { AuthConfigCheck } from "./components/AuthConfigCheck";
 import Layout from "./components/Layout";
@@ -98,7 +97,6 @@ export default function App() {
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
-          <Toaster />
         </ToastProvider>
       </AuthProvider>
     </ThemeProvider>
