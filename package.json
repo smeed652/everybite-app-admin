@@ -33,7 +33,8 @@
     "deploy:production:safe": "./scripts/git-workflow.sh deploy-production-from-staging",
     "deploy:simple": "./scripts/simple-workflow.sh deploy-production",
     "workflow:status": "./scripts/git-workflow.sh status",
-    "workflow:help": "./scripts/git-workflow.sh help"
+    "workflow:help": "./scripts/git-workflow.sh help",
+    "amplify:configure-gates": "./scripts/configure-amplify-gates.sh"
   },
   "keywords": [],
   "author": "",
