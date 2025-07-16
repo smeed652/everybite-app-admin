@@ -1,23 +1,18 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { useParams } from "react-router-dom";
 
 import { RefreshCcw } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
-import { Card } from "../../../components/ui/Card";
-import { Skeleton } from "../../../components/ui/Skeleton";
-import { useToast } from "../../../components/ui/ToastProvider";
 import type { Widget } from "../../../generated/graphql";
+import { SmartMenuErrorState } from "../components/SmartMenuErrorState";
 import SmartMenuHeader from "../components/SmartMenuHeader";
-import { useSyncWidget } from "../hooks/useSyncWidget";
-import { useUpdateWidget } from "../hooks/useUpdateWidget";
+import { SmartMenuLoadingState } from "../components/SmartMenuLoadingState";
+import {
+  useSmartMenuActions,
+  type SmartMenuSaveArgs,
+} from "../hooks/useSmartMenuActions";
 import { useWidget } from "../hooks/useWidget";
 import { useWidgetDiff } from "../hooks/useWidgetDiff";
-
-export interface SmartMenuSaveArgs {
-  widget: Widget;
-  pendingChanges: Record<string, unknown>;
-  updateFields: (changes: Partial<Widget>) => Promise<void>;
-}
 
 interface Props {
   widgetId?: string;
@@ -36,10 +31,8 @@ export default function SmartMenuPage({
 }: Props) {
   const params = useParams();
   const id = widgetId ?? (params.widgetId as string);
-  const { showToast } = useToast();
 
   const { widget, loading, error } = useWidget(id);
-  const { updateWidgetFields } = useUpdateWidget();
   const {
     formKey,
     dirty,
@@ -49,58 +42,23 @@ export default function SmartMenuPage({
     refreshSnapshot,
   } = useWidgetDiff(widget ?? null);
 
-  const [saving, setSaving] = useState(false);
-  const { sync, loading: syncing } = useSyncWidget();
+  const { saving, syncing, handleSave, handleCancel, handleSyncNow } =
+    useSmartMenuActions({
+      widget: widget!,
+      dirty,
+      pendingChanges,
+      refreshSnapshot,
+      reset,
+      onSave,
+    });
 
   /* ---------- loading / error ---------- */
   if (loading) {
-    return (
-      <div className="p-8 space-y-4" data-testid="smartmenu-generic-page">
-        <Skeleton className="h-8 w-1/3" />
-        <Card className="h-64" />
-      </div>
-    );
+    return <SmartMenuLoadingState />;
   }
-  if (error || !widget)
-    return <div className="text-red-600">Failed to load widget.</div>;
-
-  /* ---------- actions ---------- */
-  const handleSave = async () => {
-    if (!dirty) return;
-    setSaving(true);
-    try {
-      if (onSave) {
-        await onSave({
-          widget,
-          pendingChanges,
-          updateFields: async (changes) => {
-            await updateWidgetFields(widget.id, changes);
-          },
-        });
-      } else {
-        await updateWidgetFields(widget.id, pendingChanges as Partial<Widget>);
-      }
-      showToast({ title: "Changes saved", variant: "success" });
-      refreshSnapshot();
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleCancel = () => {
-    reset();
-    // No page reload needed - reset() already clears pendingChanges and increments formKey
-    // which forces child panels to remount with pristine props
-  };
-
-  const handleSyncNow = async () => {
-    try {
-      await sync(widget.id);
-      showToast({ title: "Sync started", variant: "success" });
-    } catch {
-      showToast({ title: "Sync failed", variant: "error" });
-    }
-  };
+  if (error || !widget) {
+    return <SmartMenuErrorState />;
+  }
 
   /* ---------- render ---------- */
   return (
