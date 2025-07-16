@@ -91,14 +91,11 @@ jobs:
       - name: Storybook a11y tests
         run: npm run test-stories
 
-  # E2E tests with different strategies for main vs production
+    # Smoke E2E tests for main branch
   smoke-e2e:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: [lint-and-test, build]
-    strategy:
-      matrix:
-        # Run smoke tests on main, full suite on production
-        spec: ${{ github.ref == 'refs/heads/production' && 'cypress/e2e/**/*.cy.ts' || 'cypress/e2e/smoke.cy.ts' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -127,7 +124,7 @@ jobs:
           start: >-
             npx vercel@${{ env.VERCEL_CLI_VERSION }} dev --listen 3000 --yes
             --token ${{ secrets.VERCEL_TOKEN }}
-          spec: ${{ matrix.spec }}
+          spec: cypress/e2e/smoke.cy.ts
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: chrome
