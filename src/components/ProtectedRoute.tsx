@@ -1,5 +1,5 @@
 import { fetchAuthSession } from "aws-amplify/auth";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 interface Props {
@@ -13,7 +13,16 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
   const [signedIn, setSignedIn] = useState(false);
   const [roleAllowed, setRoleAllowed] = useState(true);
 
+  // Prevent duplicate auth checks in the same render cycle
+  const authCheckInProgress = useRef(false);
+
   useEffect(() => {
+    // Prevent duplicate auth checks
+    if (authCheckInProgress.current) {
+      return;
+    }
+    authCheckInProgress.current = true;
+
     // Only allow test environment to stub auth via localStorage in actual test environments
     interface WindowWithCypress {
       Cypress?: unknown;
@@ -26,20 +35,11 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
       import.meta.env.VITE_E2E === "true" ||
       (typeof process !== "undefined" && process.env.NODE_ENV === "test");
 
-    // Debug logging
+    // Debug logging - only show once per auth check
     // eslint-disable-next-line no-console
-    console.log(
-      "[ProtectedRoute] isTestEnv:",
-      isTestEnv,
-      "VITE_E2E:",
-      import.meta.env.VITE_E2E,
-      "NODE_ENV:",
-      typeof process !== "undefined" ? process.env.NODE_ENV : undefined
-    );
+    console.log("[ProtectedRoute] Starting auth check - isTestEnv:", isTestEnv);
 
     const localToken = isTestEnv ? localStorage.getItem("everybiteAuth") : null;
-    // eslint-disable-next-line no-console
-    console.log("[ProtectedRoute] localToken:", localToken);
     if (isTestEnv && localToken) {
       try {
         const parsed = JSON.parse(localToken);
@@ -56,9 +56,7 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
         setLoading(false);
         // eslint-disable-next-line no-console
         console.log(
-          "[ProtectedRoute] (test bypass) signedIn:",
-          true,
-          "roleAllowed:",
+          "[ProtectedRoute] Test auth bypass - signedIn: true, roleAllowed:",
           allowedRoles && allowedRoles.length > 0
             ? groupsArr.some((g) => allowedRoles.includes(g))
             : true
@@ -72,29 +70,9 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
     // Amplify throws if no session / not signed in
     fetchAuthSession()
       .then((session) => {
-        // eslint-disable-next-line no-console
-        console.log(
-          "[ProtectedRoute] fetchAuthSession success - full session:",
-          session
-        );
-        // eslint-disable-next-line no-console
-        console.log("[ProtectedRoute] session.tokens:", session.tokens);
-        // eslint-disable-next-line no-console
-        console.log(
-          "[ProtectedRoute] session.tokens?.accessToken:",
-          session.tokens?.accessToken
-        );
-        // eslint-disable-next-line no-console
-        console.log(
-          "[ProtectedRoute] session.tokens?.idToken:",
-          session.tokens?.idToken
-        );
-
         // Check if we actually have valid tokens - if not, user is not signed in
         const hasValidTokens =
           session.tokens?.accessToken || session.tokens?.idToken;
-        // eslint-disable-next-line no-console
-        console.log("[ProtectedRoute] hasValidTokens:", hasValidTokens);
 
         if (!hasValidTokens) {
           // eslint-disable-next-line no-console
@@ -117,8 +95,6 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
             anySession.tokens?.accessToken?.payload ||
             anySession.idToken?.payload ||
             anySession.tokens?.idToken?.payload;
-          // eslint-disable-next-line no-console
-          console.log("[ProtectedRoute] Amplify session payload:", payload);
           const rawGroups = payload?.["cognito:groups"];
           const groupsArr: string[] = Array.isArray(rawGroups)
             ? (rawGroups as string[])
@@ -136,18 +112,19 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
         }
         // eslint-disable-next-line no-console
         console.log(
-          "[ProtectedRoute] signedIn:",
-          true,
-          "roleAllowed:",
+          "[ProtectedRoute] Auth successful - signedIn: true, roleAllowed:",
           roleAllowed
         );
       })
       .catch((err) => {
         // eslint-disable-next-line no-console
-        console.log("[ProtectedRoute] fetchAuthSession error:", err);
+        console.log("[ProtectedRoute] Auth failed:", err.message);
         setSignedIn(false);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        authCheckInProgress.current = false;
+      });
   }, []);
 
   // Show loading overlay instead of unmounting content

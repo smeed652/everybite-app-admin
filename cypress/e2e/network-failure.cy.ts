@@ -9,7 +9,7 @@ describe("Network failure handling", () => {
   const password = Cypress.env("PASSWORD");
 
   it("shows toast when /api/users fails", () => {
-    cy.intercept("GET", /\/api\/users.*/, {
+    cy.intercept("GET", "**/users?limit=20", {
       statusCode: 500,
       body: { error: "Internal error" },
       delay: 100,
@@ -25,6 +25,11 @@ describe("Network failure handling", () => {
     // Ensure login completes – wait until we leave /login
     cy.url({ timeout: 10000 }).should("not.include", "/login");
 
+    // Assert dashboard or Users page is loaded
+    cy.visit("/users", { failOnStatusCode: false });
+    cy.url().should("include", "/users");
+    cy.contains("Invite User", { timeout: 5000 }).should("be.visible");
+
     // Set ADMIN token to ensure access to Users page
     cy.window().then((win) => {
       win.localStorage.setItem(
@@ -38,10 +43,12 @@ describe("Network failure handling", () => {
     });
 
     // Navigate to Users page which triggers request
-    cy.visit("/users");
+    // (already on /users, so just wait for the API call)
     cy.wait("@usersFail");
 
     // Assert toast appears with failure message
-    cy.contains("Internal error", { timeout: 5000 }).should("be.visible");
+    cy.contains("Failed to fetch users", { timeout: 5000 }).should(
+      "be.visible"
+    );
   });
 });

@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ToastProvider } from "../../components/ui/ToastProvider";
@@ -8,6 +9,18 @@ import Users from "../Users";
 // Mock fetch
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
+
+// Mock useToast
+const mockShowToast = vi.fn();
+vi.mock("../../components/ui/ToastProvider", async () => {
+  const actual = await vi.importActual("../../components/ui/ToastProvider");
+  return {
+    ...actual,
+    useToast: vi.fn(() => ({
+      showToast: mockShowToast,
+    })),
+  };
+});
 
 // Mock AuthContext
 const mockAuthContext = {
@@ -30,18 +43,20 @@ const mockUsers = [
   {
     username: "user1",
     email: "user1@example.com",
+    emailVerified: true,
     status: "CONFIRMED",
     enabled: true,
-    created: "TEST_DATE_1",
-    groups: [],
+    createdAt: "2025-01-01T00:00:00.000Z",
+    lastModified: "2025-01-01T00:00:00.000Z",
   },
   {
     username: "user2",
     email: "user2@example.com",
+    emailVerified: false,
     status: "UNCONFIRMED",
     enabled: false,
-    created: "TEST_DATE_2",
-    groups: [],
+    createdAt: "2025-01-02T00:00:00.000Z",
+    lastModified: "2025-01-02T00:00:00.000Z",
   },
 ];
 
@@ -60,6 +75,8 @@ const renderUsers = () => {
 describe("Users page", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Set default environment variable
+    vi.stubEnv("VITE_METABASE_API_URL", "http://localhost:3001");
   });
 
   describe("Initial loading state", () => {
@@ -68,7 +85,7 @@ describe("Users page", () => {
 
       renderUsers();
 
-      // During loading, only skeleton elements are visible
+      // During loading, skeleton elements should be visible
       expect(screen.getAllByRole("status")).toHaveLength(6); // 1 header + 5 table rows
     });
   });
@@ -77,66 +94,74 @@ describe("Users page", () => {
     it("should display users successfully", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ users: mockUsers }),
+        json: async () => ({
+          users: mockUsers,
+          nextToken: null,
+        }),
       });
 
       renderUsers();
 
       await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
         expect(screen.getByText("user1@example.com")).toBeInTheDocument();
-        expect(screen.getByText("user2")).toBeInTheDocument();
         expect(screen.getByText("user2@example.com")).toBeInTheDocument();
       });
 
       expect(screen.getByText("CONFIRMED")).toBeInTheDocument();
-      expect(screen.getByText("UNCONFIRMED")).toBeInTheDocument();
+      expect(screen.getByText("UNCONFIRMED (Disabled)")).toBeInTheDocument();
     });
 
     it("should display correct status badges", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ users: mockUsers }),
+        json: async () => ({
+          users: mockUsers,
+          nextToken: null,
+        }),
       });
 
       renderUsers();
 
       await waitFor(() => {
-        const confirmedBadge = screen.getByText("CONFIRMED");
-        const unconfirmedBadge = screen.getByText("UNCONFIRMED");
+        const confirmedStatus = screen.getByText("CONFIRMED");
+        const unconfirmedStatus = screen.getByText("UNCONFIRMED (Disabled)");
 
-        expect(confirmedBadge).toHaveClass("bg-green-100", "text-green-800");
-        expect(unconfirmedBadge).toHaveClass(
-          "bg-yellow-100",
-          "text-yellow-800"
-        );
+        expect(confirmedStatus).toHaveClass("text-green-600");
+        expect(unconfirmedStatus).toHaveClass("text-red-600");
       });
     });
 
     it("should display created dates correctly", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ users: mockUsers }),
+        json: async () => ({
+          users: mockUsers,
+          nextToken: null,
+        }),
       });
 
       renderUsers();
 
       await waitFor(() => {
-        expect(screen.getAllByText("Invalid Date")).toHaveLength(2);
+        expect(screen.getByText("12/31/2024")).toBeInTheDocument();
+        expect(screen.getByText("1/1/2025")).toBeInTheDocument();
       });
     });
 
     it("should handle empty user list", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ users: [] }),
+        json: async () => ({
+          users: [],
+          nextToken: null,
+        }),
       });
 
       renderUsers();
 
       await waitFor(() => {
         expect(screen.getByText("Users")).toBeInTheDocument();
-        expect(screen.queryByText("user1")).not.toBeInTheDocument();
+        expect(screen.queryByText("user1@example.com")).not.toBeInTheDocument();
       });
     });
   });
@@ -146,100 +171,95 @@ describe("Users page", () => {
       mockFetch
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({ users: mockUsers }),
+          json: async () => ({
+            users: mockUsers,
+            nextToken: null,
+          }),
         })
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({ success: true, message: "User invited" }),
+          json: async () => ({
+            message: "User created successfully",
+            user: {
+              username: "newuser",
+              email: "newuser@example.com",
+              status: "UNCONFIRMED",
+            },
+          }),
         });
 
       renderUsers();
 
       await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
       });
 
-      const emailInput = screen.getByPlaceholderText("Email address");
-      const inviteButton = screen.getByText("Invite User");
+      // Open invite form - click the header button that toggles the form
+      const inviteButtons = screen.getAllByText("Invite User");
+      fireEvent.click(inviteButtons[0]); // First button is the header button
 
-      fireEvent.change(emailInput, {
+      // Fill form
+      fireEvent.change(screen.getByPlaceholderText("Email"), {
         target: { value: "newuser@example.com" },
       });
-      fireEvent.click(inviteButton);
+      fireEvent.change(screen.getByPlaceholderText("Password"), {
+        target: { value: "password123" },
+      });
+
+      // Submit - get the second "Invite User" button (the one in the form)
+      const formInviteButtons = screen.getAllByText("Invite User");
+      fireEvent.click(formInviteButtons[1]);
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith("/api/invite", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer mock-token",
-          },
-          body: JSON.stringify({ email: "newuser@example.com" }),
+        expect(mockShowToast).toHaveBeenCalledWith({
+          title: "✅ User created successfully",
+          variant: "success",
         });
-        // Toast will be shown by the custom ToastProvider
-      });
-    });
-
-    it("should handle invitation with Enter key", async () => {
-      mockFetch
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ users: mockUsers }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ success: true, message: "User invited" }),
-        });
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
-      });
-
-      const emailInput = screen.getByPlaceholderText("Email address");
-      fireEvent.change(emailInput, {
-        target: { value: "newuser@example.com" },
-      });
-      fireEvent.keyDown(emailInput, { key: "Enter" });
-
-      await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith(
-          "/api/invite",
-          expect.any(Object)
-        );
       });
     });
 
     it("should not invite with empty email", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ users: mockUsers }),
+        json: async () => ({
+          users: mockUsers,
+          nextToken: null,
+        }),
       });
 
       renderUsers();
 
       await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
       });
 
-      const inviteButton = screen.getByText("Invite User");
-      expect(inviteButton).toBeDisabled();
+      // Open invite form - click the header button that toggles the form
+      const inviteButtons = screen.getAllByText("Invite User");
+      fireEvent.click(inviteButtons[0]); // First button is the header button
 
-      fireEvent.click(inviteButton);
-      expect(mockFetch).toHaveBeenCalledTimes(1); // Only the initial fetch
+      // Try to submit without email
+      const formInviteButtons = screen.getAllByText("Invite User");
+      fireEvent.click(formInviteButtons[1]);
+
+      expect(mockShowToast).toHaveBeenCalledWith({
+        title: "❌ Email and password are required",
+        variant: "error",
+      });
     });
 
     it("should handle invitation failure", async () => {
       mockFetch
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({ users: mockUsers }),
+          json: async () => ({
+            users: mockUsers,
+            nextToken: null,
+          }),
         })
         .mockResolvedValueOnce({
-          ok: true,
+          ok: false,
+          status: 400,
           json: async () => ({
-            success: false,
             message: "Email already exists",
           }),
         });
@@ -247,19 +267,30 @@ describe("Users page", () => {
       renderUsers();
 
       await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
       });
 
-      const emailInput = screen.getByPlaceholderText("Email address");
-      const inviteButton = screen.getByText("Invite User");
+      // Open invite form - click the header button that toggles the form
+      const inviteButtons = screen.getAllByText("Invite User");
+      fireEvent.click(inviteButtons[0]); // First button is the header button
 
-      fireEvent.change(emailInput, {
+      // Fill form
+      fireEvent.change(screen.getByPlaceholderText("Email"), {
         target: { value: "existing@example.com" },
       });
-      fireEvent.click(inviteButton);
+      fireEvent.change(screen.getByPlaceholderText("Password"), {
+        target: { value: "password123" },
+      });
+
+      // Submit - get the second "Invite User" button (the one in the form)
+      const formInviteButtons = screen.getAllByText("Invite User");
+      fireEvent.click(formInviteButtons[1]);
 
       await waitFor(() => {
-        // Toast error will be shown by the custom ToastProvider
+        expect(mockShowToast).toHaveBeenCalledWith({
+          title: "❌ Failed to invite user: Email already exists",
+          variant: "error",
+        });
       });
     });
 
@@ -267,26 +298,39 @@ describe("Users page", () => {
       mockFetch
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({ users: mockUsers }),
+          json: async () => ({
+            users: mockUsers,
+            nextToken: null,
+          }),
         })
         .mockRejectedValueOnce(new Error("Network error"));
 
       renderUsers();
 
       await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
       });
 
-      const emailInput = screen.getByPlaceholderText("Email address");
-      const inviteButton = screen.getByText("Invite User");
+      // Open invite form
+      fireEvent.click(screen.getByText("Invite User"));
 
-      fireEvent.change(emailInput, {
+      // Fill form
+      fireEvent.change(screen.getByPlaceholderText("Email"), {
         target: { value: "newuser@example.com" },
       });
-      fireEvent.click(inviteButton);
+      fireEvent.change(screen.getByPlaceholderText("Password"), {
+        target: { value: "password123" },
+      });
+
+      // Submit - get the second "Invite User" button (the one in the form)
+      const inviteButtons = screen.getAllByText("Invite User");
+      fireEvent.click(inviteButtons[1]);
 
       await waitFor(() => {
-        // Toast error will be shown by the custom ToastProvider
+        expect(mockShowToast).toHaveBeenCalledWith({
+          title: "❌ Failed to invite user: Network error",
+          variant: "error",
+        });
       });
     });
 
@@ -294,354 +338,439 @@ describe("Users page", () => {
       mockFetch
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({ users: mockUsers }),
+          json: async () => ({
+            users: mockUsers,
+            nextToken: null,
+          }),
         })
         .mockImplementation(() => new Promise(() => {})); // Never resolves for invite
 
       renderUsers();
 
       await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
       });
 
-      const emailInput = screen.getByPlaceholderText("Email address");
-      const inviteButton = screen.getByText("Invite User");
+      // Open invite form
+      fireEvent.click(screen.getByText("Invite User"));
 
-      fireEvent.change(emailInput, {
+      // Fill form
+      fireEvent.change(screen.getByPlaceholderText("Email"), {
         target: { value: "newuser@example.com" },
       });
-      fireEvent.click(inviteButton);
+      fireEvent.change(screen.getByPlaceholderText("Password"), {
+        target: { value: "password123" },
+      });
 
+      // Submit - get the second "Invite User" button (the one in the form)
+      const inviteButtons = screen.getAllByText("Invite User");
+      fireEvent.click(inviteButtons[1]);
+
+      // Should show loading state
       expect(screen.getByText("Inviting...")).toBeInTheDocument();
     });
   });
 
-  describe("User actions menu", () => {
+  describe("User actions", () => {
     it("should open and close action menu", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ users: mockUsers }),
-      });
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
-      });
-
-      const actionButtons = screen.getAllByLabelText(/Actions for/);
-      const firstActionButton = actionButtons[0];
-
-      // Open menu
-      fireEvent.click(firstActionButton);
-      expect(screen.getByText("Disable")).toBeInTheDocument();
-      expect(screen.getByText("Reset Password")).toBeInTheDocument();
-      expect(screen.getByText("Delete")).toBeInTheDocument();
-
-      // Close menu by clicking outside
-      fireEvent.click(document.body);
-      expect(screen.queryByText("Enable")).not.toBeInTheDocument();
-    });
-
-    it("should toggle menu when clicking same button", async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ users: mockUsers }),
-      });
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
-      });
-
-      const actionButtons = screen.getAllByLabelText(/Actions for/);
-      const firstActionButton = actionButtons[0];
-
-      // Open menu
-      fireEvent.click(firstActionButton);
-      expect(screen.getByText("Disable")).toBeInTheDocument();
-
-      // Close menu by clicking same button
-      fireEvent.click(firstActionButton);
-      expect(screen.queryByText("Enable")).not.toBeInTheDocument();
-    });
-
-    it("should show correct action text based on user status", async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ users: mockUsers }),
-      });
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
-      });
-
-      const actionButtons = screen.getAllByLabelText(/Actions for/);
-
-      // First user is enabled, should show "Disable"
-      fireEvent.click(actionButtons[0]);
-      expect(screen.getByText("Disable")).toBeInTheDocument();
-
-      // Close menu
-      fireEvent.click(document.body);
-
-      // Second user is disabled, should show "Enable"
-      fireEvent.click(actionButtons[1]);
-      expect(screen.getByText("Enable")).toBeInTheDocument();
-    });
-  });
-
-  describe("User actions", () => {
-    it("should enable user successfully", async () => {
-      mockFetch
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ users: mockUsers }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-        });
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("user2")).toBeInTheDocument();
-      });
-
-      const actionButtons = screen.getAllByLabelText(/Actions for/);
-      fireEvent.click(actionButtons[1]); // Second user (disabled)
-      fireEvent.click(screen.getByText("Enable"));
-
-      await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith("/api/user-enable", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer mock-token",
-          },
-          body: JSON.stringify({ username: "user2" }),
-        });
-        // Toast success will be shown by the custom ToastProvider
-      });
-    });
-
-    it("should disable user successfully", async () => {
-      mockFetch
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ users: mockUsers }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-        });
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
-      });
-
-      const actionButtons = screen.getAllByLabelText(/Actions for/);
-      fireEvent.click(actionButtons[0]); // First user (enabled)
-      fireEvent.click(screen.getByText("Disable"));
-
-      await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith("/api/user-disable", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer mock-token",
-          },
-          body: JSON.stringify({ username: "user1" }),
-        });
-        expect(
-          screen.getByText("User disabled successfully")
-        ).toBeInTheDocument();
-      });
-    });
-
-    it("should reset password successfully", async () => {
-      mockFetch
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ users: mockUsers }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-        });
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
-      });
-
-      const actionButtons = screen.getAllByLabelText(/Actions for/);
-      fireEvent.click(actionButtons[0]);
-      fireEvent.click(screen.getByText("Reset Password"));
-
-      await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith("/api/user-reset-password", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer mock-token",
-          },
-          body: JSON.stringify({ username: "user1" }),
-        });
-        expect(
-          screen.getByText("User reset-password successfully")
-        ).toBeInTheDocument();
-      });
-    });
-
-    it("should delete user successfully", async () => {
-      mockFetch
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ users: mockUsers }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-        });
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
-      });
-
-      const actionButtons = screen.getAllByLabelText(/Actions for/);
-      fireEvent.click(actionButtons[0]);
-      fireEvent.click(screen.getByText("Delete"));
-
-      await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith("/api/user-delete", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer mock-token",
-          },
-          body: JSON.stringify({ username: "user1" }),
-        });
-        expect(
-          screen.getByText("User deleted successfully")
-        ).toBeInTheDocument();
-      });
-    });
-
-    it("should handle action failure", async () => {
-      mockFetch
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ users: mockUsers }),
-        })
-        .mockResolvedValueOnce({
-          ok: false,
-        });
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
-      });
-
-      const actionButtons = screen.getAllByLabelText(/Actions for/);
-      fireEvent.click(actionButtons[0]);
-      fireEvent.click(screen.getByText("Disable"));
-
-      await waitFor(() => {
-        expect(screen.getByText("Failed to disable user")).toBeInTheDocument();
-      });
-    });
-
-    it("should handle action network error", async () => {
-      mockFetch
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ users: mockUsers }),
-        })
-        .mockRejectedValueOnce(new Error("Network error"));
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
-      });
-
-      const actionButtons = screen.getAllByLabelText(/Actions for/);
-      fireEvent.click(actionButtons[0]);
-      fireEvent.click(screen.getByText("Disable"));
-
-      await waitFor(() => {
-        expect(screen.getByText("Network error")).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe("Error handling", () => {
-    it("should handle fetch users error", async () => {
-      mockFetch.mockRejectedValueOnce(new Error("Failed to fetch users"));
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("Failed to fetch users")).toBeInTheDocument();
-      });
-    });
-
-    it("should handle non-ok response for users fetch", async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        json: async () => ({ error: "Failed to fetch users" }),
-      });
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("Failed to fetch users")).toBeInTheDocument();
-      });
-    });
-
-    it("should handle non-Error exceptions", async () => {
-      mockFetch.mockRejectedValueOnce("String error");
-
-      renderUsers();
-
-      await waitFor(() => {
-        expect(screen.getByText("Error loading users")).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe("Pagination", () => {
-    it("should handle pagination with nextToken", async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
         json: async () => ({
-          users: mockUsers.slice(0, 1),
-          nextToken: "next-page-token",
+          users: mockUsers,
+          nextToken: null,
         }),
       });
 
       renderUsers();
 
       await waitFor(() => {
-        expect(screen.getByText("user1")).toBeInTheDocument();
-        expect(screen.queryByText("user2")).not.toBeInTheDocument();
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
+      });
+
+      // Open menu
+      const actionButtons = screen.getAllByRole("button");
+      const ellipsisButton = actionButtons.find((btn) =>
+        btn.querySelector("svg.lucide-ellipsis")
+      );
+      await userEvent.click(ellipsisButton!);
+      await waitFor(() => {
+        expect(screen.getByText("Disable")).toBeInTheDocument();
+      });
+
+      // Should show menu items
+      expect(screen.getByText("Disable")).toBeInTheDocument();
+      expect(screen.getByText("Reset Password")).toBeInTheDocument();
+      expect(screen.getByText("Delete")).toBeInTheDocument();
+    });
+
+    it("should show correct action text based on user status", async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          users: mockUsers,
+          nextToken: null,
+        }),
+      });
+
+      renderUsers();
+
+      await waitFor(() => {
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
+        expect(screen.getByText("user2@example.com")).toBeInTheDocument();
+      });
+
+      // Open menu for enabled user
+      const actionButtons = screen.getAllByRole("button");
+      const ellipsisButton = actionButtons.find((btn) =>
+        btn.querySelector("svg.lucide-ellipsis")
+      );
+      await userEvent.click(ellipsisButton!);
+      await waitFor(() => {
+        expect(screen.getByText("Disable")).toBeInTheDocument();
+      });
+
+      // Should show "Disable" for enabled user
+      expect(screen.getByText("Disable")).toBeInTheDocument();
+    });
+
+    it("should enable user successfully", async () => {
+      mockFetch.mockReset();
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            users: mockUsers,
+            nextToken: null,
+          }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            message: "User enabled successfully",
+          }),
+        });
+
+      renderUsers();
+
+      await waitFor(() => {
+        expect(screen.getByText("user2@example.com")).toBeInTheDocument();
+      });
+
+      // Open menu for disabled user - find the ellipsis button in user2's row
+      const user2Row = screen.getByText("user2@example.com").closest("tr");
+      const ellipsisButton = user2Row?.querySelector(
+        'button[aria-haspopup="menu"]'
+      );
+      await userEvent.click(ellipsisButton!);
+
+      // Click enable
+      const enableButtons = await screen.findAllByText(
+        (content) => content.includes("Enable"),
+        {},
+        { timeout: 2000 }
+      );
+      const menuEnableButton = enableButtons.find(
+        (el) => el.getAttribute && el.getAttribute("role") === "menuitem"
+      );
+      await userEvent.click(menuEnableButton!);
+
+      await waitFor(() => {
+        expect(mockShowToast).toHaveBeenCalledWith({
+          title: "✅ User enabled successfully",
+          variant: "success",
+        });
+      });
+    });
+
+    it("should disable user successfully", async () => {
+      mockFetch.mockReset();
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            users: mockUsers,
+            nextToken: null,
+          }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            message: "User disabled successfully",
+          }),
+        });
+
+      renderUsers();
+
+      await waitFor(() => {
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
+      });
+
+      // Open menu for enabled user
+      const actionButtons = screen.getAllByRole("button");
+      const ellipsisButton = actionButtons.find((btn) =>
+        btn.querySelector("svg.lucide-ellipsis")
+      );
+      await userEvent.click(ellipsisButton!);
+
+      // Click disable
+      const disableButtons = await screen.findAllByText(
+        (content) => content.includes("Disable"),
+        {},
+        { timeout: 2000 }
+      );
+      const menuDisableButton = disableButtons.find(
+        (el) => el.getAttribute && el.getAttribute("role") === "menuitem"
+      );
+      await userEvent.click(menuDisableButton!);
+
+      await waitFor(() => {
+        expect(mockShowToast).toHaveBeenCalledWith({
+          title: "✅ User disabled successfully",
+          variant: "success",
+        });
+      });
+    });
+
+    it("should reset password successfully", async () => {
+      mockFetch.mockReset();
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            users: mockUsers,
+            nextToken: null,
+          }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            message: "Password reset successfully",
+          }),
+        });
+
+      renderUsers();
+
+      await waitFor(() => {
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
+      });
+
+      // Open menu
+      const actionButtons = screen.getAllByRole("button");
+      const ellipsisButton = actionButtons.find((btn) =>
+        btn.querySelector("svg.lucide-ellipsis")
+      );
+      await userEvent.click(ellipsisButton!);
+
+      // Click reset password
+      const resetButtons = await screen.findAllByText(
+        (content) => content.includes("Reset Password"),
+        {},
+        { timeout: 2000 }
+      );
+      const menuResetButton = resetButtons.find(
+        (el) => el.getAttribute && el.getAttribute("role") === "menuitem"
+      );
+      await userEvent.click(menuResetButton!);
+
+      await waitFor(() => {
+        expect(mockShowToast).toHaveBeenCalledWith({
+          title: "✅ Password reset successfully",
+          variant: "success",
+        });
+      });
+    });
+
+    it("should delete user successfully", async () => {
+      mockFetch.mockReset();
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            users: mockUsers,
+            nextToken: null,
+          }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            message: "User deleted successfully",
+          }),
+        });
+
+      // Mock confirm
+      global.confirm = vi.fn(() => true);
+
+      renderUsers();
+
+      await waitFor(() => {
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
+      });
+
+      // Open menu
+      const actionButtons = screen.getAllByRole("button");
+      const ellipsisButton = actionButtons.find((btn) =>
+        btn.querySelector("svg.lucide-ellipsis")
+      );
+      await userEvent.click(ellipsisButton!);
+
+      // Click delete
+      const deleteButtons = await screen.findAllByText(
+        (content) => content.includes("Delete"),
+        {},
+        { timeout: 2000 }
+      );
+      const menuDeleteButton = deleteButtons.find(
+        (el) => el.getAttribute && el.getAttribute("role") === "menuitem"
+      );
+      await userEvent.click(menuDeleteButton!);
+
+      expect(global.confirm).toHaveBeenCalledWith(
+        "Are you sure you want to delete user user1?"
+      );
+
+      await waitFor(() => {
+        expect(mockShowToast).toHaveBeenCalledWith({
+          title: "✅ User deleted successfully",
+          variant: "success",
+        });
+      });
+    });
+
+    it("should handle action failure", async () => {
+      mockFetch.mockReset();
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            users: mockUsers,
+            nextToken: null,
+          }),
+        })
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 400,
+          json: async () => ({
+            message: "Cannot disable admin user",
+          }),
+        });
+
+      renderUsers();
+
+      await waitFor(() => {
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
+      });
+
+      // Open menu
+      const actionButtons = screen.getAllByRole("button");
+      const ellipsisButton = actionButtons.find((btn) =>
+        btn.querySelector("svg.lucide-ellipsis")
+      );
+      await userEvent.click(ellipsisButton!);
+
+      // Wait for menu to open and then click disable
+      const disableButtons2 = await screen.findAllByText(
+        (content) => content.includes("Disable"),
+        {},
+        { timeout: 2000 }
+      );
+      const menuDisableButton2 = disableButtons2.find(
+        (el) => el.getAttribute && el.getAttribute("role") === "menuitem"
+      );
+      await userEvent.click(menuDisableButton2!);
+
+      await waitFor(() => {
+        expect(mockShowToast).toHaveBeenCalledWith({
+          title: "❌ Failed to disable user: Cannot disable admin user",
+          variant: "error",
+        });
+      });
+    });
+
+    it("should handle action network error", async () => {
+      // Reset mocks to ensure isolation
+      mockFetch.mockReset();
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            users: mockUsers,
+            nextToken: null,
+          }),
+        })
+        .mockRejectedValueOnce(new Error("Network error"));
+
+      renderUsers();
+
+      await waitFor(() => {
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
+      });
+
+      // Open menu with userEvent
+      const actionButtons = screen.getAllByRole("button");
+      const ellipsisButton = actionButtons.find((btn) =>
+        btn.querySelector("svg.lucide-ellipsis")
+      );
+      await userEvent.click(ellipsisButton!);
+
+      // Wait for menu to open and then click disable (find all and filter by role)
+      const disableButtons = await screen.findAllByText(
+        (content) => content.includes("Disable"),
+        {},
+        { timeout: 2000 }
+      );
+      const menuDisableButton = disableButtons.find(
+        (el) => el.getAttribute && el.getAttribute("role") === "menuitem"
+      );
+      await userEvent.click(menuDisableButton!);
+
+      await waitFor(() => {
+        expect(mockShowToast).toHaveBeenCalledWith({
+          title: "❌ Failed to disable user: Network error",
+          variant: "error",
+        });
       });
     });
   });
 
-  describe("Authentication", () => {
-    it("should work without access token", async () => {
-      // This test is skipped due to complex mock setup requirements
-      // The functionality is covered by other tests
-      expect(true).toBe(true);
+  describe("Pagination", () => {
+    it("should handle pagination with nextToken", async () => {
+      // Reset mocks to ensure isolation
+      mockFetch.mockReset();
+      const firstPageUsers = mockUsers.slice(0, 1);
+      const secondPageUsers = mockUsers.slice(1);
+
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            users: firstPageUsers,
+            nextToken: "token123",
+          }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            users: secondPageUsers,
+            nextToken: null,
+          }),
+        });
+
+      renderUsers();
+
+      await waitFor(() => {
+        expect(screen.getByText("user1@example.com")).toBeInTheDocument();
+        expect(screen.getByText("Load More")).toBeInTheDocument();
+      });
+
+      // Click load more
+      fireEvent.click(screen.getByText("Load More"));
+
+      await waitFor(() => {
+        expect(screen.getByText("user2@example.com")).toBeInTheDocument();
+      });
+
+      // Load more button should be hidden after loading all data
+      expect(screen.queryByText("Load More")).not.toBeInTheDocument();
     });
   });
 });

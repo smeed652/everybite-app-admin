@@ -1,7 +1,5 @@
 {
   "httpMethod": "GET",
-  "path": "/metabase/dashboard",
-  "headers": {
-    "Content-Type": "application/json"
-  }
+  "path": "/users",
+  "rawPath": "/users"
 }

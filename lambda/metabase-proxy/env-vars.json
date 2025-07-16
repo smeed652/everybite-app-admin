@@ -1,0 +1,8 @@
+{
+  "Variables": {
+    "METABASE_URL": "https://analytics.everybite.com",
+    "METABASE_USERNAME": "sid@everybite.com",
+    "METABASE_PASSWORD": "wH3R4f?Lbot5Ir",
+    "COGNITO_USER_POOL_ID": "us-west-1_HuVwywmH1"
+  }
+}

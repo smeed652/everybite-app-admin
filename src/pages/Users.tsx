@@ -1,339 +1,450 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useCallback, useEffect, useRef, useState } from "react";
+import { MoreHorizontal, UserPlus } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "../components/ui/Button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../components/ui/DropdownMenu";
 import { Input } from "../components/ui/Input";
 import { Skeleton } from "../components/ui/Skeleton";
 import { Table, TBody, TD, TH, THead, TR } from "../components/ui/Table";
 import { useToast } from "../components/ui/ToastProvider";
-import { useAuth } from "../context/AuthContext";
 
-interface CognitoUserRow {
+interface User {
   username: string;
   email: string;
+  emailVerified: boolean;
   status: string;
   enabled: boolean;
-  created: string;
-  groups: string[];
+  createdAt: string;
+  lastModified: string;
 }
 
 interface UsersResponse {
-  users: CognitoUserRow[];
+  users: User[];
   nextToken?: string;
 }
 
 interface InviteUserRequest {
   email: string;
-  password?: string;
-}
-
-interface InviteUserResponse {
-  success: boolean;
-  message: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 export default function Users() {
-  const { accessToken } = useAuth();
-  const { showToast } = useToast();
-  const [users, setUsers] = useState<CognitoUserRow[]>([]);
-  const [listLoading, setListLoading] = useState(false);
-  const [nextToken, setNextToken] = useState<string | undefined>(undefined);
-  const [menuOpen, setMenuOpen] = useState<string | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [nextToken, setNextToken] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
   const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteLoading, setInviteLoading] = useState(false);
-  const tableRef = useRef<HTMLDivElement>(null);
-  const hasInitialized = useRef(false);
+  const [invitePassword, setInvitePassword] = useState("");
+  const [inviteFirstName, setInviteFirstName] = useState("");
+  const [inviteLastName, setInviteLastName] = useState("");
+  const [showInviteForm, setShowInviteForm] = useState(false);
+  const [inviting, setInviting] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
 
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (tableRef.current && !tableRef.current.contains(e.target as Node)) {
-        setMenuOpen(null);
-      }
-    };
-    document.addEventListener("click", handler);
-    return () => document.removeEventListener("click", handler);
-  }, []);
+  const { showToast } = useToast();
+  // Use the same Lambda URL as Metabase - one consistent pattern
+  const usersApiUrl =
+    import.meta.env.VITE_METABASE_API_URL || "http://localhost:3001";
 
   const fetchUsers = useCallback(
-    async (token?: string) => {
-      console.log("🔍 fetchUsers called with token:", token ? "yes" : "no");
-      setListLoading(true);
+    async (token?: string | null) => {
       try {
-        const qs = token ? `?paginationToken=${encodeURIComponent(token)}` : "";
-        const res = await fetch(`/api/users${qs}`, {
-          headers: accessToken
-            ? { Authorization: `Bearer ${accessToken}` }
-            : undefined,
-        });
+        setError(null);
+        const params = new URLSearchParams();
+        if (token) {
+          params.append("nextToken", token);
+        }
+        params.append("limit", "20");
 
-        if (!res.ok) {
-          const errorData = await res
-            .json()
-            .catch(() => ({ error: "Unknown error" }));
-          throw new Error(
-            errorData.error || `HTTP ${res.status}: ${res.statusText}`
-          );
+        const response = await fetch(`${usersApiUrl}users?${params}`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data: UsersResponse = await res.json();
-        console.log("📊 Users fetched:", data.users.length);
-        setUsers((prev) => (token ? [...prev, ...data.users] : data.users));
-        setNextToken(data.nextToken);
-      } catch (err: unknown) {
-        const errorMessage =
-          err instanceof Error ? err.message : "Error loading users";
-        console.error("❌ Failed to fetch users:", errorMessage);
+        const data: UsersResponse = await response.json();
 
-        // Only show error toast if we don't have any users yet
-        if (users.length === 0) {
-          showToast({ title: errorMessage, variant: "error" });
+        if (token) {
+          setUsers((prev) => [...prev, ...data.users]);
         } else {
-          // If we have users but the request failed, it might be a pagination issue
-          console.warn(
-            "⚠️ Failed to load more users, but we have existing data"
-          );
+          setUsers(data.users);
         }
-      } finally {
-        setListLoading(false);
-      }
-    },
-    [accessToken, users.length, showToast]
-  );
 
-  // initial load - prevent duplicate calls from React StrictMode
-  useEffect(() => {
-    if (!hasInitialized.current && accessToken) {
-      console.log("🚀 Users component mounted, fetching initial data");
-      hasInitialized.current = true;
-      fetchUsers();
-    }
-  }, [accessToken, fetchUsers]);
-
-  const handleInvite = async () => {
-    if (!inviteEmail.trim()) return;
-    console.log("📧 Inviting user:", inviteEmail);
-    setInviteLoading(true);
-    try {
-      const res = await fetch("/api/invite", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        },
-        body: JSON.stringify({
-          email: inviteEmail.trim(),
-        } as InviteUserRequest),
-      });
-      const data: InviteUserResponse = await res.json();
-      if (data.success) {
-        showToast({ title: "User invited successfully", variant: "success" });
-        setInviteEmail("");
-        // Instead of refetching, add the new user optimistically
-        // The user will appear in the list when they confirm their email
-        console.log(
-          "✅ User invited, no need to refetch - they will appear when confirmed"
-        );
-      } else {
+        setNextToken(data.nextToken || null);
+        setHasMore(!!data.nextToken);
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Unknown error";
+        setError(errorMessage);
         showToast({
-          title: data.message || "Failed to invite user",
+          title: `❌ Failed to fetch users: ${errorMessage}`,
           variant: "error",
         });
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
       }
-    } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to invite user";
-      showToast({ title: errorMessage, variant: "error" });
-    } finally {
-      setInviteLoading(false);
-    }
-  };
+    },
+    [usersApiUrl] // Remove showToast dependency to prevent circular dependencies
+  );
 
-  const handleAction = async (action: string, username: string) => {
+  const loadMore = useCallback(async () => {
+    if (loadingMore || !hasMore) return;
+
+    setLoadingMore(true);
+    await fetchUsers(nextToken);
+  }, [fetchUsers, loadingMore, hasMore, nextToken]);
+
+  const inviteUser = useCallback(async () => {
+    if (!inviteEmail || !invitePassword) {
+      showToast({
+        title: "❌ Email and password are required",
+        variant: "error",
+      });
+      return;
+    }
+
+    setInviting(true);
     try {
-      const res = await fetch(`/api/user-${action}`, {
+      const userData: InviteUserRequest = {
+        email: inviteEmail,
+        password: invitePassword,
+        ...(inviteFirstName && { firstName: inviteFirstName }),
+        ...(inviteLastName && { lastName: inviteLastName }),
+      };
+
+      const response = await fetch(`${usersApiUrl}users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         },
-        body: JSON.stringify({ username }),
+        body: JSON.stringify(userData),
       });
-      if (res.ok) {
-        showToast({
-          title:
-            action === "reset-password"
-              ? "User reset-password successfully"
-              : `User ${action}d successfully`,
-          variant: "success",
-        });
 
-        // Update local state instead of refetching
-        setUsers((prevUsers) => {
-          if (action === "delete") {
-            return prevUsers.filter((user) => user.username !== username);
-          }
-
-          return prevUsers.map((user) => {
-            if (user.username === username) {
-              if (action === "enable" || action === "disable") {
-                return { ...user, enabled: action === "enable" };
-              }
-              // For reset-password, no state change needed
-              return user;
-            }
-            return user;
-          });
-        });
-      } else {
-        showToast({ title: `Failed to ${action} user`, variant: "error" });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`
+        );
       }
-    } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error ? err.message : `Failed to ${action} user`;
-      showToast({ title: errorMessage, variant: "error" });
+
+      const result = await response.json();
+      showToast({ title: `✅ ${result.message}`, variant: "success" });
+
+      // Reset form
+      setInviteEmail("");
+      setInvitePassword("");
+      setInviteFirstName("");
+      setInviteLastName("");
+      setShowInviteForm(false);
+
+      // Refresh users list
+      await fetchUsers();
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      showToast({
+        title: `❌ Failed to invite user: ${errorMessage}`,
+        variant: "error",
+      });
+    } finally {
+      setInviting(false);
     }
-    setMenuOpen(null);
+  }, [
+    usersApiUrl,
+    inviteEmail,
+    invitePassword,
+    inviteFirstName,
+    inviteLastName,
+    showToast,
+  ]);
+
+  const performUserAction = useCallback(
+    async (action: string, username: string) => {
+      setActionLoading(`${action}-${username}`);
+      try {
+        const response = await fetch(
+          `${usersApiUrl}users/${username}/${action}`,
+          {
+            method: "PUT",
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || `HTTP error! status: ${response.status}`
+          );
+        }
+
+        const result = await response.json();
+        showToast({ title: `✅ ${result.message}`, variant: "success" });
+
+        // Refresh users list
+        await fetchUsers();
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Unknown error";
+        showToast({
+          title: `❌ Failed to ${action} user: ${errorMessage}`,
+          variant: "error",
+        });
+      } finally {
+        setActionLoading(null);
+      }
+    },
+    [usersApiUrl, showToast]
+  );
+
+  const deleteUser = useCallback(
+    async (username: string) => {
+      if (!confirm(`Are you sure you want to delete user ${username}?`)) {
+        return;
+      }
+
+      setActionLoading(`delete-${username}`);
+      try {
+        const response = await fetch(`${usersApiUrl}users/${username}`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || `HTTP error! status: ${response.status}`
+          );
+        }
+
+        const result = await response.json();
+        showToast({ title: `✅ ${result.message}`, variant: "success" });
+
+        // Refresh users list
+        await fetchUsers();
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Unknown error";
+        showToast({
+          title: `❌ Failed to delete user: ${errorMessage}`,
+          variant: "error",
+        });
+      } finally {
+        setActionLoading(null);
+      }
+    },
+    [usersApiUrl, showToast]
+  );
+
+  useEffect(() => {
+    fetchUsers();
+  }, []); // Only run once on mount
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString();
   };
 
-  if (listLoading && users.length === 0) {
+  const getStatusColor = (status: string, enabled: boolean) => {
+    if (!enabled) return "text-red-600";
+    switch (status) {
+      case "CONFIRMED":
+        return "text-green-600";
+      case "UNCONFIRMED":
+        return "text-yellow-600";
+      case "ARCHIVED":
+        return "text-gray-600";
+      default:
+        return "text-gray-600";
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="p-8 space-y-4">
-        <Skeleton className="h-8 w-1/3" />
-        <div className="space-y-2">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-12 w-full" />
-          ))}
+      <div className="p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Users</h1>
+          <Button disabled>
+            <UserPlus className="w-4 h-4 mr-2" />
+            Invite User
+          </Button>
+        </div>
+
+        <div className="bg-white rounded-lg shadow">
+          <div className="p-6">
+            <Skeleton className="h-4 w-32 mb-4" />
+            <div className="space-y-3">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Skeleton key={i} className="h-12 w-full" />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Users</h1>
-        <div className="flex items-center gap-2">
-          <Input
-            placeholder="Email address"
-            value={inviteEmail}
-            onChange={(e) => setInviteEmail(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleInvite()}
-            className="w-64"
-          />
-          <Button
-            onClick={handleInvite}
-            disabled={inviteLoading || !inviteEmail.trim()}
-          >
-            {inviteLoading ? "Inviting..." : "Invite User"}
-          </Button>
-        </div>
+        <Button onClick={() => setShowInviteForm(!showInviteForm)}>
+          <UserPlus className="w-4 h-4 mr-2" />
+          Invite User
+        </Button>
       </div>
 
-      <div ref={tableRef} className="border rounded-lg overflow-hidden">
+      {showInviteForm && (
+        <div className="bg-white rounded-lg shadow p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4">Invite New User</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              placeholder="Email"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              type="email"
+            />
+            <Input
+              placeholder="Password"
+              value={invitePassword}
+              onChange={(e) => setInvitePassword(e.target.value)}
+              type="password"
+            />
+            <Input
+              placeholder="First Name (optional)"
+              value={inviteFirstName}
+              onChange={(e) => setInviteFirstName(e.target.value)}
+            />
+            <Input
+              placeholder="Last Name (optional)"
+              value={inviteLastName}
+              onChange={(e) => setInviteLastName(e.target.value)}
+            />
+          </div>
+          <div className="flex gap-2 mt-4">
+            <Button onClick={inviteUser} disabled={inviting}>
+              {inviting ? "Inviting..." : "Invite User"}
+            </Button>
+            <Button variant="outline" onClick={() => setShowInviteForm(false)}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <p className="text-red-800">{error}</p>
+        </div>
+      )}
+
+      <div className="bg-white rounded-lg shadow overflow-hidden">
         <Table>
           <THead>
             <TR>
-              <TH>Username</TH>
               <TH>Email</TH>
               <TH>Status</TH>
+              <TH>Email Verified</TH>
               <TH>Created</TH>
-              <TH>Groups</TH>
               <TH>Actions</TH>
             </TR>
           </THead>
           <TBody>
-            {users.map((user) => (
-              <TR key={user.username}>
-                <TD>{user.username}</TD>
-                <TD>{user.email}</TD>
-                <TD>
-                  <span
-                    className={`px-2 py-1 rounded text-xs ${
-                      user.status === "CONFIRMED"
-                        ? "bg-green-100 text-green-800"
-                        : user.status === "UNCONFIRMED"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {user.status}
-                  </span>
-                </TD>
-                <TD>{new Date(user.created).toLocaleDateString()}</TD>
-                <TD>
-                  <div className="flex flex-wrap gap-1">
-                    {(user.groups ?? []).map((group) => (
-                      <span
-                        key={group}
-                        className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs"
-                      >
-                        {group}
-                      </span>
-                    ))}
-                  </div>
-                </TD>
-                <TD>
-                  <div className="relative">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() =>
-                        setMenuOpen(
-                          menuOpen === user.username ? null : user.username
-                        )
-                      }
-                      aria-label={`Actions for ${user.email}`}
-                    >
-                      ⋮
-                    </Button>
-                    {menuOpen === user.username && (
-                      <div className="absolute right-0 top-full mt-1 w-48 bg-white border rounded-md shadow-lg z-10">
-                        <button
-                          className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+            {users?.length > 0 ? (
+              users.map((user) => (
+                <TR key={user.username}>
+                  <TD>{user.email}</TD>
+                  <TD>
+                    <span className={getStatusColor(user.status, user.enabled)}>
+                      {user.status} {!user.enabled && "(Disabled)"}
+                    </span>
+                  </TD>
+                  <TD>{user.emailVerified ? "✅" : "❌"}</TD>
+                  <TD>{formatDate(user.createdAt)}</TD>
+                  <TD>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        {user.enabled ? (
+                          <DropdownMenuItem
+                            onClick={() =>
+                              performUserAction("disable", user.username)
+                            }
+                            disabled={
+                              actionLoading === `disable-${user.username}`
+                            }
+                          >
+                            {actionLoading === `disable-${user.username}`
+                              ? "Disabling..."
+                              : "Disable"}
+                          </DropdownMenuItem>
+                        ) : (
+                          <DropdownMenuItem
+                            onClick={() =>
+                              performUserAction("enable", user.username)
+                            }
+                            disabled={
+                              actionLoading === `enable-${user.username}`
+                            }
+                          >
+                            {actionLoading === `enable-${user.username}`
+                              ? "Enabling..."
+                              : "Enable"}
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem
                           onClick={() =>
-                            handleAction(
-                              user.enabled ? "disable" : "enable",
-                              user.username
-                            )
+                            performUserAction("reset-password", user.username)
+                          }
+                          disabled={
+                            actionLoading === `reset-password-${user.username}`
                           }
                         >
-                          {user.enabled ? "Disable" : "Enable"}
-                        </button>
-                        <button
-                          className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                          onClick={() =>
-                            handleAction("reset-password", user.username)
-                          }
+                          {actionLoading === `reset-password-${user.username}`
+                            ? "Resetting..."
+                            : "Reset Password"}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => deleteUser(user.username)}
+                          disabled={actionLoading === `delete-${user.username}`}
+                          className="text-red-600"
                         >
-                          Reset Password
-                        </button>
-                        <button
-                          className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                          onClick={() => handleAction("delete", user.username)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                          {actionLoading === `delete-${user.username}`
+                            ? "Deleting..."
+                            : "Delete"}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TD>
+                </TR>
+              ))
+            ) : (
+              <TR>
+                <TD colSpan={5} className="text-center py-8 text-gray-500">
+                  No users found
                 </TD>
               </TR>
-            ))}
+            )}
           </TBody>
         </Table>
-      </div>
 
-      {nextToken && (
-        <div className="text-center">
-          <Button
-            onClick={() => fetchUsers(nextToken)}
-            disabled={listLoading}
-            variant="outline"
-          >
-            {listLoading ? "Loading..." : "Load More"}
-          </Button>
-        </div>
-      )}
+        {hasMore && (
+          <div className="p-4 text-center">
+            <Button onClick={loadMore} disabled={loadingMore} variant="outline">
+              {loadingMore ? "Loading..." : "Load More"}
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
