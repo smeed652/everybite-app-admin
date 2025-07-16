@@ -1,40 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { logger } from "../../../lib/logger";
-
-/* ------------------------------------------------------------------------- */
-/* Types                                                                     */
-/* ------------------------------------------------------------------------- */
-
-export interface UseWidgetDiffOptions {
-  /** Treat an undefined array as an empty array when comparing diffs. */
-  coerceArrayUndefined?: boolean;
-  /**
-   * After [reset()](cci:1://file:///Volumes/External%20Drive/Local%20Everybite%20Development/Front%20End/everybite-admin-app/src/features/smartMenus/hooks/useWidgetDiff.ts:96:2-120:4) merge any `pendingChanges` into the internal snapshot so
-   * subsequent edits are compared to the latest saved state.
-   */
-  refreshSnapshotOnReset?: boolean;
-}
-
-/** The public shape returned by the hook. */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export interface UseWidgetDiffReturn<T> {
-  /** Changing this key forces remounting of child forms. */
-  formKey: number;
-  /** Map of field → new value for unsaved edits. */
-  pendingChanges: Record<string, unknown>;
-  /** True when `pendingChanges` is non-empty. */
-  dirty: boolean;
-  /** Call when any field changes. */
-  handleFieldChange: (changes: Record<string, unknown>) => void;
-  /** Cancel edits and reset diff state. */
-  reset: () => void;
-  /** Accept current edits as the new snapshot without saving externally. */
-  refreshSnapshot: () => void;
-}
-
-/* ------------------------------------------------------------------------- */
-/* Hook                                                                      */
-/* ------------------------------------------------------------------------- */
+import { UseWidgetDiffOptions, UseWidgetDiffReturn } from "./types/widgetDiff";
+import { deepClone, isEqual } from "./utils/diffHelpers";
 
 export function useWidgetDiff<T extends { id?: string }>(
   widget: T | null,
@@ -85,34 +52,6 @@ export function useWidgetDiff<T extends { id?: string }>(
       setFormKey(0);
     }
   }, [widget]);
-
-  /* ---------------------------- helpers -------------------------------- */
-  const deepClone = <K>(o: K): K => JSON.parse(JSON.stringify(o));
-
-  // Helper: normalize arrays for comparison (undefined → [], sorted)
-  const normalizeArray = (arr: unknown): unknown => {
-    if (Array.isArray(arr)) {
-      // Sort array for stable comparison (string/number only)
-      return [...arr].sort();
-    }
-    if (arr === undefined) return [];
-    return arr;
-  };
-
-  const isEqual = (a: unknown, b: unknown) => {
-    // If both are arrays or undefined, normalize and compare
-    if (
-      Array.isArray(a) ||
-      Array.isArray(b) ||
-      a === undefined ||
-      b === undefined
-    ) {
-      return (
-        JSON.stringify(normalizeArray(a)) === JSON.stringify(normalizeArray(b))
-      );
-    }
-    return JSON.stringify(a) === JSON.stringify(b);
-  };
 
   /* ------------------------- field change ------------------------------ */
 
