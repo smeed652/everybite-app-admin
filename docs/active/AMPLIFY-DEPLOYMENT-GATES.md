@@ -37,7 +37,7 @@ Configure Amplify to wait for GitHub CI status before deploying.
 
 If you don't see "Deployment gates" as an option, this could be because:
 
-1. **Feature not available in your region** - Try switching to `us-east-1` region
+1. **Feature not available in your region** - Try switching to `us-west-1` region
 2. **Amplify version doesn't support it** - Update to latest Amplify CLI
 3. **Permissions issue** - Ensure you have admin access to the app
 4. **Feature flag not enabled** - Contact AWS support
@@ -142,7 +142,7 @@ Push to main → GitHub CI runs → Amplify waits for CI → Deploy
 
 ### Deployment Gates Not Available
 
-1. **Check region** - Try `us-east-1` (most features available)
+1. **Check region** - Try `us-west-1` (most features available)
 2. **Check Amplify version** - Update to latest version
 3. **Check permissions** - Ensure admin access to the app
 4. **Contact AWS support** - Feature might need to be enabled

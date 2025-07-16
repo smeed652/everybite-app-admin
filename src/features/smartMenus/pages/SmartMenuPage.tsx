@@ -32,7 +32,16 @@ export default function SmartMenuPage({
   const params = useParams();
   const id = widgetId ?? (params.widgetId as string);
 
+  console.log("[SmartMenuPage] Widget ID:", id);
+  console.log("[SmartMenuPage] Params:", params);
+
   const { widget, loading, error } = useWidget(id);
+
+  console.log("[SmartMenuPage] Loading:", loading);
+  console.log("[SmartMenuPage] Error:", error);
+  console.log("[SmartMenuPage] Widget:", widget);
+
+  // Always call hooks at the top level with proper fallbacks
   const {
     formKey,
     dirty,
@@ -44,7 +53,7 @@ export default function SmartMenuPage({
 
   const { saving, syncing, handleSave, handleCancel, handleSyncNow } =
     useSmartMenuActions({
-      widget: widget!,
+      widget: widget ?? ({} as Widget), // Provide a fallback to satisfy the hook
       dirty,
       pendingChanges,
       refreshSnapshot,
@@ -57,7 +66,7 @@ export default function SmartMenuPage({
     return <SmartMenuLoadingState />;
   }
   if (error || !widget) {
-    return <SmartMenuErrorState />;
+    return <SmartMenuErrorState error={error} />;
   }
 
   /* ---------- render ---------- */

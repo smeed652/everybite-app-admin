@@ -7,7 +7,7 @@ set -e
 
 ENVIRONMENT=${1:-dev}
 FUNCTION_NAME="metabase-proxy-${ENVIRONMENT}"
-REGION=${AWS_REGION:-us-east-1}
+REGION=${AWS_REGION:-us-west-1}
 
 echo "Deploying Metabase Proxy Lambda Function..."
 echo "Environment: $ENVIRONMENT"

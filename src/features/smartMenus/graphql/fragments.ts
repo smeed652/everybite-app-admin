@@ -25,7 +25,7 @@ export const WIDGET_FIELDS = gql`
 
     # URLs and links
     orderUrl
-    logoUrl
+    # logoUrl - temporarily disabled due to server error
     logoWidth
     faviconUrl
     widgetLogoUrl

@@ -33,7 +33,7 @@ export function useSmartMenuActions({
   const { updateWidgetFields } = useUpdateWidget();
 
   const handleSave = async () => {
-    if (!dirty) return;
+    if (!dirty || !widget?.id) return;
     setSaving(true);
     try {
       if (onSave) {
@@ -61,6 +61,7 @@ export function useSmartMenuActions({
   };
 
   const handleSyncNow = async () => {
+    if (!widget?.id) return;
     try {
       await sync(widget.id);
       showToast({ title: "Sync started", variant: "success" });

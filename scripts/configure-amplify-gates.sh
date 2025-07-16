@@ -50,7 +50,7 @@ print_status "Checking current Amplify app configuration..."
 echo ""
 print_warning "You need to provide your Amplify App ID."
 print_warning "You can find this in the Amplify Console URL:"
-print_warning "https://console.aws.amazon.com/amplify/home?region=us-east-1#/d[APP_ID]"
+print_warning "https://console.aws.amazon.com/amplify/home?region=us-west-1#/d[APP_ID]"
 echo ""
 
 read -p "Enter your Amplify App ID: " AMPLIFY_APP_ID

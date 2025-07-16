@@ -34,7 +34,9 @@
     "deploy:simple": "./scripts/simple-workflow.sh deploy-production",
     "workflow:status": "./scripts/git-workflow.sh status",
     "workflow:help": "./scripts/git-workflow.sh help",
-    "amplify:configure-gates": "./scripts/configure-amplify-gates.sh"
+    "amplify:configure-gates": "./scripts/configure-amplify-gates.sh",
+    "migrate:us-west-1": "./scripts/migrate-to-us-west-1.sh",
+    "migrate:amplify:automated": "./scripts/amplify-migration-automation.sh"
   },
   "keywords": [],
   "author": "",

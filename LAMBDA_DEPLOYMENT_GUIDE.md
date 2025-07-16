@@ -43,7 +43,7 @@ cd lambda
 ./deploy.sh dev
 
 # The script will output your Lambda function URL
-# Example: https://abc123.lambda-url.us-east-1.on.aws/
+# Example: https://abc123.lambda-url.us-west-1.on.aws/
 ```
 
 ### Step 2: Update Environment Variables
