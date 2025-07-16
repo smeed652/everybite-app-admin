@@ -2,6 +2,8 @@
 
 Admin panel for configuring EveryBite's SmartMenu widgets.
 
+<!-- Test: Branch protection verification - CI should pass -->
+
 This repository includes a React (Vite) frontend, AWS Lambda functions for API proxying, and infrastructure for GraphQL code-generation, testing, CI, and deployment.
 
 ---
