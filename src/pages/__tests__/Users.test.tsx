@@ -33,6 +33,7 @@ const mockUsers = [
     status: "CONFIRMED",
     enabled: true,
     created: "TEST_DATE_1",
+    groups: [],
   },
   {
     username: "user2",
@@ -40,6 +41,7 @@ const mockUsers = [
     status: "UNCONFIRMED",
     enabled: false,
     created: "TEST_DATE_2",
+    groups: [],
   },
 ];
 
@@ -455,9 +457,9 @@ describe("Users page", () => {
           },
           body: JSON.stringify({ username: "user1" }),
         });
-        expect(toast.success).toHaveBeenCalledWith(
-          "User disabled successfully"
-        );
+        expect(
+          screen.getByText("User disabled successfully")
+        ).toBeInTheDocument();
       });
     });
 
@@ -490,9 +492,9 @@ describe("Users page", () => {
           },
           body: JSON.stringify({ username: "user1" }),
         });
-        expect(toast.success).toHaveBeenCalledWith(
-          "User reset-password successfully"
-        );
+        expect(
+          screen.getByText("User reset-password successfully")
+        ).toBeInTheDocument();
       });
     });
 
@@ -525,7 +527,9 @@ describe("Users page", () => {
           },
           body: JSON.stringify({ username: "user1" }),
         });
-        expect(toast.success).toHaveBeenCalledWith("User deleted successfully");
+        expect(
+          screen.getByText("User deleted successfully")
+        ).toBeInTheDocument();
       });
     });
 
@@ -550,7 +554,7 @@ describe("Users page", () => {
       fireEvent.click(screen.getByText("Disable"));
 
       await waitFor(() => {
-        expect(toast.error).toHaveBeenCalledWith("Failed to disable user");
+        expect(screen.getByText("Failed to disable user")).toBeInTheDocument();
       });
     });
 
@@ -573,7 +577,7 @@ describe("Users page", () => {
       fireEvent.click(screen.getByText("Disable"));
 
       await waitFor(() => {
-        expect(toast.error).toHaveBeenCalledWith("Network error");
+        expect(screen.getByText("Network error")).toBeInTheDocument();
       });
     });
   });
@@ -585,7 +589,7 @@ describe("Users page", () => {
       renderUsers();
 
       await waitFor(() => {
-        expect(toast.error).toHaveBeenCalledWith("Failed to fetch users");
+        expect(screen.getByText("Failed to fetch users")).toBeInTheDocument();
       });
     });
 
@@ -593,12 +597,13 @@ describe("Users page", () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
+        json: async () => ({ error: "Failed to fetch users" }),
       });
 
       renderUsers();
 
       await waitFor(() => {
-        expect(toast.error).toHaveBeenCalledWith("Failed to fetch users");
+        expect(screen.getByText("Failed to fetch users")).toBeInTheDocument();
       });
     });
 
@@ -608,7 +613,7 @@ describe("Users page", () => {
       renderUsers();
 
       await waitFor(() => {
-        expect(toast.error).toHaveBeenCalledWith("Error loading users");
+        expect(screen.getByText("Error loading users")).toBeInTheDocument();
       });
     });
   });

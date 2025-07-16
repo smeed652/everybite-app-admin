@@ -247,7 +247,9 @@ describe("Authentication Protection Integration", () => {
       renderApp();
 
       await waitFor(() => {
-        expect(screen.getByText("Users")).toBeInTheDocument();
+        expect(
+          screen.getByRole("heading", { name: "Users" })
+        ).toBeInTheDocument();
       });
       expect(window.location.pathname).toBe("/users");
     });

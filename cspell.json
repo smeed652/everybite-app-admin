@@ -26,7 +26,12 @@
     "Pageable",
     "Macronutrients",
     "Prefs",
-    "Newb"
+    "Newb",
+    "Vercel",
+    "vercel",
+    "VERCEL",
+    "creds",
+    "oneline"
   ],
   "ignorePaths": [
     "node_modules/**",

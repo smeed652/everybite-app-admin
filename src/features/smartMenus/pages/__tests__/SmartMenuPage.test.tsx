@@ -2,6 +2,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
+import { ToastProvider } from "../../../../components/ui/ToastProvider";
 import { useUpdateWidget } from "../../hooks/useUpdateWidget";
 import { useWidget } from "../../hooks/useWidget";
 vi.mock("../../hooks/useWidget");
@@ -24,7 +25,6 @@ vi.mock("@apollo/client", () => ({
 vi.mock("../../hooks/useWidgetDiff");
 
 vi.mock("../../../../generated/graphql", () => ({ __esModule: true }));
-vi.mock("react-hot-toast", () => ({ toast: { success: vi.fn() } }));
 
 import SmartMenuPage from "../SmartMenuPage";
 
@@ -43,17 +43,19 @@ function renderPage(
 
   return render(
     <MemoryRouter>
-      <SmartMenuPage
-        // simple panel: one input that calls onFieldChange
-        renderPanels={(widget: any, _key: number, onFieldChange: any) => (
-          <input
-            aria-label="name"
-            defaultValue={widget.name}
-            onChange={(e) => onFieldChange({ name: e.target.value })}
-          />
-        )}
-        {...props}
-      />
+      <ToastProvider>
+        <SmartMenuPage
+          // simple panel: one input that calls onFieldChange
+          renderPanels={(widget: any, _key: number, onFieldChange: any) => (
+            <input
+              aria-label="name"
+              defaultValue={widget.name}
+              onChange={(e) => onFieldChange({ name: e.target.value })}
+            />
+          )}
+          {...props}
+        />
+      </ToastProvider>
     </MemoryRouter>
   );
 }
@@ -75,7 +77,9 @@ describe("SmartMenuPage", () => {
 
     render(
       <MemoryRouter>
-        <SmartMenuPage renderPanels={() => null} />
+        <ToastProvider>
+          <SmartMenuPage renderPanels={() => null} />
+        </ToastProvider>
       </MemoryRouter>
     );
 

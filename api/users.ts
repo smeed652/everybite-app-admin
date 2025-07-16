@@ -73,45 +73,62 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       : undefined;
 
   const client = new CognitoIdentityProviderClient({ region: AWS_REGION });
-  const input: ListUsersCommandInput = {
-    UserPoolId: COGNITO_USER_POOL_ID,
-    Limit: limit,
-    PaginationToken: paginationToken,
-  };
 
   try {
-    const data: ListUsersCommandOutput = await client.send(
-      new ListUsersCommand(input)
+    // Get users with pagination
+    const usersInput: ListUsersCommandInput = {
+      UserPoolId: COGNITO_USER_POOL_ID,
+      Limit: limit,
+      PaginationToken: paginationToken,
+    };
+
+    const usersData: ListUsersCommandOutput = await client.send(
+      new ListUsersCommand(usersInput)
     );
 
-    // Fetch detailed user information including groups for each user
-    const usersWithGroups = await Promise.all(
-      (data.Users || []).map(async (u) => {
-        const emailAttr = u.Attributes?.find((a) => a.Name === "email");
+    const users = usersData.Users || [];
+    console.log(`[api/users] Found ${users.length} users`);
 
-        // Get user groups
+    // Fetch groups for all users in parallel with better error handling
+    const usersWithGroups = await Promise.allSettled(
+      users.map(async (u) => {
+        const emailAttr = u.Attributes?.find((a) => a.Name === "email");
+        const username = u.Username || "";
+
+        // Get user groups with timeout
         let groups: string[] = [];
         try {
           const adminListGroupsForUserInput: AdminListGroupsForUserCommandInput =
             {
               UserPoolId: COGNITO_USER_POOL_ID,
-              Username: u.Username || "",
+              Username: username,
             };
+
+          // Add timeout to prevent hanging requests
+          const timeoutPromise = new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error("Group fetch timeout")), 3000)
+          );
+
           const userData: AdminListGroupsForUserCommandOutput =
-            await client.send(
-              new AdminListGroupsForUserCommand(adminListGroupsForUserInput)
-            );
+            await Promise.race([
+              client.send(
+                new AdminListGroupsForUserCommand(adminListGroupsForUserInput)
+              ),
+              timeoutPromise,
+            ]);
+
           groups = userData.Groups?.map((g) => g.GroupName || "") || [];
         } catch (groupErr: unknown) {
           // If we can't get groups, continue without them
           console.warn(
-            `[api/users] failed to get groups for user ${u.Username}:`,
+            `[api/users] failed to get groups for user ${username}:`,
             groupErr
           );
+          // Don't throw - continue with empty groups
         }
 
         return {
-          username: u.Username || "",
+          username,
           email: emailAttr?.Value || "",
           status: u.UserStatus || "",
           enabled: !!u.Enabled,
@@ -121,9 +138,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       })
     );
 
+    // Filter out failed promises and extract successful results
+    const successfulUsers = usersWithGroups
+      .filter(
+        (
+          result
+        ): result is PromiseFulfilledResult<{
+          username: string;
+          email: string;
+          status: string;
+          enabled: boolean;
+          created: string;
+          groups: string[];
+        }> => result.status === "fulfilled"
+      )
+      .map((result) => result.value);
+
+    const failedUsers = usersWithGroups.filter(
+      (result): result is PromiseRejectedResult => result.status === "rejected"
+    ).length;
+
+    if (failedUsers > 0) {
+      console.warn(
+        `[api/users] ${failedUsers} users failed to load groups, but continuing with successful ones`
+      );
+    }
+
+    console.log(
+      `[api/users] Returning ${successfulUsers.length} users with groups`
+    );
+
     return res
       .status(200)
-      .json({ users: usersWithGroups, nextToken: data.PaginationToken });
+      .json({ users: successfulUsers, nextToken: usersData.PaginationToken });
   } catch (err: unknown) {
     // eslint-disable-next-line no-console
     console.error("[api/users] list users error", err);

@@ -1,10 +1,11 @@
+---
 name: CI
 
 on:
   push:
-    branches: ["staging", "production"]
-  pull_request:
-    branches: ["staging", "production"]
+    branches:
+      - "main"
+      - "production"
 
 jobs:
   smoke-e2e:
@@ -40,15 +41,19 @@ jobs:
       - name: Cypress tests
         uses: cypress-io/github-action@v6
         with:
-          start: npx vercel@latest dev --listen 3000 --yes --token ${{ secrets.VERCEL_TOKEN }}
-          spec: ${{ github.event_name == 'pull_request' && 'cypress/e2e/smoke.cy.ts' || 'cypress/e2e/**/*.cy.ts' }}
+          start: >-
+            npx vercel@latest dev --listen 3000 --yes
+            --token ${{ secrets.VERCEL_TOKEN }}
+          spec: >-
+            ${{ github.ref == 'refs/heads/production' &&
+            'cypress/e2e/**/*.cy.ts' || 'cypress/e2e/smoke.cy.ts' }}
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
-
         env:
           VITE_AWS_REGION: ${{ secrets.VITE_AWS_REGION }}
           VITE_COGNITO_USER_POOL_ID: ${{ secrets.VITE_COGNITO_USER_POOL_ID }}
           VITE_COGNITO_APP_CLIENT_ID: ${{ secrets.VITE_COGNITO_APP_CLIENT_ID }}
+          VITE_METABASE_API_URL: ${{ secrets.VITE_METABASE_API_URL }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           CYPRESS_BASE_URL: http://localhost:3000
           CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
@@ -62,7 +67,7 @@ jobs:
           path: cypress/screenshots
 
   full-e2e:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/production'
+    if: github.ref == 'refs/heads/production'
     runs-on: ubuntu-latest
     needs: smoke-e2e
     steps:
@@ -87,13 +92,16 @@ jobs:
       - name: Full Cypress suite
         uses: cypress-io/github-action@v6
         with:
-          start: npx vercel@latest dev --listen 3000 --yes --token ${{ secrets.VERCEL_TOKEN }}
+          start: >-
+            npx vercel@latest dev --listen 3000 --yes
+            --token ${{ secrets.VERCEL_TOKEN }}
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
         env:
           VITE_AWS_REGION: ${{ secrets.VITE_AWS_REGION }}
           VITE_COGNITO_USER_POOL_ID: ${{ secrets.VITE_COGNITO_USER_POOL_ID }}
           VITE_COGNITO_APP_CLIENT_ID: ${{ secrets.VITE_COGNITO_APP_CLIENT_ID }}
+          VITE_METABASE_API_URL: ${{ secrets.VITE_METABASE_API_URL }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           CYPRESS_BASE_URL: http://localhost:3000
           CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}

@@ -11,7 +11,7 @@ describe("Network failure handling", () => {
   it("shows toast when /api/users fails", () => {
     cy.intercept("GET", /\/api\/users.*/, {
       statusCode: 500,
-      body: { message: "Internal error" },
+      body: { error: "Internal error" },
       delay: 100,
     }).as("usersFail");
 
@@ -42,8 +42,6 @@ describe("Network failure handling", () => {
     cy.wait("@usersFail");
 
     // Assert toast appears with failure message
-    cy.contains(/failed to fetch users/i, { timeout: 5000 }).should(
-      "be.visible"
-    );
+    cy.contains("Internal error", { timeout: 5000 }).should("be.visible");
   });
 });

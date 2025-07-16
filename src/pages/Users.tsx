@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Skeleton } from "../components/ui/Skeleton";
@@ -41,6 +41,7 @@ export default function Users() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteLoading, setInviteLoading] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
+  const hasInitialized = useRef(false);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -53,35 +54,64 @@ export default function Users() {
     return () => document.removeEventListener("click", handler);
   }, []);
 
-  const fetchUsers = async (token?: string) => {
-    setListLoading(true);
-    try {
-      const qs = token ? `?paginationToken=${encodeURIComponent(token)}` : "";
-      const res = await fetch(`/api/users${qs}`, {
-        headers: accessToken
-          ? { Authorization: `Bearer ${accessToken}` }
-          : undefined,
-      });
-      if (!res.ok) throw new Error("Failed to fetch users");
-      const data: UsersResponse = await res.json();
-      setUsers((prev) => (token ? [...prev, ...data.users] : data.users));
-      setNextToken(data.nextToken);
-    } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Error loading users";
-      showToast({ title: errorMessage, variant: "error" });
-    } finally {
-      setListLoading(false);
-    }
-  };
+  const fetchUsers = useCallback(
+    async (token?: string) => {
+      console.log("🔍 fetchUsers called with token:", token ? "yes" : "no");
+      setListLoading(true);
+      try {
+        const qs = token ? `?paginationToken=${encodeURIComponent(token)}` : "";
+        const res = await fetch(`/api/users${qs}`, {
+          headers: accessToken
+            ? { Authorization: `Bearer ${accessToken}` }
+            : undefined,
+        });
 
-  // initial load
+        if (!res.ok) {
+          const errorData = await res
+            .json()
+            .catch(() => ({ error: "Unknown error" }));
+          throw new Error(
+            errorData.error || `HTTP ${res.status}: ${res.statusText}`
+          );
+        }
+
+        const data: UsersResponse = await res.json();
+        console.log("📊 Users fetched:", data.users.length);
+        setUsers((prev) => (token ? [...prev, ...data.users] : data.users));
+        setNextToken(data.nextToken);
+      } catch (err: unknown) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Error loading users";
+        console.error("❌ Failed to fetch users:", errorMessage);
+
+        // Only show error toast if we don't have any users yet
+        if (users.length === 0) {
+          showToast({ title: errorMessage, variant: "error" });
+        } else {
+          // If we have users but the request failed, it might be a pagination issue
+          console.warn(
+            "⚠️ Failed to load more users, but we have existing data"
+          );
+        }
+      } finally {
+        setListLoading(false);
+      }
+    },
+    [accessToken, users.length, showToast]
+  );
+
+  // initial load - prevent duplicate calls from React StrictMode
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (!hasInitialized.current && accessToken) {
+      console.log("🚀 Users component mounted, fetching initial data");
+      hasInitialized.current = true;
+      fetchUsers();
+    }
+  }, [accessToken, fetchUsers]);
 
   const handleInvite = async () => {
     if (!inviteEmail.trim()) return;
+    console.log("📧 Inviting user:", inviteEmail);
     setInviteLoading(true);
     try {
       const res = await fetch("/api/invite", {
@@ -98,7 +128,11 @@ export default function Users() {
       if (data.success) {
         showToast({ title: "User invited successfully", variant: "success" });
         setInviteEmail("");
-        fetchUsers(); // refresh list
+        // Instead of refetching, add the new user optimistically
+        // The user will appear in the list when they confirm their email
+        console.log(
+          "✅ User invited, no need to refetch - they will appear when confirmed"
+        );
       } else {
         showToast({
           title: data.message || "Failed to invite user",
@@ -132,7 +166,24 @@ export default function Users() {
               : `User ${action}d successfully`,
           variant: "success",
         });
-        fetchUsers(); // refresh list
+
+        // Update local state instead of refetching
+        setUsers((prevUsers) => {
+          if (action === "delete") {
+            return prevUsers.filter((user) => user.username !== username);
+          }
+
+          return prevUsers.map((user) => {
+            if (user.username === username) {
+              if (action === "enable" || action === "disable") {
+                return { ...user, enabled: action === "enable" };
+              }
+              // For reset-password, no state change needed
+              return user;
+            }
+            return user;
+          });
+        });
       } else {
         showToast({ title: `Failed to ${action} user`, variant: "error" });
       }
@@ -211,7 +262,7 @@ export default function Users() {
                 <TD>{new Date(user.created).toLocaleDateString()}</TD>
                 <TD>
                   <div className="flex flex-wrap gap-1">
-                    {user.groups.map((group) => (
+                    {(user.groups ?? []).map((group) => (
                       <span
                         key={group}
                         className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs"

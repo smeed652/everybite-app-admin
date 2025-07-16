@@ -2,6 +2,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
+import { ToastProvider } from "../../components/ui/ToastProvider";
 import { Widget } from "../../generated/graphql";
 import SmartMenuDetail from "../SmartMenuDetail";
 import SmartMenuFeatures from "../SmartMenuFeatures";
@@ -99,9 +100,11 @@ vi.mock("@apollo/client", () => ({
 function renderWithRouter(ui: React.ReactElement) {
   return render(
     <MemoryRouter initialEntries={["/smartmenus/widget-123"]}>
-      <Routes>
-        <Route path="/smartmenus/:widgetId" element={ui} />
-      </Routes>
+      <ToastProvider>
+        <Routes>
+          <Route path="/smartmenus/:widgetId" element={ui} />
+        </Routes>
+      </ToastProvider>
     </MemoryRouter>
   );
 }

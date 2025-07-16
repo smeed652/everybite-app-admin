@@ -2,6 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import App from "../App";
+import { ToastProvider } from "../components/ui/ToastProvider";
 import SmartMenuDetail from "../pages/SmartMenuDetail";
 import SmartMenuFeatures from "../pages/SmartMenuFeatures";
 import SmartMenuMarketing from "../pages/SmartMenuMarketing";
@@ -119,9 +120,11 @@ describe("Routing Consistency", () => {
     it("should render SmartMenus list at /smartmenus", () => {
       render(
         <MemoryRouter initialEntries={["/smartmenus"]}>
-          <Routes>
-            <Route path="/smartmenus" element={<SmartMenus />} />
-          </Routes>
+          <ToastProvider>
+            <Routes>
+              <Route path="/smartmenus" element={<SmartMenus />} />
+            </Routes>
+          </ToastProvider>
         </MemoryRouter>
       );
 
@@ -131,9 +134,14 @@ describe("Routing Consistency", () => {
     it("should render SmartMenu detail at /smartmenus/:id", () => {
       render(
         <MemoryRouter initialEntries={["/smartmenus/test-widget-1"]}>
-          <Routes>
-            <Route path="/smartmenus/:widgetId" element={<SmartMenuDetail />} />
-          </Routes>
+          <ToastProvider>
+            <Routes>
+              <Route
+                path="/smartmenus/:widgetId"
+                element={<SmartMenuDetail />}
+              />
+            </Routes>
+          </ToastProvider>
         </MemoryRouter>
       );
 
@@ -143,12 +151,14 @@ describe("Routing Consistency", () => {
     it("should render SmartMenu features at /smartmenus/:id/features", () => {
       render(
         <MemoryRouter initialEntries={["/smartmenus/test-widget-1/features"]}>
-          <Routes>
-            <Route
-              path="/smartmenus/:widgetId/features"
-              element={<SmartMenuFeatures />}
-            />
-          </Routes>
+          <ToastProvider>
+            <Routes>
+              <Route
+                path="/smartmenus/:widgetId/features"
+                element={<SmartMenuFeatures />}
+              />
+            </Routes>
+          </ToastProvider>
         </MemoryRouter>
       );
 
@@ -158,12 +168,14 @@ describe("Routing Consistency", () => {
     it("should render SmartMenu marketing at /smartmenus/:id/marketing", () => {
       render(
         <MemoryRouter initialEntries={["/smartmenus/test-widget-1/marketing"]}>
-          <Routes>
-            <Route
-              path="/smartmenus/:widgetId/marketing"
-              element={<SmartMenuMarketing />}
-            />
-          </Routes>
+          <ToastProvider>
+            <Routes>
+              <Route
+                path="/smartmenus/:widgetId/marketing"
+                element={<SmartMenuMarketing />}
+              />
+            </Routes>
+          </ToastProvider>
         </MemoryRouter>
       );
 
