@@ -18,6 +18,7 @@ const GET_ALL_WIDGETS = gql`
       id
       createdAt
       publishedAt
+      numberOfLocations
     }
   }
 `;
@@ -27,21 +28,25 @@ const mockWidgets = [
     id: "1",
     createdAt: "2024-11-01T10:00:00Z",
     publishedAt: "2024-11-02T10:00:00Z",
+    numberOfLocations: 5,
   },
   {
     id: "2",
     createdAt: "2024-11-15T10:00:00Z",
     publishedAt: null,
+    numberOfLocations: 3,
   },
   {
     id: "3",
     createdAt: "2024-12-01T10:00:00Z",
     publishedAt: "2024-12-02T10:00:00Z",
+    numberOfLocations: 8,
   },
   {
     id: "4",
     createdAt: "2024-10-01T10:00:00Z",
     publishedAt: "2024-10-02T10:00:00Z",
+    numberOfLocations: 12,
   },
 ];
 
@@ -118,7 +123,7 @@ describe("Dashboard", () => {
     await screen.findAllByTestId("metrics-card");
 
     const metricsCards = screen.getAllByTestId("metrics-card");
-    expect(metricsCards).toHaveLength(2);
+    expect(metricsCards).toHaveLength(3);
   });
 
   it("calculates trending deltas correctly", async () => {
@@ -135,6 +140,7 @@ describe("Dashboard", () => {
         publishedAt: new Date(
           currentPeriod.getTime() + 24 * 60 * 60 * 1000
         ).toISOString(),
+        numberOfLocations: 5,
       },
       {
         id: "2",
@@ -144,6 +150,7 @@ describe("Dashboard", () => {
         publishedAt: new Date(
           currentPeriod.getTime() + 6 * 24 * 60 * 60 * 1000
         ).toISOString(),
+        numberOfLocations: 8,
       },
       // Previous 30-day period
       {
@@ -152,6 +159,7 @@ describe("Dashboard", () => {
         publishedAt: new Date(
           previousPeriod.getTime() + 24 * 60 * 60 * 1000
         ).toISOString(),
+        numberOfLocations: 12,
       },
     ];
 
@@ -174,10 +182,11 @@ describe("Dashboard", () => {
     await screen.findAllByTestId("metrics-card");
 
     // Should show delta percentages
-    // Current period: 2 created, 2 active
-    // Previous period: 1 created, 1 active
-    // Delta: +100% for both
+    // Current period: 2 created, 2 active, 13 locations (5+8)
+    // Previous period: 1 created, 1 active, 12 locations
+    // Delta: +100% for SmartMenus and Active SmartMenus, +8.3% for locations
     expect(screen.getAllByText("+100.0%")).toHaveLength(2);
+    expect(screen.getByText("+8.3%")).toBeInTheDocument();
   });
 
   it("handles zero previous period correctly", async () => {
@@ -192,6 +201,7 @@ describe("Dashboard", () => {
         publishedAt: new Date(
           currentPeriod.getTime() + 24 * 60 * 60 * 1000
         ).toISOString(),
+        numberOfLocations: 5,
       },
     ];
 
@@ -213,7 +223,7 @@ describe("Dashboard", () => {
     await screen.findAllByTestId("metrics-card");
 
     // When previous period is 0, should show +100% if current > 0
-    expect(screen.getAllByText("+100%")).toHaveLength(2);
+    expect(screen.getAllByText("+100%")).toHaveLength(3);
   });
 
   it("handles empty widgets array", async () => {
@@ -234,7 +244,7 @@ describe("Dashboard", () => {
 
     await screen.findAllByTestId("metrics-card");
 
-    expect(screen.getAllByText("0%")).toHaveLength(2); // Both cards show 0%
+    expect(screen.getAllByText("0%")).toHaveLength(3); // All three cards show 0%
   });
 
   it("displays error state when GraphQL query fails", async () => {

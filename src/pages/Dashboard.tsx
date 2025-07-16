@@ -10,6 +10,7 @@ const GET_ALL_WIDGETS = gql /* GraphQL */ `
       id
       createdAt
       publishedAt
+      numberOfLocations
     }
   }
 `;
@@ -25,6 +26,16 @@ export default function Dashboard() {
   const active = widgets.filter((w: { publishedAt?: string | null }) =>
     Boolean(w.publishedAt)
   ).length;
+
+  // Calculate total locations for active SmartMenus
+  const activeWidgets = widgets.filter((w: { publishedAt?: string | null }) =>
+    Boolean(w.publishedAt)
+  );
+  const totalLocations = activeWidgets.reduce(
+    (sum: number, w: { numberOfLocations?: number | null }) =>
+      sum + (w.numberOfLocations || 0),
+    0
+  );
 
   // compute 30-day trending deltas
   const now = new Date();
@@ -51,6 +62,30 @@ export default function Dashboard() {
       !isAfter(new Date(w.publishedAt), startCurrent)
   ).length;
 
+  // Calculate location trends for active SmartMenus
+  const locationsCurr = widgets
+    .filter(
+      (w: { publishedAt?: string | null; numberOfLocations?: number | null }) =>
+        w.publishedAt && isAfter(new Date(w.publishedAt), startCurrent)
+    )
+    .reduce(
+      (sum: number, w: { numberOfLocations?: number | null }) =>
+        sum + (w.numberOfLocations || 0),
+      0
+    );
+  const locationsPrev = widgets
+    .filter(
+      (w: { publishedAt?: string | null; numberOfLocations?: number | null }) =>
+        w.publishedAt &&
+        isAfter(new Date(w.publishedAt), startPrev) &&
+        !isAfter(new Date(w.publishedAt), startCurrent)
+    )
+    .reduce(
+      (sum: number, w: { numberOfLocations?: number | null }) =>
+        sum + (w.numberOfLocations || 0),
+      0
+    );
+
   const pct = (curr: number, prev: number) => {
     if (prev === 0) return curr > 0 ? "+100%" : "0%";
     const v = ((curr - prev) / prev) * 100;
@@ -59,6 +94,7 @@ export default function Dashboard() {
 
   const totalDelta = pct(createdCurr, createdPrev);
   const activeDelta = pct(activeCurr, activePrev);
+  const locationsDelta = pct(locationsCurr, locationsPrev);
 
   if (error) {
     return (
@@ -75,7 +111,7 @@ export default function Dashboard() {
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-semibold">Dashboard</h1>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <MetricsCard
           title="SmartMenus"
           value={total.toLocaleString()}
@@ -86,6 +122,12 @@ export default function Dashboard() {
           title="Active SmartMenus"
           value={active.toLocaleString()}
           delta={activeDelta}
+          loading={loading}
+        />
+        <MetricsCard
+          title="Total Locations"
+          value={totalLocations.toLocaleString()}
+          delta={locationsDelta}
           loading={loading}
         />
       </div>
