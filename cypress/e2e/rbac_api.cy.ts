@@ -11,7 +11,7 @@ const payloadUser = "eyJjb2duaXRvOmdyb3VwcyI6WyJVU0VSIl19"; // {"cognito:groups"
 const tokenAdmin = `${header}.${payloadAdmin}.`;
 const tokenUser = `${header}.${payloadUser}.`;
 
-describe.skip("RBAC middleware – /api/users", () => {
+describe("RBAC middleware – /api/users", () => {
   it("returns 403 for non-admin token", () => {
     cy.request({
       url: "/api/users",

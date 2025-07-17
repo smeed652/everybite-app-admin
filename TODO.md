@@ -11,6 +11,9 @@
 - **Refactor the UI/UX to the new approach**
   - Status: Pending
 
+- **Change the names on the routes for Metabase and Cognito users, right now they are both using users**
+  - Status: Pending
+
 ## In Progress
 
 - **Fix all Users page and related tests to match the current API and UI implementation, including toast mocking and API route expectations.**
