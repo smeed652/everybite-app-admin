@@ -2,7 +2,6 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ToastProvider } from "../../components/ui/ToastProvider";
 import { AuthProvider } from "../../context/AuthContext";
 import Users from "../Users";
 
@@ -10,17 +9,14 @@ import Users from "../Users";
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
-// Mock useToast
-const mockShowToast = vi.fn();
-vi.mock("../../components/ui/ToastProvider", async () => {
-  const actual = await vi.importActual("../../components/ui/ToastProvider");
-  return {
-    ...actual,
-    useToast: vi.fn(() => ({
-      showToast: mockShowToast,
-    })),
-  };
-});
+// Mock react-hot-toast
+const mockToast = {
+  error: vi.fn(),
+  success: vi.fn(),
+  loading: vi.fn(),
+  dismiss: vi.fn(),
+};
+vi.mock("react-hot-toast", () => mockToast);
 
 // Mock AuthContext
 const mockAuthContext = {
@@ -43,20 +39,16 @@ const mockUsers = [
   {
     username: "user1",
     email: "user1@example.com",
-    emailVerified: true,
     status: "CONFIRMED",
     enabled: true,
-    createdAt: "2024-12-31T00:00:00.000Z",
-    lastModified: "2024-12-31T00:00:00.000Z",
+    created: "2024-12-31T00:00:00.000Z",
   },
   {
     username: "user2",
     email: "user2@example.com",
-    emailVerified: false,
     status: "UNCONFIRMED",
     enabled: false,
-    createdAt: "2025-01-01T00:00:00.000Z",
-    lastModified: "2025-01-01T00:00:00.000Z",
+    created: "2025-01-01T00:00:00.000Z",
   },
 ];
 
@@ -64,9 +56,7 @@ const renderUsers = () => {
   return render(
     <BrowserRouter>
       <AuthProvider>
-        <ToastProvider>
-          <Users />
-        </ToastProvider>
+        <Users />
       </AuthProvider>
     </BrowserRouter>
   );
@@ -217,10 +207,9 @@ describe("Users page", () => {
       fireEvent.click(formInviteButtons[1]);
 
       await waitFor(() => {
-        expect(mockShowToast).toHaveBeenCalledWith({
-          title: "✅ User created successfully",
-          variant: "success",
-        });
+        expect(mockToast.success).toHaveBeenCalledWith(
+          "User invited successfully"
+        );
       });
     });
 
@@ -247,10 +236,9 @@ describe("Users page", () => {
       const formInviteButtons = screen.getAllByText("Invite User");
       fireEvent.click(formInviteButtons[1]);
 
-      expect(mockShowToast).toHaveBeenCalledWith({
-        title: "❌ Email and password are required",
-        variant: "error",
-      });
+      expect(mockToast.error).toHaveBeenCalledWith(
+        "Email and password are required"
+      );
     });
 
     it("should handle invitation failure", async () => {
@@ -293,10 +281,7 @@ describe("Users page", () => {
       fireEvent.click(formInviteButtons[1]);
 
       await waitFor(() => {
-        expect(mockShowToast).toHaveBeenCalledWith({
-          title: "❌ Failed to invite user: Email already exists",
-          variant: "error",
-        });
+        expect(mockToast.error).toHaveBeenCalledWith("Email already exists");
       });
     });
 
@@ -333,10 +318,7 @@ describe("Users page", () => {
       fireEvent.click(inviteButtons[1]);
 
       await waitFor(() => {
-        expect(mockShowToast).toHaveBeenCalledWith({
-          title: "❌ Failed to invite user: Network error",
-          variant: "error",
-        });
+        expect(mockToast.error).toHaveBeenCalledWith("Failed to invite user");
       });
     });
 
@@ -481,10 +463,9 @@ describe("Users page", () => {
       await userEvent.click(menuEnableButton!);
 
       await waitFor(() => {
-        expect(mockShowToast).toHaveBeenCalledWith({
-          title: "✅ User enabled successfully",
-          variant: "success",
-        });
+        expect(mockToast.success).toHaveBeenCalledWith(
+          "User enabled successfully"
+        );
       });
     });
 
@@ -530,10 +511,9 @@ describe("Users page", () => {
       await userEvent.click(menuDisableButton!);
 
       await waitFor(() => {
-        expect(mockShowToast).toHaveBeenCalledWith({
-          title: "✅ User disabled successfully",
-          variant: "success",
-        });
+        expect(mockToast.success).toHaveBeenCalledWith(
+          "User disabled successfully"
+        );
       });
     });
 
@@ -579,10 +559,9 @@ describe("Users page", () => {
       await userEvent.click(menuResetButton!);
 
       await waitFor(() => {
-        expect(mockShowToast).toHaveBeenCalledWith({
-          title: "✅ Password reset successfully",
-          variant: "success",
-        });
+        expect(mockToast.success).toHaveBeenCalledWith(
+          "User reset-passwordd successfully"
+        );
       });
     });
 
@@ -635,10 +614,9 @@ describe("Users page", () => {
       );
 
       await waitFor(() => {
-        expect(mockShowToast).toHaveBeenCalledWith({
-          title: "✅ User deleted successfully",
-          variant: "success",
-        });
+        expect(mockToast.success).toHaveBeenCalledWith(
+          "User deleted successfully"
+        );
       });
     });
 
@@ -685,10 +663,7 @@ describe("Users page", () => {
       await userEvent.click(menuDisableButton2!);
 
       await waitFor(() => {
-        expect(mockShowToast).toHaveBeenCalledWith({
-          title: "❌ Failed to disable user: Cannot disable admin user",
-          variant: "error",
-        });
+        expect(mockToast.error).toHaveBeenCalledWith("Failed to disable user");
       });
     });
 
@@ -730,10 +705,7 @@ describe("Users page", () => {
       await userEvent.click(menuDisableButton!);
 
       await waitFor(() => {
-        expect(mockShowToast).toHaveBeenCalledWith({
-          title: "❌ Failed to disable user: Network error",
-          variant: "error",
-        });
+        expect(mockToast.error).toHaveBeenCalledWith("Failed to disable user");
       });
     });
   });

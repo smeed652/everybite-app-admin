@@ -2,7 +2,6 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ToastProvider } from "../../../components/ui/ToastProvider";
 import { AuthProvider } from "../../../context/AuthContext";
 import Users from "../../Users";
 
@@ -13,17 +12,14 @@ global.fetch = mockFetch;
 // Mock confirm
 global.confirm = vi.fn(() => true);
 
-// Mock useToast
-const mockShowToast = vi.fn();
-vi.mock("../../../components/ui/ToastProvider", async () => {
-  const actual = await vi.importActual("../../../components/ui/ToastProvider");
-  return {
-    ...actual,
-    useToast: vi.fn(() => ({
-      showToast: mockShowToast,
-    })),
-  };
-});
+// Mock react-hot-toast
+const mockToast = {
+  error: vi.fn(),
+  success: vi.fn(),
+  loading: vi.fn(),
+  dismiss: vi.fn(),
+};
+vi.mock("react-hot-toast", () => mockToast);
 
 // Mock AuthContext
 const mockAuthContext = {
@@ -46,20 +42,16 @@ const mockUsers = [
   {
     username: "user1",
     email: "user1@example.com",
-    emailVerified: true,
     status: "CONFIRMED",
     enabled: true,
-    createdAt: "2024-12-31T00:00:00.000Z",
-    lastModified: "2024-12-31T00:00:00.000Z",
+    created: "2024-12-31T00:00:00.000Z",
   },
   {
     username: "user2",
     email: "user2@example.com",
-    emailVerified: false,
     status: "UNCONFIRMED",
     enabled: false,
-    createdAt: "2025-01-01T00:00:00.000Z",
-    lastModified: "2025-01-01T00:00:00.000Z",
+    created: "2025-01-01T00:00:00.000Z",
   },
 ];
 
@@ -67,9 +59,7 @@ const renderUsers = () => {
   return render(
     <BrowserRouter>
       <AuthProvider>
-        <ToastProvider>
-          <Users />
-        </ToastProvider>
+        <Users />
       </AuthProvider>
     </BrowserRouter>
   );
@@ -80,7 +70,8 @@ describe("User Delete", () => {
     vi.clearAllMocks();
     vi.stubEnv("VITE_METABASE_API_URL", "http://localhost:3001");
     mockFetch.mockReset();
-    mockShowToast.mockReset();
+    (mockToast.error as ReturnType<typeof vi.fn>).mockReset();
+    (mockToast.success as ReturnType<typeof vi.fn>).mockReset();
     (global.confirm as ReturnType<typeof vi.fn>).mockReset();
     (global.confirm as ReturnType<typeof vi.fn>).mockReturnValue(true);
   });
@@ -108,24 +99,17 @@ describe("User Delete", () => {
       expect(screen.getByText("user1@example.com")).toBeInTheDocument();
     });
 
-    // Open action menu
-    const actionButtons = screen.getAllByRole("button");
-    const moreButtons = actionButtons.filter(
-      (button) =>
-        button.querySelector("svg")?.getAttribute("aria-hidden") === "true" &&
-        button.querySelector("svg")?.classList.contains("lucide-ellipsis")
-    );
-
-    await user.click(moreButtons[0]);
+    // Open action menu for user1
+    const actionButton = screen.getByLabelText("Actions for user1@example.com");
+    await user.click(actionButton);
 
     // Click delete
     await user.click(await screen.findByText("Delete"));
 
     await waitFor(() => {
-      expect(mockShowToast).toHaveBeenCalledWith({
-        title: "✅ User deleted successfully",
-        variant: "success",
-      });
+      expect(mockToast.success).toHaveBeenCalledWith(
+        "User deleted successfully"
+      );
     });
   });
 });
