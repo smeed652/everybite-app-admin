@@ -1,0 +1,3877 @@
+# Generated GraphQL Schema for EveryBite Analytics
+# Generated on: 2025-07-17T04:36:41.332Z
+# Total Tables: 120
+# READ-ONLY API - No mutations implemented
+
+  type PaginationInfo {
+    total: Int!
+    page: Int!
+    pageSize: Int!
+    totalPages: Int!
+    hasNext: Boolean!
+    hasPrevious: Boolean!
+  }
+
+  type AboutMealmeViewed {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type AcMarketingPageFirstVisited {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ActiveCampaignMarketingPageVisited {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ActiveCampaignWidgetEmailEntered {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ActiveOrderViewed {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ActiveRestaurants {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type AllEvents {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ByoIngredientAdded {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ByoIngredientAddedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ByoIngredientRemoved {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ByoIngredientRemovedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type CartClicked {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ChainCuisineClassifications {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ChainLocations {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ChainLocationsDetails {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ChainMenuClassifications {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ChainNraClassifications {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type Cuisines {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DbDiners {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DbOrders {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DbWidgets {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DinerEvents {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DishAvailabilityChecked {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DishByoCustomizationCancelled {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DishByoCustomizationCancelledV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DishByoCustomizationStarted {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DishByoCustomizationStartedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DishDetailsViewed {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DishDetailsViewedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DishOrderItemClicked {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DishOrderItemClickedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type Dishes {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type EmailVerificationResendClicked {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type EmailVerified {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type EnrichedWidgetViews {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type EnrichedWidgetViewsV2 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type Events {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type EverybiteFirstVisited {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ExploreListClicked {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ExploreMapClicked {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type FilterAdded {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type FilterAddedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type FilterRemoved {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type FilterRemovedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type FilteredEvents {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type FilteredUsers {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type GeneratedChainCuisineClassifications {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type GeneratedChainMenuClassifications {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type GeneratedChainNraClassifications {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type Geolocation {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type Kpis {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ManualMenuChainClassification {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ManualNraChainClassification {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ManualSignups {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ManualWidgets {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type MapMarkerClicked {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type MarketingPageFirstVisited {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type MarketingPageVisited {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type MenuCategories {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type MenucalcDinerEvents {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type MergedAmplitudeIds {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type MergedAmplitudeIdsProcessed {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type OrderHistoryViewed {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type PageViewed {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type PageViewedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type PreferenceModalPassed {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type PreferenceRemoved {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type PreferenceRemovedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type PreferenceSet {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type PreferenceSetV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type PreferencesApplied {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type PromptPageFirstVisited {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type PromptPageVisited {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type RestaurantPageVisited {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type Restaurants {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type RestaurantsTypes {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SavedDishAdded {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SavedDishRemoved {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SavedItemsViewed {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SavedRestaurantAdded {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SavedRestaurantRemoved {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SearchThisAreaClicked {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SearchTriggered {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SearchTriggeredV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SettingChanged {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SettingViewed {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SsoFirstSignIn {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type StageFilterRemoved {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type StageFilterRemovedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type StageWidgetViewed {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type StageWidgetViewedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type StageWidgetViewedV2 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SubcategoryClicked {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type SubcategoryClickedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type UserSignedIn {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type UserSignedUp {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type UtilityDates {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type VerificationEmailSent {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type VisitorsSources {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type VisitorsWithPreferences {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WelcomeModalPassed {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetEmailEntered {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetFirstVisited {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetIds {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetIngredientFilters {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetInteractions {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetInteractionsMaterialized {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetInteractionsMaterializedWithSession {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetInteractionsStage {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetInteractionsStageWithSession {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetInteractionsV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetInteractionsV3 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetLayoutChanged {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetLayoutChangedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetMenuCategoryClicked {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetMenuCategoryClickedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetViewed {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetViewedV1 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetViewsDeprecatedEventDataV2 {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type WidgetViewsGeolocated {
+    id: String!
+    createdAt: String
+    updatedAt: String
+  }
+
+  input AboutMealmeViewedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input AcMarketingPageFirstVisitedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ActiveCampaignMarketingPageVisitedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ActiveCampaignWidgetEmailEnteredFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ActiveOrderViewedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ActiveRestaurantsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input AllEventsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ByoIngredientAddedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ByoIngredientAddedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ByoIngredientRemovedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ByoIngredientRemovedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input CartClickedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ChainCuisineClassificationsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ChainLocationsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ChainLocationsDetailsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ChainMenuClassificationsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ChainNraClassificationsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input CuisinesFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DbDinersFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DbOrdersFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DbWidgetsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DinerEventsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DishAvailabilityCheckedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DishByoCustomizationCancelledFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DishByoCustomizationCancelledV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DishByoCustomizationStartedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DishByoCustomizationStartedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DishDetailsViewedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DishDetailsViewedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DishOrderItemClickedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DishOrderItemClickedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input DishesFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input EmailVerificationResendClickedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input EmailVerifiedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input EnrichedWidgetViewsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input EnrichedWidgetViewsV2Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input EventsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input EverybiteFirstVisitedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ExploreListClickedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ExploreMapClickedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input FilterAddedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input FilterAddedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input FilterRemovedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input FilterRemovedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input FilteredEventsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input FilteredUsersFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input GeneratedChainCuisineClassificationsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input GeneratedChainMenuClassificationsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input GeneratedChainNraClassificationsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input GeolocationFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input KpisFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ManualMenuChainClassificationFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ManualNraChainClassificationFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ManualSignupsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input ManualWidgetsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input MapMarkerClickedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input MarketingPageFirstVisitedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input MarketingPageVisitedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input MenuCategoriesFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input MenucalcDinerEventsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input MergedAmplitudeIdsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input MergedAmplitudeIdsProcessedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input OrderHistoryViewedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input PageViewedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input PageViewedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input PreferenceModalPassedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input PreferenceRemovedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input PreferenceRemovedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input PreferenceSetFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input PreferenceSetV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input PreferencesAppliedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input PromptPageFirstVisitedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input PromptPageVisitedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input RestaurantPageVisitedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input RestaurantsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input RestaurantsTypesFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SavedDishAddedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SavedDishRemovedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SavedItemsViewedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SavedRestaurantAddedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SavedRestaurantRemovedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SearchThisAreaClickedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SearchTriggeredFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SearchTriggeredV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SettingChangedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SettingViewedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SsoFirstSignInFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input StageFilterRemovedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input StageFilterRemovedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input StageWidgetViewedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input StageWidgetViewedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input StageWidgetViewedV2Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SubcategoryClickedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input SubcategoryClickedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input UserSignedInFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input UserSignedUpFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input UtilityDatesFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input VerificationEmailSentFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input VisitorsSourcesFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input VisitorsWithPreferencesFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WelcomeModalPassedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetEmailEnteredFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetFirstVisitedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetIdsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetIngredientFiltersFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetInteractionsFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetInteractionsMaterializedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetInteractionsMaterializedWithSessionFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetInteractionsStageFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetInteractionsStageWithSessionFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetInteractionsV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetInteractionsV3Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetLayoutChangedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetLayoutChangedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetMenuCategoryClickedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetMenuCategoryClickedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetViewedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetViewedV1Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetViewsDeprecatedEventDataV2Filter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  input WidgetViewsGeolocatedFilter {
+    id: String
+    id_in: [String]
+    id_like: String
+    createdAt: String
+    createdAt_in: [String]
+    createdAt_like: String
+    updatedAt: String
+    updatedAt_in: [String]
+    updatedAt_like: String
+    createdAt_gte: String
+    createdAt_lte: String
+    updatedAt_gte: String
+    updatedAt_lte: String
+    limit: Int
+    offset: Int
+  }
+
+  type AboutMealmeViewedList {
+    items: [AboutMealmeViewed!]!
+    pagination: PaginationInfo!
+  }
+
+  type AcMarketingPageFirstVisitedList {
+    items: [AcMarketingPageFirstVisited!]!
+    pagination: PaginationInfo!
+  }
+
+  type ActiveCampaignMarketingPageVisitedList {
+    items: [ActiveCampaignMarketingPageVisited!]!
+    pagination: PaginationInfo!
+  }
+
+  type ActiveCampaignWidgetEmailEnteredList {
+    items: [ActiveCampaignWidgetEmailEntered!]!
+    pagination: PaginationInfo!
+  }
+
+  type ActiveOrderViewedList {
+    items: [ActiveOrderViewed!]!
+    pagination: PaginationInfo!
+  }
+
+  type ActiveRestaurantsList {
+    items: [ActiveRestaurants!]!
+    pagination: PaginationInfo!
+  }
+
+  type AllEventsList {
+    items: [AllEvents!]!
+    pagination: PaginationInfo!
+  }
+
+  type ByoIngredientAddedList {
+    items: [ByoIngredientAdded!]!
+    pagination: PaginationInfo!
+  }
+
+  type ByoIngredientAddedV1List {
+    items: [ByoIngredientAddedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type ByoIngredientRemovedList {
+    items: [ByoIngredientRemoved!]!
+    pagination: PaginationInfo!
+  }
+
+  type ByoIngredientRemovedV1List {
+    items: [ByoIngredientRemovedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type CartClickedList {
+    items: [CartClicked!]!
+    pagination: PaginationInfo!
+  }
+
+  type ChainCuisineClassificationsList {
+    items: [ChainCuisineClassifications!]!
+    pagination: PaginationInfo!
+  }
+
+  type ChainLocationsList {
+    items: [ChainLocations!]!
+    pagination: PaginationInfo!
+  }
+
+  type ChainLocationsDetailsList {
+    items: [ChainLocationsDetails!]!
+    pagination: PaginationInfo!
+  }
+
+  type ChainMenuClassificationsList {
+    items: [ChainMenuClassifications!]!
+    pagination: PaginationInfo!
+  }
+
+  type ChainNraClassificationsList {
+    items: [ChainNraClassifications!]!
+    pagination: PaginationInfo!
+  }
+
+  type CuisinesList {
+    items: [Cuisines!]!
+    pagination: PaginationInfo!
+  }
+
+  type DbDinersList {
+    items: [DbDiners!]!
+    pagination: PaginationInfo!
+  }
+
+  type DbOrdersList {
+    items: [DbOrders!]!
+    pagination: PaginationInfo!
+  }
+
+  type DbWidgetsList {
+    items: [DbWidgets!]!
+    pagination: PaginationInfo!
+  }
+
+  type DinerEventsList {
+    items: [DinerEvents!]!
+    pagination: PaginationInfo!
+  }
+
+  type DishAvailabilityCheckedList {
+    items: [DishAvailabilityChecked!]!
+    pagination: PaginationInfo!
+  }
+
+  type DishByoCustomizationCancelledList {
+    items: [DishByoCustomizationCancelled!]!
+    pagination: PaginationInfo!
+  }
+
+  type DishByoCustomizationCancelledV1List {
+    items: [DishByoCustomizationCancelledV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type DishByoCustomizationStartedList {
+    items: [DishByoCustomizationStarted!]!
+    pagination: PaginationInfo!
+  }
+
+  type DishByoCustomizationStartedV1List {
+    items: [DishByoCustomizationStartedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type DishDetailsViewedList {
+    items: [DishDetailsViewed!]!
+    pagination: PaginationInfo!
+  }
+
+  type DishDetailsViewedV1List {
+    items: [DishDetailsViewedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type DishOrderItemClickedList {
+    items: [DishOrderItemClicked!]!
+    pagination: PaginationInfo!
+  }
+
+  type DishOrderItemClickedV1List {
+    items: [DishOrderItemClickedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type DishesList {
+    items: [Dishes!]!
+    pagination: PaginationInfo!
+  }
+
+  type EmailVerificationResendClickedList {
+    items: [EmailVerificationResendClicked!]!
+    pagination: PaginationInfo!
+  }
+
+  type EmailVerifiedList {
+    items: [EmailVerified!]!
+    pagination: PaginationInfo!
+  }
+
+  type EnrichedWidgetViewsList {
+    items: [EnrichedWidgetViews!]!
+    pagination: PaginationInfo!
+  }
+
+  type EnrichedWidgetViewsV2List {
+    items: [EnrichedWidgetViewsV2!]!
+    pagination: PaginationInfo!
+  }
+
+  type EventsList {
+    items: [Events!]!
+    pagination: PaginationInfo!
+  }
+
+  type EverybiteFirstVisitedList {
+    items: [EverybiteFirstVisited!]!
+    pagination: PaginationInfo!
+  }
+
+  type ExploreListClickedList {
+    items: [ExploreListClicked!]!
+    pagination: PaginationInfo!
+  }
+
+  type ExploreMapClickedList {
+    items: [ExploreMapClicked!]!
+    pagination: PaginationInfo!
+  }
+
+  type FilterAddedList {
+    items: [FilterAdded!]!
+    pagination: PaginationInfo!
+  }
+
+  type FilterAddedV1List {
+    items: [FilterAddedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type FilterRemovedList {
+    items: [FilterRemoved!]!
+    pagination: PaginationInfo!
+  }
+
+  type FilterRemovedV1List {
+    items: [FilterRemovedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type FilteredEventsList {
+    items: [FilteredEvents!]!
+    pagination: PaginationInfo!
+  }
+
+  type FilteredUsersList {
+    items: [FilteredUsers!]!
+    pagination: PaginationInfo!
+  }
+
+  type GeneratedChainCuisineClassificationsList {
+    items: [GeneratedChainCuisineClassifications!]!
+    pagination: PaginationInfo!
+  }
+
+  type GeneratedChainMenuClassificationsList {
+    items: [GeneratedChainMenuClassifications!]!
+    pagination: PaginationInfo!
+  }
+
+  type GeneratedChainNraClassificationsList {
+    items: [GeneratedChainNraClassifications!]!
+    pagination: PaginationInfo!
+  }
+
+  type GeolocationList {
+    items: [Geolocation!]!
+    pagination: PaginationInfo!
+  }
+
+  type KpisList {
+    items: [Kpis!]!
+    pagination: PaginationInfo!
+  }
+
+  type ManualMenuChainClassificationList {
+    items: [ManualMenuChainClassification!]!
+    pagination: PaginationInfo!
+  }
+
+  type ManualNraChainClassificationList {
+    items: [ManualNraChainClassification!]!
+    pagination: PaginationInfo!
+  }
+
+  type ManualSignupsList {
+    items: [ManualSignups!]!
+    pagination: PaginationInfo!
+  }
+
+  type ManualWidgetsList {
+    items: [ManualWidgets!]!
+    pagination: PaginationInfo!
+  }
+
+  type MapMarkerClickedList {
+    items: [MapMarkerClicked!]!
+    pagination: PaginationInfo!
+  }
+
+  type MarketingPageFirstVisitedList {
+    items: [MarketingPageFirstVisited!]!
+    pagination: PaginationInfo!
+  }
+
+  type MarketingPageVisitedList {
+    items: [MarketingPageVisited!]!
+    pagination: PaginationInfo!
+  }
+
+  type MenuCategoriesList {
+    items: [MenuCategories!]!
+    pagination: PaginationInfo!
+  }
+
+  type MenucalcDinerEventsList {
+    items: [MenucalcDinerEvents!]!
+    pagination: PaginationInfo!
+  }
+
+  type MergedAmplitudeIdsList {
+    items: [MergedAmplitudeIds!]!
+    pagination: PaginationInfo!
+  }
+
+  type MergedAmplitudeIdsProcessedList {
+    items: [MergedAmplitudeIdsProcessed!]!
+    pagination: PaginationInfo!
+  }
+
+  type OrderHistoryViewedList {
+    items: [OrderHistoryViewed!]!
+    pagination: PaginationInfo!
+  }
+
+  type PageViewedList {
+    items: [PageViewed!]!
+    pagination: PaginationInfo!
+  }
+
+  type PageViewedV1List {
+    items: [PageViewedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type PreferenceModalPassedList {
+    items: [PreferenceModalPassed!]!
+    pagination: PaginationInfo!
+  }
+
+  type PreferenceRemovedList {
+    items: [PreferenceRemoved!]!
+    pagination: PaginationInfo!
+  }
+
+  type PreferenceRemovedV1List {
+    items: [PreferenceRemovedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type PreferenceSetList {
+    items: [PreferenceSet!]!
+    pagination: PaginationInfo!
+  }
+
+  type PreferenceSetV1List {
+    items: [PreferenceSetV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type PreferencesAppliedList {
+    items: [PreferencesApplied!]!
+    pagination: PaginationInfo!
+  }
+
+  type PromptPageFirstVisitedList {
+    items: [PromptPageFirstVisited!]!
+    pagination: PaginationInfo!
+  }
+
+  type PromptPageVisitedList {
+    items: [PromptPageVisited!]!
+    pagination: PaginationInfo!
+  }
+
+  type RestaurantPageVisitedList {
+    items: [RestaurantPageVisited!]!
+    pagination: PaginationInfo!
+  }
+
+  type RestaurantsList {
+    items: [Restaurants!]!
+    pagination: PaginationInfo!
+  }
+
+  type RestaurantsTypesList {
+    items: [RestaurantsTypes!]!
+    pagination: PaginationInfo!
+  }
+
+  type SavedDishAddedList {
+    items: [SavedDishAdded!]!
+    pagination: PaginationInfo!
+  }
+
+  type SavedDishRemovedList {
+    items: [SavedDishRemoved!]!
+    pagination: PaginationInfo!
+  }
+
+  type SavedItemsViewedList {
+    items: [SavedItemsViewed!]!
+    pagination: PaginationInfo!
+  }
+
+  type SavedRestaurantAddedList {
+    items: [SavedRestaurantAdded!]!
+    pagination: PaginationInfo!
+  }
+
+  type SavedRestaurantRemovedList {
+    items: [SavedRestaurantRemoved!]!
+    pagination: PaginationInfo!
+  }
+
+  type SearchThisAreaClickedList {
+    items: [SearchThisAreaClicked!]!
+    pagination: PaginationInfo!
+  }
+
+  type SearchTriggeredList {
+    items: [SearchTriggered!]!
+    pagination: PaginationInfo!
+  }
+
+  type SearchTriggeredV1List {
+    items: [SearchTriggeredV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type SettingChangedList {
+    items: [SettingChanged!]!
+    pagination: PaginationInfo!
+  }
+
+  type SettingViewedList {
+    items: [SettingViewed!]!
+    pagination: PaginationInfo!
+  }
+
+  type SsoFirstSignInList {
+    items: [SsoFirstSignIn!]!
+    pagination: PaginationInfo!
+  }
+
+  type StageFilterRemovedList {
+    items: [StageFilterRemoved!]!
+    pagination: PaginationInfo!
+  }
+
+  type StageFilterRemovedV1List {
+    items: [StageFilterRemovedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type StageWidgetViewedList {
+    items: [StageWidgetViewed!]!
+    pagination: PaginationInfo!
+  }
+
+  type StageWidgetViewedV1List {
+    items: [StageWidgetViewedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type StageWidgetViewedV2List {
+    items: [StageWidgetViewedV2!]!
+    pagination: PaginationInfo!
+  }
+
+  type SubcategoryClickedList {
+    items: [SubcategoryClicked!]!
+    pagination: PaginationInfo!
+  }
+
+  type SubcategoryClickedV1List {
+    items: [SubcategoryClickedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type UserSignedInList {
+    items: [UserSignedIn!]!
+    pagination: PaginationInfo!
+  }
+
+  type UserSignedUpList {
+    items: [UserSignedUp!]!
+    pagination: PaginationInfo!
+  }
+
+  type UtilityDatesList {
+    items: [UtilityDates!]!
+    pagination: PaginationInfo!
+  }
+
+  type VerificationEmailSentList {
+    items: [VerificationEmailSent!]!
+    pagination: PaginationInfo!
+  }
+
+  type VisitorsSourcesList {
+    items: [VisitorsSources!]!
+    pagination: PaginationInfo!
+  }
+
+  type VisitorsWithPreferencesList {
+    items: [VisitorsWithPreferences!]!
+    pagination: PaginationInfo!
+  }
+
+  type WelcomeModalPassedList {
+    items: [WelcomeModalPassed!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetEmailEnteredList {
+    items: [WidgetEmailEntered!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetFirstVisitedList {
+    items: [WidgetFirstVisited!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetIdsList {
+    items: [WidgetIds!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetIngredientFiltersList {
+    items: [WidgetIngredientFilters!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetInteractionsList {
+    items: [WidgetInteractions!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetInteractionsMaterializedList {
+    items: [WidgetInteractionsMaterialized!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetInteractionsMaterializedWithSessionList {
+    items: [WidgetInteractionsMaterializedWithSession!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetInteractionsStageList {
+    items: [WidgetInteractionsStage!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetInteractionsStageWithSessionList {
+    items: [WidgetInteractionsStageWithSession!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetInteractionsV1List {
+    items: [WidgetInteractionsV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetInteractionsV3List {
+    items: [WidgetInteractionsV3!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetLayoutChangedList {
+    items: [WidgetLayoutChanged!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetLayoutChangedV1List {
+    items: [WidgetLayoutChangedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetMenuCategoryClickedList {
+    items: [WidgetMenuCategoryClicked!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetMenuCategoryClickedV1List {
+    items: [WidgetMenuCategoryClickedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetViewedList {
+    items: [WidgetViewed!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetViewedV1List {
+    items: [WidgetViewedV1!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetViewsDeprecatedEventDataV2List {
+    items: [WidgetViewsDeprecatedEventDataV2!]!
+    pagination: PaginationInfo!
+  }
+
+  type WidgetViewsGeolocatedList {
+    items: [WidgetViewsGeolocated!]!
+    pagination: PaginationInfo!
+  }
+
+  type Query {
+    # Existing analytics queries
+    widgetAnalytics(filters: AnalyticsFilters): WidgetAnalytics!
+    dailyInteractions(filters: AnalyticsFilters): [DailyInteraction!]!
+    quarterlyMetrics(startQuarter: String, endQuarter: String): [QuarterlyMetrics!]!
+    dailyOrders(startDate: String, endDate: String): [DailyOrders!]!
+    totalMetrics(startDate: String!, endDate: String!): TotalMetrics!
+    schemaExploration: SchemaExploration!
+    info: LambdaInfo!
+
+    # Enhanced schema exploration queries
+    tableMetadata(tableName: String!): TableMetadata
+    dataVolume(tableName: String!): DataVolume
+    tableRelationships(tableName: String!): TableRelationships
+    sampleData(tableName: String!, limit: Int): SampleData
+
+    # Table-specific queries
+    about_mealme_viewed(id: ID!): AboutMealmeViewed
+    about_mealme_viewedList(filter: AboutMealmeViewedFilter): AboutMealmeViewedList
+    about_mealme_viewedCount(filter: AboutMealmeViewedFilter): Int!
+    ac_marketing_page_first_visited(id: ID!): AcMarketingPageFirstVisited
+    ac_marketing_page_first_visitedList(filter: AcMarketingPageFirstVisitedFilter): AcMarketingPageFirstVisitedList
+    ac_marketing_page_first_visitedCount(filter: AcMarketingPageFirstVisitedFilter): Int!
+    active_campaign_marketing_page_visited(id: ID!): ActiveCampaignMarketingPageVisited
+    active_campaign_marketing_page_visitedList(filter: ActiveCampaignMarketingPageVisitedFilter): ActiveCampaignMarketingPageVisitedList
+    active_campaign_marketing_page_visitedCount(filter: ActiveCampaignMarketingPageVisitedFilter): Int!
+    active_campaign_widget_email_entered(id: ID!): ActiveCampaignWidgetEmailEntered
+    active_campaign_widget_email_enteredList(filter: ActiveCampaignWidgetEmailEnteredFilter): ActiveCampaignWidgetEmailEnteredList
+    active_campaign_widget_email_enteredCount(filter: ActiveCampaignWidgetEmailEnteredFilter): Int!
+    active_order_viewed(id: ID!): ActiveOrderViewed
+    active_order_viewedList(filter: ActiveOrderViewedFilter): ActiveOrderViewedList
+    active_order_viewedCount(filter: ActiveOrderViewedFilter): Int!
+    active_restaurants(id: ID!): ActiveRestaurants
+    active_restaurantsList(filter: ActiveRestaurantsFilter): ActiveRestaurantsList
+    active_restaurantsCount(filter: ActiveRestaurantsFilter): Int!
+    all_events(id: ID!): AllEvents
+    all_eventsList(filter: AllEventsFilter): AllEventsList
+    all_eventsCount(filter: AllEventsFilter): Int!
+    byo_ingredient_added(id: ID!): ByoIngredientAdded
+    byo_ingredient_addedList(filter: ByoIngredientAddedFilter): ByoIngredientAddedList
+    byo_ingredient_addedCount(filter: ByoIngredientAddedFilter): Int!
+    byo_ingredient_added_v1(id: ID!): ByoIngredientAddedV1
+    byo_ingredient_added_v1List(filter: ByoIngredientAddedV1Filter): ByoIngredientAddedV1List
+    byo_ingredient_added_v1Count(filter: ByoIngredientAddedV1Filter): Int!
+    byo_ingredient_removed(id: ID!): ByoIngredientRemoved
+    byo_ingredient_removedList(filter: ByoIngredientRemovedFilter): ByoIngredientRemovedList
+    byo_ingredient_removedCount(filter: ByoIngredientRemovedFilter): Int!
+    byo_ingredient_removed_v1(id: ID!): ByoIngredientRemovedV1
+    byo_ingredient_removed_v1List(filter: ByoIngredientRemovedV1Filter): ByoIngredientRemovedV1List
+    byo_ingredient_removed_v1Count(filter: ByoIngredientRemovedV1Filter): Int!
+    cart_clicked(id: ID!): CartClicked
+    cart_clickedList(filter: CartClickedFilter): CartClickedList
+    cart_clickedCount(filter: CartClickedFilter): Int!
+    chain_cuisine_classifications(id: ID!): ChainCuisineClassifications
+    chain_cuisine_classificationsList(filter: ChainCuisineClassificationsFilter): ChainCuisineClassificationsList
+    chain_cuisine_classificationsCount(filter: ChainCuisineClassificationsFilter): Int!
+    chain_locations(id: ID!): ChainLocations
+    chain_locationsList(filter: ChainLocationsFilter): ChainLocationsList
+    chain_locationsCount(filter: ChainLocationsFilter): Int!
+    chain_locations_details(id: ID!): ChainLocationsDetails
+    chain_locations_detailsList(filter: ChainLocationsDetailsFilter): ChainLocationsDetailsList
+    chain_locations_detailsCount(filter: ChainLocationsDetailsFilter): Int!
+    chain_menu_classifications(id: ID!): ChainMenuClassifications
+    chain_menu_classificationsList(filter: ChainMenuClassificationsFilter): ChainMenuClassificationsList
+    chain_menu_classificationsCount(filter: ChainMenuClassificationsFilter): Int!
+    chain_nra_classifications(id: ID!): ChainNraClassifications
+    chain_nra_classificationsList(filter: ChainNraClassificationsFilter): ChainNraClassificationsList
+    chain_nra_classificationsCount(filter: ChainNraClassificationsFilter): Int!
+    cuisines(id: ID!): Cuisines
+    cuisinesList(filter: CuisinesFilter): CuisinesList
+    cuisinesCount(filter: CuisinesFilter): Int!
+    db_diners(id: ID!): DbDiners
+    db_dinersList(filter: DbDinersFilter): DbDinersList
+    db_dinersCount(filter: DbDinersFilter): Int!
+    db_orders(id: ID!): DbOrders
+    db_ordersList(filter: DbOrdersFilter): DbOrdersList
+    db_ordersCount(filter: DbOrdersFilter): Int!
+    db_widgets(id: ID!): DbWidgets
+    db_widgetsList(filter: DbWidgetsFilter): DbWidgetsList
+    db_widgetsCount(filter: DbWidgetsFilter): Int!
+    diner_events(id: ID!): DinerEvents
+    diner_eventsList(filter: DinerEventsFilter): DinerEventsList
+    diner_eventsCount(filter: DinerEventsFilter): Int!
+    dish_availability_checked(id: ID!): DishAvailabilityChecked
+    dish_availability_checkedList(filter: DishAvailabilityCheckedFilter): DishAvailabilityCheckedList
+    dish_availability_checkedCount(filter: DishAvailabilityCheckedFilter): Int!
+    dish_byo_customization_cancelled(id: ID!): DishByoCustomizationCancelled
+    dish_byo_customization_cancelledList(filter: DishByoCustomizationCancelledFilter): DishByoCustomizationCancelledList
+    dish_byo_customization_cancelledCount(filter: DishByoCustomizationCancelledFilter): Int!
+    dish_byo_customization_cancelled_v1(id: ID!): DishByoCustomizationCancelledV1
+    dish_byo_customization_cancelled_v1List(filter: DishByoCustomizationCancelledV1Filter): DishByoCustomizationCancelledV1List
+    dish_byo_customization_cancelled_v1Count(filter: DishByoCustomizationCancelledV1Filter): Int!
+    dish_byo_customization_started(id: ID!): DishByoCustomizationStarted
+    dish_byo_customization_startedList(filter: DishByoCustomizationStartedFilter): DishByoCustomizationStartedList
+    dish_byo_customization_startedCount(filter: DishByoCustomizationStartedFilter): Int!
+    dish_byo_customization_started_v1(id: ID!): DishByoCustomizationStartedV1
+    dish_byo_customization_started_v1List(filter: DishByoCustomizationStartedV1Filter): DishByoCustomizationStartedV1List
+    dish_byo_customization_started_v1Count(filter: DishByoCustomizationStartedV1Filter): Int!
+    dish_details_viewed(id: ID!): DishDetailsViewed
+    dish_details_viewedList(filter: DishDetailsViewedFilter): DishDetailsViewedList
+    dish_details_viewedCount(filter: DishDetailsViewedFilter): Int!
+    dish_details_viewed_v1(id: ID!): DishDetailsViewedV1
+    dish_details_viewed_v1List(filter: DishDetailsViewedV1Filter): DishDetailsViewedV1List
+    dish_details_viewed_v1Count(filter: DishDetailsViewedV1Filter): Int!
+    dish_order_item_clicked(id: ID!): DishOrderItemClicked
+    dish_order_item_clickedList(filter: DishOrderItemClickedFilter): DishOrderItemClickedList
+    dish_order_item_clickedCount(filter: DishOrderItemClickedFilter): Int!
+    dish_order_item_clicked_v1(id: ID!): DishOrderItemClickedV1
+    dish_order_item_clicked_v1List(filter: DishOrderItemClickedV1Filter): DishOrderItemClickedV1List
+    dish_order_item_clicked_v1Count(filter: DishOrderItemClickedV1Filter): Int!
+    dishes(id: ID!): Dishes
+    dishesList(filter: DishesFilter): DishesList
+    dishesCount(filter: DishesFilter): Int!
+    email_verification_resend_clicked(id: ID!): EmailVerificationResendClicked
+    email_verification_resend_clickedList(filter: EmailVerificationResendClickedFilter): EmailVerificationResendClickedList
+    email_verification_resend_clickedCount(filter: EmailVerificationResendClickedFilter): Int!
+    email_verified(id: ID!): EmailVerified
+    email_verifiedList(filter: EmailVerifiedFilter): EmailVerifiedList
+    email_verifiedCount(filter: EmailVerifiedFilter): Int!
+    enriched_widget_views(id: ID!): EnrichedWidgetViews
+    enriched_widget_viewsList(filter: EnrichedWidgetViewsFilter): EnrichedWidgetViewsList
+    enriched_widget_viewsCount(filter: EnrichedWidgetViewsFilter): Int!
+    enriched_widget_views_v2(id: ID!): EnrichedWidgetViewsV2
+    enriched_widget_views_v2List(filter: EnrichedWidgetViewsV2Filter): EnrichedWidgetViewsV2List
+    enriched_widget_views_v2Count(filter: EnrichedWidgetViewsV2Filter): Int!
+    events(id: ID!): Events
+    eventsList(filter: EventsFilter): EventsList
+    eventsCount(filter: EventsFilter): Int!
+    everybite_first_visited(id: ID!): EverybiteFirstVisited
+    everybite_first_visitedList(filter: EverybiteFirstVisitedFilter): EverybiteFirstVisitedList
+    everybite_first_visitedCount(filter: EverybiteFirstVisitedFilter): Int!
+    explore_list_clicked(id: ID!): ExploreListClicked
+    explore_list_clickedList(filter: ExploreListClickedFilter): ExploreListClickedList
+    explore_list_clickedCount(filter: ExploreListClickedFilter): Int!
+    explore_map_clicked(id: ID!): ExploreMapClicked
+    explore_map_clickedList(filter: ExploreMapClickedFilter): ExploreMapClickedList
+    explore_map_clickedCount(filter: ExploreMapClickedFilter): Int!
+    filter_added(id: ID!): FilterAdded
+    filter_addedList(filter: FilterAddedFilter): FilterAddedList
+    filter_addedCount(filter: FilterAddedFilter): Int!
+    filter_added_v1(id: ID!): FilterAddedV1
+    filter_added_v1List(filter: FilterAddedV1Filter): FilterAddedV1List
+    filter_added_v1Count(filter: FilterAddedV1Filter): Int!
+    filter_removed(id: ID!): FilterRemoved
+    filter_removedList(filter: FilterRemovedFilter): FilterRemovedList
+    filter_removedCount(filter: FilterRemovedFilter): Int!
+    filter_removed_v1(id: ID!): FilterRemovedV1
+    filter_removed_v1List(filter: FilterRemovedV1Filter): FilterRemovedV1List
+    filter_removed_v1Count(filter: FilterRemovedV1Filter): Int!
+    filtered_events(id: ID!): FilteredEvents
+    filtered_eventsList(filter: FilteredEventsFilter): FilteredEventsList
+    filtered_eventsCount(filter: FilteredEventsFilter): Int!
+    filtered_users(id: ID!): FilteredUsers
+    filtered_usersList(filter: FilteredUsersFilter): FilteredUsersList
+    filtered_usersCount(filter: FilteredUsersFilter): Int!
+    generated_chain_cuisine_classifications(id: ID!): GeneratedChainCuisineClassifications
+    generated_chain_cuisine_classificationsList(filter: GeneratedChainCuisineClassificationsFilter): GeneratedChainCuisineClassificationsList
+    generated_chain_cuisine_classificationsCount(filter: GeneratedChainCuisineClassificationsFilter): Int!
+    generated_chain_menu_classifications(id: ID!): GeneratedChainMenuClassifications
+    generated_chain_menu_classificationsList(filter: GeneratedChainMenuClassificationsFilter): GeneratedChainMenuClassificationsList
+    generated_chain_menu_classificationsCount(filter: GeneratedChainMenuClassificationsFilter): Int!
+    generated_chain_nra_classifications(id: ID!): GeneratedChainNraClassifications
+    generated_chain_nra_classificationsList(filter: GeneratedChainNraClassificationsFilter): GeneratedChainNraClassificationsList
+    generated_chain_nra_classificationsCount(filter: GeneratedChainNraClassificationsFilter): Int!
+    geolocation(id: ID!): Geolocation
+    geolocationList(filter: GeolocationFilter): GeolocationList
+    geolocationCount(filter: GeolocationFilter): Int!
+    kpis(id: ID!): Kpis
+    kpisList(filter: KpisFilter): KpisList
+    kpisCount(filter: KpisFilter): Int!
+    manual_menu_chain_classification(id: ID!): ManualMenuChainClassification
+    manual_menu_chain_classificationList(filter: ManualMenuChainClassificationFilter): ManualMenuChainClassificationList
+    manual_menu_chain_classificationCount(filter: ManualMenuChainClassificationFilter): Int!
+    manual_nra_chain_classification(id: ID!): ManualNraChainClassification
+    manual_nra_chain_classificationList(filter: ManualNraChainClassificationFilter): ManualNraChainClassificationList
+    manual_nra_chain_classificationCount(filter: ManualNraChainClassificationFilter): Int!
+    manual_signups(id: ID!): ManualSignups
+    manual_signupsList(filter: ManualSignupsFilter): ManualSignupsList
+    manual_signupsCount(filter: ManualSignupsFilter): Int!
+    manual_widgets(id: ID!): ManualWidgets
+    manual_widgetsList(filter: ManualWidgetsFilter): ManualWidgetsList
+    manual_widgetsCount(filter: ManualWidgetsFilter): Int!
+    map_marker_clicked(id: ID!): MapMarkerClicked
+    map_marker_clickedList(filter: MapMarkerClickedFilter): MapMarkerClickedList
+    map_marker_clickedCount(filter: MapMarkerClickedFilter): Int!
+    marketing_page_first_visited(id: ID!): MarketingPageFirstVisited
+    marketing_page_first_visitedList(filter: MarketingPageFirstVisitedFilter): MarketingPageFirstVisitedList
+    marketing_page_first_visitedCount(filter: MarketingPageFirstVisitedFilter): Int!
+    marketing_page_visited(id: ID!): MarketingPageVisited
+    marketing_page_visitedList(filter: MarketingPageVisitedFilter): MarketingPageVisitedList
+    marketing_page_visitedCount(filter: MarketingPageVisitedFilter): Int!
+    menu_categories(id: ID!): MenuCategories
+    menu_categoriesList(filter: MenuCategoriesFilter): MenuCategoriesList
+    menu_categoriesCount(filter: MenuCategoriesFilter): Int!
+    menucalc_diner_events(id: ID!): MenucalcDinerEvents
+    menucalc_diner_eventsList(filter: MenucalcDinerEventsFilter): MenucalcDinerEventsList
+    menucalc_diner_eventsCount(filter: MenucalcDinerEventsFilter): Int!
+    merged_amplitude_ids(id: ID!): MergedAmplitudeIds
+    merged_amplitude_idsList(filter: MergedAmplitudeIdsFilter): MergedAmplitudeIdsList
+    merged_amplitude_idsCount(filter: MergedAmplitudeIdsFilter): Int!
+    merged_amplitude_ids_processed(id: ID!): MergedAmplitudeIdsProcessed
+    merged_amplitude_ids_processedList(filter: MergedAmplitudeIdsProcessedFilter): MergedAmplitudeIdsProcessedList
+    merged_amplitude_ids_processedCount(filter: MergedAmplitudeIdsProcessedFilter): Int!
+    order_history_viewed(id: ID!): OrderHistoryViewed
+    order_history_viewedList(filter: OrderHistoryViewedFilter): OrderHistoryViewedList
+    order_history_viewedCount(filter: OrderHistoryViewedFilter): Int!
+    page_viewed(id: ID!): PageViewed
+    page_viewedList(filter: PageViewedFilter): PageViewedList
+    page_viewedCount(filter: PageViewedFilter): Int!
+    page_viewed_v1(id: ID!): PageViewedV1
+    page_viewed_v1List(filter: PageViewedV1Filter): PageViewedV1List
+    page_viewed_v1Count(filter: PageViewedV1Filter): Int!
+    preference_modal_passed(id: ID!): PreferenceModalPassed
+    preference_modal_passedList(filter: PreferenceModalPassedFilter): PreferenceModalPassedList
+    preference_modal_passedCount(filter: PreferenceModalPassedFilter): Int!
+    preference_removed(id: ID!): PreferenceRemoved
+    preference_removedList(filter: PreferenceRemovedFilter): PreferenceRemovedList
+    preference_removedCount(filter: PreferenceRemovedFilter): Int!
+    preference_removed_v1(id: ID!): PreferenceRemovedV1
+    preference_removed_v1List(filter: PreferenceRemovedV1Filter): PreferenceRemovedV1List
+    preference_removed_v1Count(filter: PreferenceRemovedV1Filter): Int!
+    preference_set(id: ID!): PreferenceSet
+    preference_setList(filter: PreferenceSetFilter): PreferenceSetList
+    preference_setCount(filter: PreferenceSetFilter): Int!
+    preference_set_v1(id: ID!): PreferenceSetV1
+    preference_set_v1List(filter: PreferenceSetV1Filter): PreferenceSetV1List
+    preference_set_v1Count(filter: PreferenceSetV1Filter): Int!
+    preferences_applied(id: ID!): PreferencesApplied
+    preferences_appliedList(filter: PreferencesAppliedFilter): PreferencesAppliedList
+    preferences_appliedCount(filter: PreferencesAppliedFilter): Int!
+    prompt_page_first_visited(id: ID!): PromptPageFirstVisited
+    prompt_page_first_visitedList(filter: PromptPageFirstVisitedFilter): PromptPageFirstVisitedList
+    prompt_page_first_visitedCount(filter: PromptPageFirstVisitedFilter): Int!
+    prompt_page_visited(id: ID!): PromptPageVisited
+    prompt_page_visitedList(filter: PromptPageVisitedFilter): PromptPageVisitedList
+    prompt_page_visitedCount(filter: PromptPageVisitedFilter): Int!
+    restaurant_page_visited(id: ID!): RestaurantPageVisited
+    restaurant_page_visitedList(filter: RestaurantPageVisitedFilter): RestaurantPageVisitedList
+    restaurant_page_visitedCount(filter: RestaurantPageVisitedFilter): Int!
+    restaurants(id: ID!): Restaurants
+    restaurantsList(filter: RestaurantsFilter): RestaurantsList
+    restaurantsCount(filter: RestaurantsFilter): Int!
+    restaurants_types(id: ID!): RestaurantsTypes
+    restaurants_typesList(filter: RestaurantsTypesFilter): RestaurantsTypesList
+    restaurants_typesCount(filter: RestaurantsTypesFilter): Int!
+    saved_dish_added(id: ID!): SavedDishAdded
+    saved_dish_addedList(filter: SavedDishAddedFilter): SavedDishAddedList
+    saved_dish_addedCount(filter: SavedDishAddedFilter): Int!
+    saved_dish_removed(id: ID!): SavedDishRemoved
+    saved_dish_removedList(filter: SavedDishRemovedFilter): SavedDishRemovedList
+    saved_dish_removedCount(filter: SavedDishRemovedFilter): Int!
+    saved_items_viewed(id: ID!): SavedItemsViewed
+    saved_items_viewedList(filter: SavedItemsViewedFilter): SavedItemsViewedList
+    saved_items_viewedCount(filter: SavedItemsViewedFilter): Int!
+    saved_restaurant_added(id: ID!): SavedRestaurantAdded
+    saved_restaurant_addedList(filter: SavedRestaurantAddedFilter): SavedRestaurantAddedList
+    saved_restaurant_addedCount(filter: SavedRestaurantAddedFilter): Int!
+    saved_restaurant_removed(id: ID!): SavedRestaurantRemoved
+    saved_restaurant_removedList(filter: SavedRestaurantRemovedFilter): SavedRestaurantRemovedList
+    saved_restaurant_removedCount(filter: SavedRestaurantRemovedFilter): Int!
+    search_this_area_clicked(id: ID!): SearchThisAreaClicked
+    search_this_area_clickedList(filter: SearchThisAreaClickedFilter): SearchThisAreaClickedList
+    search_this_area_clickedCount(filter: SearchThisAreaClickedFilter): Int!
+    search_triggered(id: ID!): SearchTriggered
+    search_triggeredList(filter: SearchTriggeredFilter): SearchTriggeredList
+    search_triggeredCount(filter: SearchTriggeredFilter): Int!
+    search_triggered_v1(id: ID!): SearchTriggeredV1
+    search_triggered_v1List(filter: SearchTriggeredV1Filter): SearchTriggeredV1List
+    search_triggered_v1Count(filter: SearchTriggeredV1Filter): Int!
+    setting_changed(id: ID!): SettingChanged
+    setting_changedList(filter: SettingChangedFilter): SettingChangedList
+    setting_changedCount(filter: SettingChangedFilter): Int!
+    setting_viewed(id: ID!): SettingViewed
+    setting_viewedList(filter: SettingViewedFilter): SettingViewedList
+    setting_viewedCount(filter: SettingViewedFilter): Int!
+    sso_first_sign_in(id: ID!): SsoFirstSignIn
+    sso_first_sign_inList(filter: SsoFirstSignInFilter): SsoFirstSignInList
+    sso_first_sign_inCount(filter: SsoFirstSignInFilter): Int!
+    stage_filter_removed(id: ID!): StageFilterRemoved
+    stage_filter_removedList(filter: StageFilterRemovedFilter): StageFilterRemovedList
+    stage_filter_removedCount(filter: StageFilterRemovedFilter): Int!
+    stage_filter_removed_v1(id: ID!): StageFilterRemovedV1
+    stage_filter_removed_v1List(filter: StageFilterRemovedV1Filter): StageFilterRemovedV1List
+    stage_filter_removed_v1Count(filter: StageFilterRemovedV1Filter): Int!
+    stage_widget_viewed(id: ID!): StageWidgetViewed
+    stage_widget_viewedList(filter: StageWidgetViewedFilter): StageWidgetViewedList
+    stage_widget_viewedCount(filter: StageWidgetViewedFilter): Int!
+    stage_widget_viewed_v1(id: ID!): StageWidgetViewedV1
+    stage_widget_viewed_v1List(filter: StageWidgetViewedV1Filter): StageWidgetViewedV1List
+    stage_widget_viewed_v1Count(filter: StageWidgetViewedV1Filter): Int!
+    stage_widget_viewed_v2(id: ID!): StageWidgetViewedV2
+    stage_widget_viewed_v2List(filter: StageWidgetViewedV2Filter): StageWidgetViewedV2List
+    stage_widget_viewed_v2Count(filter: StageWidgetViewedV2Filter): Int!
+    subcategory_clicked(id: ID!): SubcategoryClicked
+    subcategory_clickedList(filter: SubcategoryClickedFilter): SubcategoryClickedList
+    subcategory_clickedCount(filter: SubcategoryClickedFilter): Int!
+    subcategory_clicked_v1(id: ID!): SubcategoryClickedV1
+    subcategory_clicked_v1List(filter: SubcategoryClickedV1Filter): SubcategoryClickedV1List
+    subcategory_clicked_v1Count(filter: SubcategoryClickedV1Filter): Int!
+    user_signed_in(id: ID!): UserSignedIn
+    user_signed_inList(filter: UserSignedInFilter): UserSignedInList
+    user_signed_inCount(filter: UserSignedInFilter): Int!
+    user_signed_up(id: ID!): UserSignedUp
+    user_signed_upList(filter: UserSignedUpFilter): UserSignedUpList
+    user_signed_upCount(filter: UserSignedUpFilter): Int!
+    utility_dates(id: ID!): UtilityDates
+    utility_datesList(filter: UtilityDatesFilter): UtilityDatesList
+    utility_datesCount(filter: UtilityDatesFilter): Int!
+    verification_email_sent(id: ID!): VerificationEmailSent
+    verification_email_sentList(filter: VerificationEmailSentFilter): VerificationEmailSentList
+    verification_email_sentCount(filter: VerificationEmailSentFilter): Int!
+    visitors_sources(id: ID!): VisitorsSources
+    visitors_sourcesList(filter: VisitorsSourcesFilter): VisitorsSourcesList
+    visitors_sourcesCount(filter: VisitorsSourcesFilter): Int!
+    visitors_with_preferences(id: ID!): VisitorsWithPreferences
+    visitors_with_preferencesList(filter: VisitorsWithPreferencesFilter): VisitorsWithPreferencesList
+    visitors_with_preferencesCount(filter: VisitorsWithPreferencesFilter): Int!
+    welcome_modal_passed(id: ID!): WelcomeModalPassed
+    welcome_modal_passedList(filter: WelcomeModalPassedFilter): WelcomeModalPassedList
+    welcome_modal_passedCount(filter: WelcomeModalPassedFilter): Int!
+    widget_email_entered(id: ID!): WidgetEmailEntered
+    widget_email_enteredList(filter: WidgetEmailEnteredFilter): WidgetEmailEnteredList
+    widget_email_enteredCount(filter: WidgetEmailEnteredFilter): Int!
+    widget_first_visited(id: ID!): WidgetFirstVisited
+    widget_first_visitedList(filter: WidgetFirstVisitedFilter): WidgetFirstVisitedList
+    widget_first_visitedCount(filter: WidgetFirstVisitedFilter): Int!
+    widget_ids(id: ID!): WidgetIds
+    widget_idsList(filter: WidgetIdsFilter): WidgetIdsList
+    widget_idsCount(filter: WidgetIdsFilter): Int!
+    widget_ingredient_filters(id: ID!): WidgetIngredientFilters
+    widget_ingredient_filtersList(filter: WidgetIngredientFiltersFilter): WidgetIngredientFiltersList
+    widget_ingredient_filtersCount(filter: WidgetIngredientFiltersFilter): Int!
+    widget_interactions(id: ID!): WidgetInteractions
+    widget_interactionsList(filter: WidgetInteractionsFilter): WidgetInteractionsList
+    widget_interactionsCount(filter: WidgetInteractionsFilter): Int!
+    widget_interactions_materialized(id: ID!): WidgetInteractionsMaterialized
+    widget_interactions_materializedList(filter: WidgetInteractionsMaterializedFilter): WidgetInteractionsMaterializedList
+    widget_interactions_materializedCount(filter: WidgetInteractionsMaterializedFilter): Int!
+    widget_interactions_materialized_with_session(id: ID!): WidgetInteractionsMaterializedWithSession
+    widget_interactions_materialized_with_sessionList(filter: WidgetInteractionsMaterializedWithSessionFilter): WidgetInteractionsMaterializedWithSessionList
+    widget_interactions_materialized_with_sessionCount(filter: WidgetInteractionsMaterializedWithSessionFilter): Int!
+    widget_interactions_stage(id: ID!): WidgetInteractionsStage
+    widget_interactions_stageList(filter: WidgetInteractionsStageFilter): WidgetInteractionsStageList
+    widget_interactions_stageCount(filter: WidgetInteractionsStageFilter): Int!
+    widget_interactions_stage_with_session(id: ID!): WidgetInteractionsStageWithSession
+    widget_interactions_stage_with_sessionList(filter: WidgetInteractionsStageWithSessionFilter): WidgetInteractionsStageWithSessionList
+    widget_interactions_stage_with_sessionCount(filter: WidgetInteractionsStageWithSessionFilter): Int!
+    widget_interactions_v1(id: ID!): WidgetInteractionsV1
+    widget_interactions_v1List(filter: WidgetInteractionsV1Filter): WidgetInteractionsV1List
+    widget_interactions_v1Count(filter: WidgetInteractionsV1Filter): Int!
+    widget_interactions_v3(id: ID!): WidgetInteractionsV3
+    widget_interactions_v3List(filter: WidgetInteractionsV3Filter): WidgetInteractionsV3List
+    widget_interactions_v3Count(filter: WidgetInteractionsV3Filter): Int!
+    widget_layout_changed(id: ID!): WidgetLayoutChanged
+    widget_layout_changedList(filter: WidgetLayoutChangedFilter): WidgetLayoutChangedList
+    widget_layout_changedCount(filter: WidgetLayoutChangedFilter): Int!
+    widget_layout_changed_v1(id: ID!): WidgetLayoutChangedV1
+    widget_layout_changed_v1List(filter: WidgetLayoutChangedV1Filter): WidgetLayoutChangedV1List
+    widget_layout_changed_v1Count(filter: WidgetLayoutChangedV1Filter): Int!
+    widget_menu_category_clicked(id: ID!): WidgetMenuCategoryClicked
+    widget_menu_category_clickedList(filter: WidgetMenuCategoryClickedFilter): WidgetMenuCategoryClickedList
+    widget_menu_category_clickedCount(filter: WidgetMenuCategoryClickedFilter): Int!
+    widget_menu_category_clicked_v1(id: ID!): WidgetMenuCategoryClickedV1
+    widget_menu_category_clicked_v1List(filter: WidgetMenuCategoryClickedV1Filter): WidgetMenuCategoryClickedV1List
+    widget_menu_category_clicked_v1Count(filter: WidgetMenuCategoryClickedV1Filter): Int!
+    widget_viewed(id: ID!): WidgetViewed
+    widget_viewedList(filter: WidgetViewedFilter): WidgetViewedList
+    widget_viewedCount(filter: WidgetViewedFilter): Int!
+    widget_viewed_v1(id: ID!): WidgetViewedV1
+    widget_viewed_v1List(filter: WidgetViewedV1Filter): WidgetViewedV1List
+    widget_viewed_v1Count(filter: WidgetViewedV1Filter): Int!
+    widget_views_deprecated_event_data_v2(id: ID!): WidgetViewsDeprecatedEventDataV2
+    widget_views_deprecated_event_data_v2List(filter: WidgetViewsDeprecatedEventDataV2Filter): WidgetViewsDeprecatedEventDataV2List
+    widget_views_deprecated_event_data_v2Count(filter: WidgetViewsDeprecatedEventDataV2Filter): Int!
+    widget_views_geolocated(id: ID!): WidgetViewsGeolocated
+    widget_views_geolocatedList(filter: WidgetViewsGeolocatedFilter): WidgetViewsGeolocatedList
+    widget_views_geolocatedCount(filter: WidgetViewsGeolocatedFilter): Int!
+  }
+
+schema {
+  query: Query
+}
+

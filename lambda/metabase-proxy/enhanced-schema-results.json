@@ -1,0 +1,756 @@
+{
+  "tables": [
+    {
+      "tableName": "about_mealme_viewed"
+    },
+    {
+      "tableName": "ac_marketing_page_first_visited"
+    },
+    {
+      "tableName": "active_campaign_marketing_page_visited"
+    },
+    {
+      "tableName": "active_campaign_widget_email_entered"
+    },
+    {
+      "tableName": "active_order_viewed"
+    },
+    {
+      "tableName": "active_restaurants"
+    },
+    {
+      "tableName": "all_events"
+    },
+    {
+      "tableName": "byo_ingredient_added"
+    },
+    {
+      "tableName": "byo_ingredient_added_v1"
+    },
+    {
+      "tableName": "byo_ingredient_removed"
+    },
+    {
+      "tableName": "byo_ingredient_removed_v1"
+    },
+    {
+      "tableName": "cart_clicked"
+    },
+    {
+      "tableName": "chain_cuisine_classifications"
+    },
+    {
+      "tableName": "chain_locations"
+    },
+    {
+      "tableName": "chain_locations_details"
+    },
+    {
+      "tableName": "chain_menu_classifications"
+    },
+    {
+      "tableName": "chain_nra_classifications"
+    },
+    {
+      "tableName": "cuisines"
+    },
+    {
+      "tableName": "db_diners"
+    },
+    {
+      "tableName": "db_orders"
+    },
+    {
+      "tableName": "db_widgets"
+    },
+    {
+      "tableName": "diner_events"
+    },
+    {
+      "tableName": "dish_availability_checked"
+    },
+    {
+      "tableName": "dish_byo_customization_cancelled"
+    },
+    {
+      "tableName": "dish_byo_customization_cancelled_v1"
+    },
+    {
+      "tableName": "dish_byo_customization_started"
+    },
+    {
+      "tableName": "dish_byo_customization_started_v1"
+    },
+    {
+      "tableName": "dish_details_viewed"
+    },
+    {
+      "tableName": "dish_details_viewed_v1"
+    },
+    {
+      "tableName": "dish_order_item_clicked"
+    },
+    {
+      "tableName": "dish_order_item_clicked_v1"
+    },
+    {
+      "tableName": "dishes"
+    },
+    {
+      "tableName": "email_verification_resend_clicked"
+    },
+    {
+      "tableName": "email_verified"
+    },
+    {
+      "tableName": "enriched_widget_views"
+    },
+    {
+      "tableName": "enriched_widget_views_v2"
+    },
+    {
+      "tableName": "events"
+    },
+    {
+      "tableName": "everybite_first_visited"
+    },
+    {
+      "tableName": "explore_list_clicked"
+    },
+    {
+      "tableName": "explore_map_clicked"
+    },
+    {
+      "tableName": "filter_added"
+    },
+    {
+      "tableName": "filter_added_v1"
+    },
+    {
+      "tableName": "filter_removed"
+    },
+    {
+      "tableName": "filter_removed_v1"
+    },
+    {
+      "tableName": "filtered_events"
+    },
+    {
+      "tableName": "filtered_users"
+    },
+    {
+      "tableName": "generated_chain_cuisine_classifications"
+    },
+    {
+      "tableName": "generated_chain_menu_classifications"
+    },
+    {
+      "tableName": "generated_chain_nra_classifications"
+    },
+    {
+      "tableName": "geolocation"
+    },
+    {
+      "tableName": "kpis"
+    },
+    {
+      "tableName": "manual_menu_chain_classification"
+    },
+    {
+      "tableName": "manual_nra_chain_classification"
+    },
+    {
+      "tableName": "manual_signups"
+    },
+    {
+      "tableName": "manual_widgets"
+    },
+    {
+      "tableName": "map_marker_clicked"
+    },
+    {
+      "tableName": "marketing_page_first_visited"
+    },
+    {
+      "tableName": "marketing_page_visited"
+    },
+    {
+      "tableName": "menu_categories"
+    },
+    {
+      "tableName": "menucalc_diner_events"
+    },
+    {
+      "tableName": "merged_amplitude_ids"
+    },
+    {
+      "tableName": "merged_amplitude_ids_processed"
+    },
+    {
+      "tableName": "order_history_viewed"
+    },
+    {
+      "tableName": "page_viewed"
+    },
+    {
+      "tableName": "page_viewed_v1"
+    },
+    {
+      "tableName": "preference_modal_passed"
+    },
+    {
+      "tableName": "preference_removed"
+    },
+    {
+      "tableName": "preference_removed_v1"
+    },
+    {
+      "tableName": "preference_set"
+    },
+    {
+      "tableName": "preference_set_v1"
+    },
+    {
+      "tableName": "preferences_applied"
+    },
+    {
+      "tableName": "prompt_page_first_visited"
+    },
+    {
+      "tableName": "prompt_page_visited"
+    },
+    {
+      "tableName": "restaurant_page_visited"
+    },
+    {
+      "tableName": "restaurants"
+    },
+    {
+      "tableName": "restaurants_types"
+    },
+    {
+      "tableName": "saved_dish_added"
+    },
+    {
+      "tableName": "saved_dish_removed"
+    },
+    {
+      "tableName": "saved_items_viewed"
+    },
+    {
+      "tableName": "saved_restaurant_added"
+    },
+    {
+      "tableName": "saved_restaurant_removed"
+    },
+    {
+      "tableName": "search_this_area_clicked"
+    },
+    {
+      "tableName": "search_triggered"
+    },
+    {
+      "tableName": "search_triggered_v1"
+    },
+    {
+      "tableName": "setting_changed"
+    },
+    {
+      "tableName": "setting_viewed"
+    },
+    {
+      "tableName": "sso_first_sign_in"
+    },
+    {
+      "tableName": "stage_filter_removed"
+    },
+    {
+      "tableName": "stage_filter_removed_v1"
+    },
+    {
+      "tableName": "stage_widget_viewed"
+    },
+    {
+      "tableName": "stage_widget_viewed_v1"
+    },
+    {
+      "tableName": "stage_widget_viewed_v2"
+    },
+    {
+      "tableName": "subcategory_clicked"
+    },
+    {
+      "tableName": "subcategory_clicked_v1"
+    },
+    {
+      "tableName": "user_signed_in"
+    },
+    {
+      "tableName": "user_signed_up"
+    },
+    {
+      "tableName": "utility_dates"
+    },
+    {
+      "tableName": "verification_email_sent"
+    },
+    {
+      "tableName": "visitors_sources"
+    },
+    {
+      "tableName": "visitors_with_preferences"
+    },
+    {
+      "tableName": "welcome_modal_passed"
+    },
+    {
+      "tableName": "widget_email_entered"
+    },
+    {
+      "tableName": "widget_first_visited"
+    },
+    {
+      "tableName": "widget_ids"
+    },
+    {
+      "tableName": "widget_ingredient_filters"
+    },
+    {
+      "tableName": "widget_interactions"
+    },
+    {
+      "tableName": "widget_interactions_materialized"
+    },
+    {
+      "tableName": "widget_interactions_materialized_with_session"
+    },
+    {
+      "tableName": "widget_interactions_stage"
+    },
+    {
+      "tableName": "widget_interactions_stage_with_session"
+    },
+    {
+      "tableName": "widget_interactions_v1"
+    },
+    {
+      "tableName": "widget_interactions_v3"
+    },
+    {
+      "tableName": "widget_layout_changed"
+    },
+    {
+      "tableName": "widget_layout_changed_v1"
+    },
+    {
+      "tableName": "widget_menu_category_clicked"
+    },
+    {
+      "tableName": "widget_menu_category_clicked_v1"
+    },
+    {
+      "tableName": "widget_viewed"
+    },
+    {
+      "tableName": "widget_viewed_v1"
+    },
+    {
+      "tableName": "widget_views_deprecated_event_data_v2"
+    },
+    {
+      "tableName": "widget_views_geolocated"
+    }
+  ],
+  "widgetInteractionsColumns": [
+    {
+      "columnName": "event_time\ttimestamp(3)",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "user_id\tvarchar",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "amplitude_id\tbigint",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "location\tvarchar",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "widget_id\tvarchar",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "context_page_url\tvarchar",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "event\tvarchar",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "restaurant_name\tvarchar",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "more_info\tvarchar",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "event_hour\ttimestamp(3)",
+      "dataType": null,
+      "comment": null
+    }
+  ],
+  "dbWidgetsColumns": [
+    {
+      "columnName": "id                  \tstring              \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "restaurant_id       \tstring              \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "created_at          \ttimestamp           \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "updated_at          \ttimestamp           \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "deleted_at          \ttimestamp           \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "background_color    \tstring              \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "higlight_color      \tstring              \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "name                \tstring              \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "primary_brand_color \tstring              \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "display_images      \tboolean             \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "font_family         \tstring              \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "display_feedback_button\tboolean             \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "display_soft_sign_up\tboolean             \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "published_at        \ttimestamp           \tWidget publishing timestamp. Describes the date (sometimes includes the time) when the widget went live on a chain's website.",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "display_dish_details_link\tboolean             \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "display_give_feedback_banner\tboolean             \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "display_notify_me_banner\tboolean             \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "layout              \tstring              \tLayout type of the widget.",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "is_byo_enabled      \tboolean             \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "is_order_button_enabled\tboolean             \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "supported_allergens \tARRAY<INT>          \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "order_url           \tstring              \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "number_of_locations \tint                 \t                    ",
+      "dataType": null,
+      "comment": null
+    },
+    {
+      "columnName": "number_of_locations_source\tstring              \t                    ",
+      "dataType": null,
+      "comment": null
+    }
+  ],
+  "widgetInteractionsSample": [
+    {
+      "values": [
+        "2025-04-25T10:49:56.782Z",
+        "",
+        "1183927778662",
+        "Massachusetts, Brookline",
+        "ad34a11c",
+        "https://www.honeygrow.com/",
+        "order item clicked",
+        "Honeygrow",
+        "Dish Name: Buffalo Chicken Salad",
+        "2025-04-25T10:00:00Z"
+      ]
+    },
+    {
+      "values": [
+        "2025-04-25T10:50:33.972Z",
+        "",
+        "1184560914012",
+        "Georgia, Atlanta",
+        "d0b7b350",
+        "https://www.ellianos.com/",
+        "order item clicked",
+        "Ellianos Coffee",
+        "Dish Name: White Mocha Large",
+        "2025-04-25T10:00:00Z"
+      ]
+    },
+    {
+      "values": [
+        "2025-04-25T10:55:42.161Z",
+        "",
+        "1184560914012",
+        "New York, New York",
+        "8cc42096",
+        "https://app.everybite.com/widget/life-alive-organic-cafe",
+        "order item clicked",
+        "Life Alive Cafe",
+        "Dish Name: Spiced Chai",
+        "2025-04-25T10:00:00Z"
+      ]
+    },
+    {
+      "values": [
+        "2025-04-25T10:10:00.038Z",
+        "",
+        "1196889339038",
+        "Ohio, Powell",
+        "b23f0985",
+        "https://www.citybbq.com/",
+        "order item clicked",
+        "City Barbeque",
+        "Dish Name: Peach Cobbler",
+        "2025-04-25T10:00:00Z"
+      ]
+    },
+    {
+      "values": [
+        "2025-04-25T10:47:49.891Z",
+        "",
+        "1199711207425",
+        "Georgia, Atlanta",
+        "d0b7b350",
+        "",
+        "order item clicked",
+        "Ellianos Coffee",
+        "Dish Name: Iced Turtle Medium",
+        "2025-04-25T10:00:00Z"
+      ]
+    }
+  ],
+  "dbWidgetsSample": [
+    {
+      "values": [
+        "cacb3c7c",
+        "0a4f7cdf-7e80-4948-97a2-1303c63faaed",
+        "2024-11-06T14:22:56.592Z",
+        "2024-11-06T14:22:56.592Z",
+        "",
+        "",
+        "",
+        "Green District Salads",
+        "e8042c",
+        "",
+        "",
+        "true",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "TABLE_LAYOUT",
+        "true",
+        "",
+        "1,2,3,4,5,6,7,8,10",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "values": [
+        "a0f9096d",
+        "022314c5-b4b4-4389-b049-b4edacfa648e",
+        "2024-09-10T14:39:26.278Z",
+        "2024-09-10T14:39:26.278Z",
+        "",
+        "",
+        "",
+        "Carrabbas",
+        "a01c24",
+        "",
+        "",
+        "true",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "TABLE_LAYOUT",
+        "",
+        "",
+        "1,2,3,4,5,6,7,8,10",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "values": [
+        "ae1f0970",
+        "00fa5b5e-f73a-4432-aa07-636550e8eed8",
+        "2024-12-05T14:59:11.55Z",
+        "2024-12-05T14:59:11.55Z",
+        "",
+        "",
+        "",
+        "Lennys",
+        "",
+        "",
+        "",
+        "true",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "TABLE_LAYOUT",
+        "true",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "values": [
+        "ae9f09fe",
+        "007a33cf-714b-494c-af97-bdf26cffb2a1",
+        "2024-09-10T16:10:24.865Z",
+        "2024-09-10T16:10:24.865Z",
+        "",
+        "",
+        "",
+        "Huddle House",
+        "b01c2c",
+        "",
+        "",
+        "true",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "TABLE_LAYOUT",
+        "",
+        "",
+        "1,2,3,4,5,6,7,8",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "values": [
+        "a5fb0938",
+        "f6498420-fc79-41d8-94db-92c1f84a898d",
+        "2024-06-07T11:10:43Z",
+        "2024-09-18T22:42:33.858Z",
+        "",
+        "",
+        "000000",
+        "Love Life Cafe",
+        "000000",
+        "true",
+        "",
+        "true",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "TABLE_LAYOUT",
+        "true",
+        "",
+        "1,2,3,4,5,6,7,8,10",
+        "",
+        "",
+        ""
+      ]
+    }
+  ],
+  "detailedMetadata": {},
+  "dataVolumes": {},
+  "relationships": {},
+  "explorationDate": "2025-07-17T05:22:37.908Z"
+}

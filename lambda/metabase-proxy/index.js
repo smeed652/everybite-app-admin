@@ -1,4 +1,6 @@
 const axios = require("axios");
+const { graphql } = require("graphql");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
 const {
   CognitoIdentityProviderClient,
   ListUsersCommand,
@@ -8,6 +10,19 @@ const {
   AdminEnableUserCommand,
   AdminDisableUserCommand,
 } = require("@aws-sdk/client-cognito-identity-provider");
+
+// JWT validator removed - using API key authentication only
+
+// Import GraphQL schema and resolvers
+const analyticsSchema = require("./schema/analytics");
+const analyticsResolvers = require("./resolvers/analytics");
+const tableResolvers = require("./resolvers/table-resolvers");
+
+// Create executable schema
+const schema = makeExecutableSchema({
+  typeDefs: [analyticsSchema],
+  resolvers: [analyticsResolvers, tableResolvers],
+});
 
 // Metabase session management
 let sessionToken = null;
@@ -25,6 +40,36 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
   "Content-Type": "application/json",
 };
+
+// Authentication middleware - API key only
+async function authenticateRequest(event, requiredRoles = []) {
+  const apiKey = event.headers?.["x-api-key"] || event.headers?.["X-API-Key"];
+
+  try {
+    // Check for API key
+    if (!apiKey) {
+      throw new Error("API key required");
+    }
+
+    const validApiKey = process.env.API_KEY;
+    if (!validApiKey) {
+      throw new Error("API key authentication not configured");
+    }
+
+    if (apiKey !== validApiKey) {
+      throw new Error("Invalid API key");
+    }
+
+    // API key authentication successful - return a mock user with admin role
+    return {
+      sub: "api-key-user",
+      "cognito:groups": ["ADMIN"],
+      email: "api-key@everybite.com",
+    };
+  } catch (error) {
+    throw new Error(`Authentication failed: ${error.message}`);
+  }
+}
 
 async function authenticateMetabase() {
   const METABASE_URL = process.env.METABASE_URL;
@@ -50,14 +95,14 @@ async function authenticateMetabase() {
   return sessionToken;
 }
 
-async function fetchMetabase(path) {
+async function executeMetabaseQuery(queryData) {
   const METABASE_URL = process.env.METABASE_URL;
   if (!METABASE_URL) {
     throw new Error("METABASE_URL not configured");
   }
 
   const token = await authenticateMetabase();
-  const response = await axios.get(`${METABASE_URL}${path}`, {
+  const response = await axios.post(`${METABASE_URL}/api/dataset`, queryData, {
     headers: { "X-Metabase-Session": token },
   });
   return response.data;
@@ -187,17 +232,39 @@ async function resetCognitoPassword(userPoolId, username) {
 
 function generateTemporaryPassword() {
   const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-  let password = "";
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
   for (let i = 0; i < 12; i++) {
-    password += chars.charAt(Math.floor(Math.random() * chars.length));
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  return password;
+  return result;
 }
 
-exports.handler = async (event) => {
-  // Handle CORS preflight requests
-  if (event.httpMethod === "OPTIONS") {
+// Create Apollo Server
+// const server = new ApolloServer({
+//   typeDefs: [analyticsSchema],
+//   resolvers: [analyticsResolvers],
+//   formatError: (error) => {
+//     console.error("GraphQL Error:", error);
+//     return {
+//       message: error.message,
+//       path: error.path,
+//     };
+//   },
+//   introspection: true,
+// });
+
+// Create GraphQL handler
+const graphqlHandler = async (event, context) => {
+  console.log("GraphQL Request received:", JSON.stringify(event, null, 2));
+
+  const httpMethod = event.httpMethod;
+  const path = event.path;
+  let body = event.body;
+  const queryStringParameters = event.queryStringParameters;
+
+  // Handle preflight requests
+  if (httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
       headers: corsHeaders,
@@ -206,50 +273,125 @@ exports.handler = async (event) => {
   }
 
   try {
-    // Handle both API Gateway and Lambda Function URL formats
-    const httpMethod = event.httpMethod || event.requestContext?.http?.method;
-    const path = event.path || event.rawPath;
-    const body = event.body;
-    const queryStringParameters = event.queryStringParameters;
-    const userPoolId = process.env.COGNITO_USER_POOL_ID;
+    // Authenticate request
+    const decodedToken = await authenticateRequest(event, []); // No specific roles required for this endpoint
 
-    // Handle Lambda Function URL path format
-    let requestPath = path;
-    if (event.rawPath) {
-      requestPath = event.rawPath;
-    } else if (requestPath) {
-      requestPath = requestPath;
-    } else {
-      requestPath = "/";
+    // Parse body if it's a string
+    let query, variables;
+    if (body) {
+      if (typeof body === "string") {
+        try {
+          body = JSON.parse(body);
+        } catch (e) {
+          return {
+            statusCode: 400,
+            headers: corsHeaders,
+            body: JSON.stringify({ error: "Invalid JSON body" }),
+          };
+        }
+      }
+      query = body.query;
+      variables = body.variables;
+    } else if (queryStringParameters) {
+      query = queryStringParameters.query;
+      variables = queryStringParameters.variables;
     }
 
-    console.log("Debug - Event:", JSON.stringify(event, null, 2));
-    console.log("Debug - Request path:", requestPath);
-    console.log("Debug - HTTP method:", httpMethod);
-    console.log("Debug - Path:", path);
-    console.log("Debug - RawPath:", event.rawPath);
-    console.log("Debug - Event.httpMethod:", event.httpMethod);
-    console.log(
-      "Debug - Event.requestContext?.http?.method:",
-      event.requestContext?.http?.method
-    );
-
-    // Test endpoint
-    if (requestPath === "/test") {
+    if (!query) {
       return {
-        statusCode: 200,
+        statusCode: 400,
         headers: corsHeaders,
-        body: JSON.stringify({
-          message: "Test endpoint working",
-          requestPath: requestPath,
-          path: path,
-          rawPath: event.rawPath,
-          httpMethod: httpMethod,
-        }),
+        body: JSON.stringify({ error: "No query provided" }),
       };
     }
-    // Metabase endpoints
-    else if (requestPath === "/dashboard") {
+
+    const result = await graphql({
+      schema: schema,
+      source: query,
+      variableValues: variables,
+      contextValue: {
+        executeMetabaseQuery,
+        fetchMetabase,
+        event,
+        context,
+      },
+    });
+
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: JSON.stringify(result),
+    };
+  } catch (error) {
+    console.error(
+      "GraphQL Handler Error:",
+      error && error.stack ? error.stack : error
+    );
+    return {
+      statusCode: 500,
+      headers: corsHeaders,
+      body: JSON.stringify({
+        message: "Internal server error",
+        error:
+          (error && (error.message || error.toString())) || "Unknown error",
+        stack: error && error.stack,
+      }),
+    };
+  }
+};
+
+// Main Lambda handler
+exports.handler = async (event, context) => {
+  console.log("Event structure:", JSON.stringify(event, null, 2));
+
+  // Extract path from different event structures
+  let path, httpMethod, queryStringParameters, body;
+
+  if (event.requestContext && event.requestContext.http) {
+    // Lambda URL HTTP request
+    path = event.rawPath || event.requestContext.http.path;
+    httpMethod = event.requestContext.http.method;
+    queryStringParameters = event.queryStringParameters;
+    body = event.body;
+  } else {
+    // Direct Lambda invocation or API Gateway
+    path = event.path;
+    httpMethod = event.httpMethod;
+    queryStringParameters = event.queryStringParameters;
+    body = event.body;
+  }
+
+  const userPoolId = process.env.COGNITO_USER_POOL_ID;
+
+  console.log("Extracted values:", {
+    httpMethod,
+    path,
+    queryStringParameters,
+    body,
+  });
+
+  // Handle preflight requests
+  if (httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: "",
+    };
+  }
+
+  try {
+    // Handle GraphQL requests
+    if (path === "/graphql" || path.endsWith("/graphql")) {
+      return await graphqlHandler(event, context);
+    }
+
+    // Authenticate request for non-GraphQL endpoints
+    const decodedToken = await authenticateRequest(event, []); // No specific roles required for this endpoint
+
+    // Handle REST endpoints for backward compatibility
+    const requestPath = path.replace("/metabase", "");
+
+    if (requestPath === "/dashboard") {
       // Fetch dashboard metrics
       const [users, dashboards, questions] = await Promise.all([
         fetchMetabase("/api/user"),
@@ -271,8 +413,8 @@ exports.handler = async (event) => {
           popularDashboards,
         }),
       };
-    } else if (requestPath === "/metabase/users") {
-      // Fetch Metabase users data
+    } else if (requestPath === "/users") {
+      // Fetch users data
       const users = await fetchMetabase("/api/user");
 
       const transformedUsers = users.data.map((user) => ({
@@ -412,14 +554,28 @@ exports.handler = async (event) => {
       };
     }
   } catch (error) {
-    console.error("Lambda error:", error);
+    console.error("Lambda error:", error && error.stack ? error.stack : error);
     return {
       statusCode: 500,
-      headers: corsHeaders,
       body: JSON.stringify({
-        error: "Internal server error",
-        details: error.message,
+        message: "Internal server error",
+        error:
+          (error && (error.message || error.toString())) || "Unknown error",
+        stack: error && error.stack,
       }),
     };
   }
 };
+
+async function fetchMetabase(path) {
+  const METABASE_URL = process.env.METABASE_URL;
+  if (!METABASE_URL) {
+    throw new Error("METABASE_URL not configured");
+  }
+
+  const token = await authenticateMetabase();
+  const response = await axios.get(`${METABASE_URL}${path}`, {
+    headers: { "X-Metabase-Session": token },
+  });
+  return response.data;
+}

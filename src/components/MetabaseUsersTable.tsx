@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMetabaseUsers } from "../hooks/useMetabase";
+import { useMetabaseUsersGraphQL } from "../hooks/useMetabaseGraphQL";
 import { useTableSort } from "../hooks/useTableSort";
 import { MetabaseUser } from "../types/metabase";
 import { MetabaseUsersTableError } from "./MetabaseUsersTableError";
@@ -10,7 +10,7 @@ import { Skeleton } from "./ui/Skeleton";
 import { Table, TBody, TD, TH, THead, TR } from "./ui/Table";
 
 export const MetabaseUsersTable = () => {
-  const { users, loading, error, refetch } = useMetabaseUsers();
+  const { users, loading, error, refetch } = useMetabaseUsersGraphQL();
   const [searchTerm, setSearchTerm] = useState("");
   const { handleSort, sortData } = useTableSort<MetabaseUser>("dateJoined");
 
@@ -45,7 +45,7 @@ export const MetabaseUsersTable = () => {
         onRefresh={refetch}
       />
 
-      {loading && !users ? (
+      {loading && !users?.users ? (
         <div className="space-y-4 flex-1">
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-10 w-full" />

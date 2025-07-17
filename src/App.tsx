@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { ToastProvider } from "./components/ui/ToastProvider";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import CacheManagement from "./pages/CacheManagement";
 import Dashboard from "./pages/Dashboard";
 import Forbidden from "./pages/Forbidden";
 import Login from "./pages/Login";
@@ -78,6 +79,14 @@ export default function App() {
                 element={
                   <ProtectedRoute allowedRoles={["ADMIN"]}>
                     <MetabaseUsers />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/cache"
+                element={
+                  <ProtectedRoute allowedRoles={["ADMIN"]}>
+                    <CacheManagement />
                   </ProtectedRoute>
                 }
               />

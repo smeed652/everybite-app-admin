@@ -10,6 +10,7 @@ export interface EnvironmentConfig {
     analytics: boolean;
     notifications: boolean;
     debugMode: boolean;
+    caching: boolean; // New caching feature flag
   };
 }
 
@@ -24,6 +25,7 @@ const environments: Record<string, EnvironmentConfig> = {
       analytics: false,
       notifications: false,
       debugMode: true,
+      caching: import.meta.env.VITE_ENABLE_CACHING === "true", // Can be overridden via env var
     },
   },
   staging: {
@@ -39,6 +41,7 @@ const environments: Record<string, EnvironmentConfig> = {
       analytics: true,
       notifications: false,
       debugMode: false,
+      caching: true, // Always enabled in staging
     },
   },
   production: {
@@ -53,6 +56,7 @@ const environments: Record<string, EnvironmentConfig> = {
       analytics: true,
       notifications: true,
       debugMode: false,
+      caching: true, // Always enabled in production
     },
   },
 };
@@ -86,7 +90,25 @@ export const isStaging = currentEnvironment === "staging";
 export const isProduction = currentEnvironment === "production";
 
 // Feature flags
-export const features = config.features;
+export const features = {
+  ...config.features,
+  get caching() {
+    // Check localStorage for cacheConfig first
+    try {
+      const raw = localStorage.getItem("cacheConfig");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (typeof parsed.enableCaching === "boolean") {
+          return parsed.enableCaching;
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+    // Fallback to env/config
+    return config.features.caching;
+  },
+};
 
 // Logging configuration
 export const logConfig = {

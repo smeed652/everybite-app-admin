@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2025-07-17T04:38:15.966Z",
+  "totalTables": 120,
+  "keyTablesWithDetailedColumns": 6,
+  "remainingTablesWithBasicColumns": 114,
+  "keyTables": [
+    "widget_interactions",
+    "db_widgets",
+    "db_orders",
+    "db_diners",
+    "restaurants",
+    "dishes"
+  ],
+  "schemaFeatures": [
+    "Read-only API (no mutations)",
+    "Detailed column mapping for key tables",
+    "Basic types for remaining tables",
+    "Filter input types for each table",
+    "Pagination support",
+    "List types for bulk queries",
+    "Enhanced schema exploration queries",
+    "Existing analytics queries preserved"
+  ]
+}

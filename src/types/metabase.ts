@@ -13,7 +13,7 @@ export interface MetabaseUser {
   isQbnewb: boolean;
   locale: string | null;
   ssoSource: string | null;
-  updatedAt: string;
+  updatedAt?: string; // Optional since GraphQL doesn't return this field
 }
 
 export interface MetabaseUsersResponse {

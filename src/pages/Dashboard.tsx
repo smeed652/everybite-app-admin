@@ -2,7 +2,9 @@ import { gql, useQuery } from "@apollo/client";
 import { isAfter, subDays } from "date-fns";
 import { AlertTriangle } from "lucide-react";
 import { MetricsCard } from "../components/MetricsCard";
+import { QuarterlyMetricsTable } from "../components/QuarterlyMetricsTable";
 import { PlayerAnalyticsSection } from "../features/dashboard/sections/PlayerAnalyticsSection";
+import { useQuarterlyMetricsGraphQL } from "../hooks/useQuarterlyMetricsGraphQL";
 
 const GET_ALL_WIDGETS = gql /* GraphQL */ `
   query GetAllWidgets {
@@ -36,6 +38,19 @@ export default function Dashboard() {
       sum + (w.numberOfLocations || 0),
     0
   );
+
+  // Use the new GraphQL quarterly metrics hook
+  const {
+    quarterlyData,
+    totalOrders,
+    ordersDelta,
+    loading: quarterlyLoading,
+    error: quarterlyError,
+  } = useQuarterlyMetricsGraphQL();
+
+  console.log("Dashboard: quarterlyData:", quarterlyData);
+  console.log("Dashboard: quarterlyLoading:", quarterlyLoading);
+  console.log("Dashboard: quarterlyError:", quarterlyError);
 
   // compute 30-day trending deltas
   const now = new Date();
@@ -108,10 +123,15 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-semibold">Dashboard</h1>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-muted-foreground">
+          Overview of your SmartMenu performance and analytics.
+        </p>
+      </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricsCard
           title="SmartMenus"
           value={total.toLocaleString()}
@@ -130,9 +150,25 @@ export default function Dashboard() {
           delta={locationsDelta}
           loading={loading}
         />
+        <MetricsCard
+          title="Total Orders"
+          value={totalOrders.toLocaleString()}
+          delta={ordersDelta}
+          loading={quarterlyLoading}
+        />
       </div>
 
+      {/* Quarterly Metrics Table */}
+      <QuarterlyMetricsTable
+        data={quarterlyData}
+        loading={quarterlyLoading}
+        error={quarterlyError}
+      />
+
       <PlayerAnalyticsSection />
+
+      {/* GraphQL Test Component */}
+      {/* <GraphQLTest /> */}
     </div>
   );
 }

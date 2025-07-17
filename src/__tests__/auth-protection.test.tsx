@@ -10,6 +10,22 @@ vi.mock("aws-amplify/auth", () => ({
 }));
 
 // Mock Apollo Client
+function ApolloLinkMock(this: unknown, fn: unknown) {
+  // @ts-expect-error: ApolloLinkMock is a test double and does not match the real ApolloLink constructor signature
+  this.request = fn;
+}
+ApolloLinkMock.from = vi.fn(() => {
+  // Return a mock link that has a concat method
+  const mockLink = {
+    request: vi.fn(),
+    concat: vi.fn(() => mockLink),
+  };
+  return mockLink;
+});
+ApolloLinkMock.prototype.concat = vi.fn(function (this: unknown) {
+  return this;
+});
+
 vi.mock("@apollo/client", () => ({
   ApolloProvider: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="apollo-provider">{children}</div>
@@ -24,6 +40,11 @@ vi.mock("@apollo/client", () => ({
     mutate: vi.fn(),
   }),
   gql: vi.fn((strings, ...args) => ({ strings, args })),
+  createHttpLink: vi.fn(() => ({})),
+  InMemoryCache: vi.fn(() => ({})),
+  ApolloClient: vi.fn(() => ({})),
+  ApolloLink: ApolloLinkMock,
+  setContext: vi.fn(() => ({})),
 }));
 
 // Mock the auth context

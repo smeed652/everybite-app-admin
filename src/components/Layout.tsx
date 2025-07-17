@@ -1,4 +1,4 @@
-import { Database, Gauge, Menu, Users } from "lucide-react";
+import { Database, Gauge, Menu, Settings, Users } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import SmartMenusNav from "../features/smartMenus/components/SmartMenusNav";
 import { Button } from "./ui/Button";
@@ -24,10 +24,14 @@ export default function Layout() {
   const navSections: NavSection[] = [
     {
       heading: "Home",
+      items: [{ label: "Dashboard", to: "/" }],
+    },
+    {
+      heading: "Admin",
       items: [
-        { label: "Dashboard", to: "/" },
         { label: "Users", to: "/users" },
         { label: "Metabase Users", to: "/metabase-users" },
+        { label: "Cache Management", to: "/admin/cache" },
       ],
     },
     {
@@ -71,9 +75,11 @@ export default function Layout() {
                             ? Users
                             : label === "Metabase Users"
                               ? Database
-                              : label === "SmartMenus"
-                                ? Menu
-                                : undefined;
+                              : label === "Cache Management"
+                                ? Settings
+                                : label === "SmartMenus"
+                                  ? Menu
+                                  : undefined;
                       return (
                         <NavLink
                           key={label}
@@ -151,9 +157,11 @@ export default function Layout() {
                       ? Users
                       : label === "Metabase Users"
                         ? Database
-                        : label === "SmartMenus"
-                          ? Menu
-                          : undefined;
+                        : label === "Cache Management"
+                          ? Settings
+                          : label === "SmartMenus"
+                            ? Menu
+                            : undefined;
                 return (
                   <NavLink
                     key={label}

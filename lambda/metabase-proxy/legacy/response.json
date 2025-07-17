@@ -1,0 +1,1 @@
+{"statusCode":500,"body":"{\"message\":\"Internal server error\",\"error\":\"Authentication failed: JWT validation failed: jwt malformed\",\"stack\":\"Error: Authentication failed: JWT validation failed: jwt malformed\\n    at authenticateRequest (/var/task/index.js:55:11)\\n    at async exports.handler (/var/task/index.js:267:26)\"}"}
