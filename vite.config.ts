@@ -9,9 +9,17 @@ export default defineConfig({
   plugins: [react()],
   build: {
     sourcemap: true,
+    rollupOptions: {
+      input: {
+        main: "index.html",
+      },
+    },
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
+  },
+  server: {
+    port: 3000,
   },
   // Vitest configuration for unit tests
   test: {

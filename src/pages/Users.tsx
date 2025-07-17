@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Skeleton } from "../components/ui/Skeleton";
 import { Table, TBody, TD, TH, THead, TR } from "../components/ui/Table";
+import { useToast } from "../components/ui/ToastProvider";
 import { useAuth } from "../context/AuthContext";
 
 interface CognitoUserRow {
@@ -32,6 +32,7 @@ interface InviteUserResponse {
 
 export default function Users() {
   const { accessToken } = useAuth();
+  const { showToast } = useToast();
   const [users, setUsers] = useState<CognitoUserRow[]>([]);
   const [listLoading, setListLoading] = useState(false);
   const [nextToken, setNextToken] = useState<string | undefined>(undefined);
@@ -51,32 +52,35 @@ export default function Users() {
     return () => document.removeEventListener("click", handler);
   }, []);
 
-  const fetchUsers = async (token?: string) => {
-    setListLoading(true);
-    try {
-      const qs = token ? `?paginationToken=${encodeURIComponent(token)}` : "";
-      const res = await fetch(`/api/users${qs}`, {
-        headers: accessToken
-          ? { Authorization: `Bearer ${accessToken}` }
-          : undefined,
-      });
-      if (!res.ok) throw new Error("Failed to fetch users");
-      const data: UsersResponse = await res.json();
-      setUsers((prev) => (token ? [...prev, ...data.users] : data.users));
-      setNextToken(data.nextToken);
-    } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Error loading users";
-      toast.error(errorMessage);
-    } finally {
-      setListLoading(false);
-    }
-  };
+  const fetchUsers = useCallback(
+    async (token?: string) => {
+      setListLoading(true);
+      try {
+        const qs = token ? `?paginationToken=${encodeURIComponent(token)}` : "";
+        const res = await fetch(`/api/users${qs}`, {
+          headers: accessToken
+            ? { Authorization: `Bearer ${accessToken}` }
+            : undefined,
+        });
+        if (!res.ok) throw new Error("Failed to fetch users");
+        const data: UsersResponse = await res.json();
+        setUsers((prev) => (token ? [...prev, ...data.users] : data.users));
+        setNextToken(data.nextToken);
+      } catch (err: unknown) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Error loading users";
+        showToast({ title: errorMessage, variant: "error" });
+      } finally {
+        setListLoading(false);
+      }
+    },
+    [accessToken, showToast]
+  );
 
   // initial load
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
   const handleInvite = async () => {
     if (!inviteEmail.trim()) return;
@@ -94,22 +98,34 @@ export default function Users() {
       });
       const data: InviteUserResponse = await res.json();
       if (data.success) {
-        toast.success("User invited successfully");
+        showToast({ title: "User invited successfully", variant: "success" });
         setInviteEmail("");
         fetchUsers(); // refresh list
       } else {
-        toast.error(data.message || "Failed to invite user");
+        showToast({
+          title: data.message || "Failed to invite user",
+          variant: "error",
+        });
       }
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to invite user";
-      toast.error(errorMessage);
+      showToast({ title: errorMessage, variant: "error" });
     } finally {
       setInviteLoading(false);
     }
   };
 
   const handleAction = async (action: string, username: string) => {
+    if (action === "delete") {
+      const confirmed = window.confirm(
+        `Are you sure you want to delete user ${username}?`
+      );
+      if (!confirmed) {
+        setMenuOpen(null);
+        return;
+      }
+    }
     try {
       const res = await fetch(`/api/user-${action}`, {
         method: "POST",
@@ -120,15 +136,18 @@ export default function Users() {
         body: JSON.stringify({ username }),
       });
       if (res.ok) {
-        toast.success(`User ${action}d successfully`);
+        showToast({
+          title: `User ${action}d successfully`,
+          variant: "success",
+        });
         fetchUsers(); // refresh list
       } else {
-        toast.error(`Failed to ${action} user`);
+        showToast({ title: `Failed to ${action} user`, variant: "error" });
       }
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : `Failed to ${action} user`;
-      toast.error(errorMessage);
+      showToast({ title: errorMessage, variant: "error" });
     }
     setMenuOpen(null);
   };

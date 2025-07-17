@@ -1,15 +1,15 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MetabaseUsersTable } from "../components/MetabaseUsersTable";
-import { useMetabaseUsers } from "../hooks/useMetabase";
+import { useMetabaseUsersGraphQL } from "../hooks/useMetabaseGraphQL";
 
-// Mock the useMetabaseUsers hook
-vi.mock("../hooks/useMetabase", () => ({
-  useMetabaseUsers: vi.fn(),
+// Mock the useMetabaseUsersGraphQL hook
+vi.mock("../hooks/useMetabaseGraphQL", () => ({
+  useMetabaseUsersGraphQL: vi.fn(),
 }));
 
-const mockUseMetabaseUsers = useMetabaseUsers as vi.MockedFunction<
-  typeof useMetabaseUsers
+const mockUseMetabaseUsersGraphQL = useMetabaseUsersGraphQL as ReturnType<
+  typeof vi.fn
 >;
 
 // Mock data
@@ -70,7 +70,7 @@ describe("MetabaseUsersTable", () => {
   });
 
   it("renders loading state initially", () => {
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: null,
       loading: true,
       error: null,
@@ -85,7 +85,7 @@ describe("MetabaseUsersTable", () => {
   });
 
   it("renders users table when data is loaded", () => {
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: mockUsers,
       loading: false,
       error: null,
@@ -101,7 +101,7 @@ describe("MetabaseUsersTable", () => {
   });
 
   it("displays user status badges correctly", () => {
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: mockUsers,
       loading: false,
       error: null,
@@ -119,7 +119,7 @@ describe("MetabaseUsersTable", () => {
   });
 
   it("displays role badges correctly", () => {
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: mockUsers,
       loading: false,
       error: null,
@@ -140,7 +140,7 @@ describe("MetabaseUsersTable", () => {
   });
 
   it("filters users by search term", async () => {
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: mockUsers,
       loading: false,
       error: null,
@@ -162,7 +162,7 @@ describe("MetabaseUsersTable", () => {
   });
 
   it("filters users by email", async () => {
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: mockUsers,
       loading: false,
       error: null,
@@ -184,7 +184,7 @@ describe("MetabaseUsersTable", () => {
   });
 
   it("handles name header click without errors", () => {
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: mockUsers,
       loading: false,
       error: null,
@@ -207,7 +207,7 @@ describe("MetabaseUsersTable", () => {
   });
 
   it("sorts users by date joined", async () => {
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: mockUsers,
       loading: false,
       error: null,
@@ -229,7 +229,7 @@ describe("MetabaseUsersTable", () => {
   });
 
   it("handles empty search results", async () => {
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: mockUsers,
       loading: false,
       error: null,
@@ -252,7 +252,7 @@ describe("MetabaseUsersTable", () => {
 
   it("calls refetch when refresh button is clicked", () => {
     const mockRefetch = vi.fn();
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: mockUsers,
       loading: false,
       error: null,
@@ -268,7 +268,7 @@ describe("MetabaseUsersTable", () => {
   });
 
   it("disables refresh button when loading", () => {
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: null,
       loading: true,
       error: null,
@@ -283,7 +283,7 @@ describe("MetabaseUsersTable", () => {
 
   it("displays error state with retry button", () => {
     const mockRefetch = vi.fn();
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: null,
       loading: false,
       error: "Failed to fetch users",
@@ -304,7 +304,7 @@ describe("MetabaseUsersTable", () => {
   });
 
   it("displays empty state when no users exist", () => {
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: { users: [], total: 0 },
       loading: false,
       error: null,
@@ -318,7 +318,7 @@ describe("MetabaseUsersTable", () => {
   });
 
   it("formats dates correctly", () => {
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: mockUsers,
       loading: false,
       error: null,
@@ -345,7 +345,7 @@ describe("MetabaseUsersTable", () => {
       total: 1,
     };
 
-    mockUseMetabaseUsers.mockReturnValue({
+    mockUseMetabaseUsersGraphQL.mockReturnValue({
       users: usersWithNullDates,
       loading: false,
       error: null,

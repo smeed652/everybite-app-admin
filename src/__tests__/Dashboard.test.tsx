@@ -116,7 +116,7 @@ describe("Dashboard", () => {
     expect(activeSmartMenusCard).toBeInTheDocument();
   });
 
-  it.skip("displays correct metrics when data loads", async () => {
+  it("displays correct metrics when data loads", async () => {
     renderDashboard(mocks);
 
     // Wait for data to load
@@ -126,7 +126,7 @@ describe("Dashboard", () => {
     expect(metricsCards).toHaveLength(4); // Now includes Total Orders card
   });
 
-  it.skip("calculates trending deltas correctly", async () => {
+  it("calculates trending deltas correctly", async () => {
     // Create widgets with specific dates for trend calculation
     const now = new Date();
     const currentPeriod = new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000); // 15 days ago
@@ -189,7 +189,7 @@ describe("Dashboard", () => {
     expect(screen.getByText("+8.3%")).toBeInTheDocument();
   });
 
-  it.skip("handles zero previous period correctly", async () => {
+  it("handles zero previous period correctly", async () => {
     const now = new Date();
     const currentPeriod = new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000); // 15 days ago
 
@@ -226,7 +226,7 @@ describe("Dashboard", () => {
     expect(screen.getAllByText("+100%")).toHaveLength(3);
   });
 
-  it.skip("handles empty widgets array", async () => {
+  it("handles empty widgets array", async () => {
     const emptyMocks = [
       {
         request: {
@@ -244,10 +244,10 @@ describe("Dashboard", () => {
 
     await screen.findAllByTestId("metrics-card");
 
-    expect(screen.getAllByText("0%")).toHaveLength(3); // All three cards show 0%
+    expect(screen.getAllByText("0%")).toHaveLength(4); // All four cards show 0%
   });
 
-  it.skip("displays error state when GraphQL query fails", async () => {
+  it("displays error state when GraphQL query fails", async () => {
     renderDashboard(errorMocks);
 
     await screen.findByText("Failed to load dashboard metrics.");
@@ -257,7 +257,7 @@ describe("Dashboard", () => {
     ).toBeInTheDocument();
   });
 
-  it.skip("handles widgets with null publishedAt", async () => {
+  it("handles widgets with null publishedAt", async () => {
     const now = new Date();
     const currentPeriod = new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000); // 15 days ago
 
@@ -296,7 +296,7 @@ describe("Dashboard", () => {
     await screen.findAllByTestId("metrics-card");
   });
 
-  it.skip("handles negative deltas correctly", async () => {
+  it("handles negative deltas correctly", async () => {
     const now = new Date();
     const currentPeriod = new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000); // 15 days ago
     const previousPeriod = new Date(now.getTime() - 45 * 24 * 60 * 60 * 1000); // 45 days ago

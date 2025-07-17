@@ -1,10 +1,29 @@
+/* eslint-disable react/prop-types */
 import { Component, type ErrorInfo, type ReactNode } from "react";
-import { toast } from "react-hot-toast";
 import { logger } from "../lib/logger";
+import { useToast } from "./ui/ToastProvider";
+
+// Create a wrapper component that provides toast functionality
+const ErrorBoundaryWithToast: React.FC<{
+  children: ReactNode;
+  fallback?: ReactNode;
+}> = ({ children, fallback }) => {
+  const { showToast } = useToast();
+
+  return (
+    <ErrorBoundary showToast={showToast} fallback={fallback}>
+      {children}
+    </ErrorBoundary>
+  );
+};
 
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
+  showToast: (opts: {
+    title: string;
+    variant?: "default" | "success" | "error";
+  }) => void;
 }
 
 interface State {
@@ -26,7 +45,10 @@ export class ErrorBoundary extends Component<Props, State> {
     logger.error("[ErrorBoundary]", error, info);
 
     // Show toast notification
-    toast.error("Something went wrong. Please refresh or contact support.");
+    this.props.showToast({
+      title: "Something went wrong. Please refresh or contact support.",
+      variant: "error",
+    });
   }
 
   render() {
@@ -47,4 +69,5 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-export default ErrorBoundary;
+// Export the wrapper as the default
+export default ErrorBoundaryWithToast;

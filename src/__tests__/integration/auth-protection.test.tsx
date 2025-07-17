@@ -10,22 +10,6 @@ vi.mock("aws-amplify/auth", () => ({
 }));
 
 // Mock Apollo Client
-function ApolloLinkMock(this: unknown, fn: unknown) {
-  // @ts-expect-error: ApolloLinkMock is a test double and does not match the real ApolloLink constructor signature
-  this.request = fn;
-}
-ApolloLinkMock.from = vi.fn(() => {
-  // Return a mock link that has a concat method
-  const mockLink = {
-    request: vi.fn(),
-    concat: vi.fn(() => mockLink),
-  };
-  return mockLink;
-});
-ApolloLinkMock.prototype.concat = vi.fn(function (this: unknown) {
-  return this;
-});
-
 vi.mock("@apollo/client", () => ({
   ApolloProvider: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="apollo-provider">{children}</div>
@@ -43,9 +27,41 @@ vi.mock("@apollo/client", () => ({
   createHttpLink: vi.fn(() => ({})),
   InMemoryCache: vi.fn(() => ({})),
   ApolloClient: vi.fn(() => ({})),
-  ApolloLink: ApolloLinkMock,
+  ApolloLink: {
+    from: vi.fn(() => ({
+      request: vi.fn(),
+      concat: vi.fn(() => ({})),
+    })),
+  },
   setContext: vi.fn(() => ({})),
+  onError: vi.fn(() => ({})),
+  fromPromise: vi.fn(() => ({})),
 }));
+
+// Mock Observable
+vi.mock("zen-observable-ts", () => ({
+  Observable: {
+    of: vi.fn(() => ({})),
+  },
+}));
+
+// Mock metabase-apollo to prevent real Apollo Client creation
+vi.mock("../../lib/metabase-apollo", () => ({
+  metabaseClient: null,
+  reinitializeMetabaseClient: vi.fn(),
+  cacheUtils: {
+    clearCache: vi.fn(),
+    getCacheStatus: vi.fn(() => ({ enabled: false })),
+    refreshOperation: vi.fn(),
+    isEnabled: vi.fn(() => false),
+  },
+  startScheduledRefresh: vi.fn(),
+  stopScheduledRefresh: vi.fn(),
+  getScheduledRefreshInfo: vi.fn(() => ({ enabled: false })),
+}));
+
+// Mock fetch for API calls
+global.fetch = vi.fn();
 
 // Mock the auth context
 const mockLogin = vi.fn();
@@ -263,6 +279,22 @@ describe("Authentication Protection Integration", () => {
         identityId: "test-identity",
         userSub: "test-user",
       });
+
+      // Mock API calls for Users page
+      vi.mocked(fetch).mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          users: [
+            {
+              username: "testuser",
+              email: "test@example.com",
+              status: "CONFIRMED",
+              enabled: true,
+              created: "2024-01-01T00:00:00Z",
+            },
+          ],
+        }),
+      } as Response);
 
       window.history.pushState({}, "", "/users");
       renderApp();

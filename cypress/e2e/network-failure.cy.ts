@@ -9,7 +9,7 @@ describe("Network failure handling", () => {
   const password = Cypress.env("PASSWORD");
 
   it("shows toast when /api/users fails", () => {
-    cy.intercept("GET", "**/users?limit=20", {
+    cy.intercept("GET", "**/api/users*", {
       statusCode: 500,
       body: { error: "Internal error" },
       delay: 100,
