@@ -7,7 +7,7 @@ import { PlayerAnalyticsSection } from "../features/dashboard/sections/PlayerAna
 import { useQuarterlyMetricsGraphQL } from "../hooks/useQuarterlyMetricsGraphQL";
 
 const GET_ALL_WIDGETS = gql /* GraphQL */ `
-  query GetAllWidgets {
+  query GetAllWidgetsForDashboard {
     widgets {
       id
       createdAt

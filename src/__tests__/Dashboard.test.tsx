@@ -13,7 +13,7 @@ vi.mock("../features/dashboard/sections/PlayerAnalyticsSection", () => ({
 }));
 
 const GET_ALL_WIDGETS = gql`
-  query GetAllWidgets {
+  query GetAllWidgetsForDashboardTest {
     widgets {
       id
       createdAt

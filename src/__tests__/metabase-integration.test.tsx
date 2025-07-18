@@ -45,7 +45,7 @@ vi.mock("aws-amplify/auth", () => ({
 }));
 
 const GET_ALL_WIDGETS = gql`
-  query GetAllWidgets {
+  query GetAllWidgetsForMetabaseIntegrationTest {
     widgets {
       id
       createdAt
