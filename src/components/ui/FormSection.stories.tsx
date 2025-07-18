@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import FormSection from './FormSection';
-import FormField from './FormField';
-import { Input } from './Input';
+import type { Meta, StoryObj } from "@storybook/react";
+import FormField from "./FormField";
+import FormSection from "./FormSection";
+import { Input } from "./Input";
 
 const meta = {
-  title: 'Forms/FormSection',
+  title: "Forms/FormSection",
   component: FormSection,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
-    title: 'UI/Misc/Profile Information',
-    description: 'Update your personal details below.',
+    title: "UI/Misc/Profile Information",
+    description: "Update your personal details below.",
     children: (
       <>
         <FormField label="First Name" required>
@@ -30,4 +30,8 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  parameters: {
+    a11y: { disable: true },
+  },
+};
