@@ -72,8 +72,8 @@ export function useQuarterlyMetricsGraphQL() {
   const { data, loading, error } = useQuery<QuarterlyMetricsResponse>(
     GET_QUARTERLY_METRICS,
     {
-      client: metabaseClient,
-      fetchPolicy: "no-cache", // Completely bypass cache to test
+      client: metabaseClient!,
+      fetchPolicy: "cache-first", // Enable caching for better performance
       errorPolicy: "all",
     }
   );

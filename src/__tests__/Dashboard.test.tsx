@@ -12,13 +12,17 @@ vi.mock("../features/dashboard/sections/PlayerAnalyticsSection", () => ({
   ),
 }));
 
-const GET_ALL_WIDGETS = gql`
-  query GetAllWidgetsForDashboard {
+const GET_DASHBOARD_WIDGETS = gql`
+  query GetDashboardWidgets {
     widgets {
       id
       createdAt
       publishedAt
       numberOfLocations
+      displayImages
+      layout
+      isOrderButtonEnabled
+      isByoEnabled
     }
   }
 `;
@@ -29,31 +33,47 @@ const mockWidgets = [
     createdAt: "2024-11-01T10:00:00Z",
     publishedAt: "2024-11-02T10:00:00Z",
     numberOfLocations: 5,
+    displayImages: true,
+    layout: "CARD",
+    isOrderButtonEnabled: true,
+    isByoEnabled: false,
   },
   {
     id: "2",
     createdAt: "2024-11-15T10:00:00Z",
     publishedAt: null,
     numberOfLocations: 3,
+    displayImages: false,
+    layout: "TABLE",
+    isOrderButtonEnabled: false,
+    isByoEnabled: true,
   },
   {
     id: "3",
     createdAt: "2024-12-01T10:00:00Z",
     publishedAt: "2024-12-02T10:00:00Z",
     numberOfLocations: 8,
+    displayImages: true,
+    layout: "CARD",
+    isOrderButtonEnabled: true,
+    isByoEnabled: true,
   },
   {
     id: "4",
     createdAt: "2024-10-01T10:00:00Z",
     publishedAt: "2024-10-02T10:00:00Z",
     numberOfLocations: 12,
+    displayImages: false,
+    layout: "TABLE",
+    isOrderButtonEnabled: false,
+    isByoEnabled: false,
   },
 ];
 
 const mocks = [
   {
     request: {
-      query: GET_ALL_WIDGETS,
+      query: GET_DASHBOARD_WIDGETS,
     },
     result: {
       data: {
@@ -66,7 +86,7 @@ const mocks = [
 const errorMocks = [
   {
     request: {
-      query: GET_ALL_WIDGETS,
+      query: GET_DASHBOARD_WIDGETS,
     },
     error: new Error("Failed to fetch widgets"),
   },
@@ -141,6 +161,10 @@ describe("Dashboard", () => {
           currentPeriod.getTime() + 24 * 60 * 60 * 1000
         ).toISOString(),
         numberOfLocations: 5,
+        displayImages: true,
+        layout: "CARD",
+        isOrderButtonEnabled: true,
+        isByoEnabled: false,
       },
       {
         id: "2",
@@ -151,6 +175,10 @@ describe("Dashboard", () => {
           currentPeriod.getTime() + 6 * 24 * 60 * 60 * 1000
         ).toISOString(),
         numberOfLocations: 8,
+        displayImages: false,
+        layout: "TABLE",
+        isOrderButtonEnabled: false,
+        isByoEnabled: true,
       },
       // Previous 30-day period
       {
@@ -160,13 +188,17 @@ describe("Dashboard", () => {
           previousPeriod.getTime() + 24 * 60 * 60 * 1000
         ).toISOString(),
         numberOfLocations: 12,
+        displayImages: true,
+        layout: "CARD",
+        isOrderButtonEnabled: true,
+        isByoEnabled: true,
       },
     ];
 
     const trendMocks = [
       {
         request: {
-          query: GET_ALL_WIDGETS,
+          query: GET_DASHBOARD_WIDGETS,
         },
         result: {
           data: {
@@ -202,13 +234,17 @@ describe("Dashboard", () => {
           currentPeriod.getTime() + 24 * 60 * 60 * 1000
         ).toISOString(),
         numberOfLocations: 5,
+        displayImages: true,
+        layout: "CARD",
+        isOrderButtonEnabled: true,
+        isByoEnabled: false,
       },
     ];
 
     const zeroPrevMocks = [
       {
         request: {
-          query: GET_ALL_WIDGETS,
+          query: GET_DASHBOARD_WIDGETS,
         },
         result: {
           data: {
@@ -230,7 +266,7 @@ describe("Dashboard", () => {
     const emptyMocks = [
       {
         request: {
-          query: GET_ALL_WIDGETS,
+          query: GET_DASHBOARD_WIDGETS,
         },
         result: {
           data: {
@@ -268,6 +304,11 @@ describe("Dashboard", () => {
         publishedAt: new Date(
           currentPeriod.getTime() + 24 * 60 * 60 * 1000
         ).toISOString(),
+        numberOfLocations: 5,
+        displayImages: true,
+        layout: "CARD",
+        isOrderButtonEnabled: true,
+        isByoEnabled: false,
       },
       {
         id: "2",
@@ -275,13 +316,18 @@ describe("Dashboard", () => {
           currentPeriod.getTime() + 5 * 24 * 60 * 60 * 1000
         ).toISOString(),
         publishedAt: null, // Unpublished
+        numberOfLocations: 3,
+        displayImages: false,
+        layout: "TABLE",
+        isOrderButtonEnabled: false,
+        isByoEnabled: true,
       },
     ];
 
     const unpublishedMocks = [
       {
         request: {
-          query: GET_ALL_WIDGETS,
+          query: GET_DASHBOARD_WIDGETS,
         },
         result: {
           data: {
@@ -309,6 +355,11 @@ describe("Dashboard", () => {
         publishedAt: new Date(
           currentPeriod.getTime() + 24 * 60 * 60 * 1000
         ).toISOString(),
+        numberOfLocations: 5,
+        displayImages: true,
+        layout: "CARD",
+        isOrderButtonEnabled: true,
+        isByoEnabled: false,
       },
       // Previous period: 2 created
       {
@@ -317,6 +368,11 @@ describe("Dashboard", () => {
         publishedAt: new Date(
           previousPeriod.getTime() + 24 * 60 * 60 * 1000
         ).toISOString(),
+        numberOfLocations: 8,
+        displayImages: false,
+        layout: "TABLE",
+        isOrderButtonEnabled: false,
+        isByoEnabled: true,
       },
       {
         id: "3",
@@ -326,13 +382,18 @@ describe("Dashboard", () => {
         publishedAt: new Date(
           previousPeriod.getTime() + 6 * 24 * 60 * 60 * 1000
         ).toISOString(),
+        numberOfLocations: 12,
+        displayImages: true,
+        layout: "CARD",
+        isOrderButtonEnabled: true,
+        isByoEnabled: true,
       },
     ];
 
     const negativeMocks = [
       {
         request: {
-          query: GET_ALL_WIDGETS,
+          query: GET_DASHBOARD_WIDGETS,
         },
         result: {
           data: {

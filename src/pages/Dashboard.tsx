@@ -1,77 +1,47 @@
-import { gql, useQuery } from "@apollo/client";
 import { isAfter, subDays } from "date-fns";
 import { AlertTriangle } from "lucide-react";
 import { MetricsCard } from "../components/MetricsCard";
 import { QuarterlyMetricsTable } from "../components/QuarterlyMetricsTable";
 import { PlayerAnalyticsSection } from "../features/dashboard/sections/PlayerAnalyticsSection";
-import { useQuarterlyMetricsGraphQL } from "../hooks/useQuarterlyMetricsGraphQL";
-
-const GET_ALL_WIDGETS = gql /* GraphQL */ `
-  query GetAllWidgetsForDashboard {
-    widgets {
-      id
-      createdAt
-      publishedAt
-      numberOfLocations
-    }
-  }
-`;
+import { useDashboardData } from "../hooks/useDashboardData";
 
 export default function Dashboard() {
-  // fetch widgets
-  const { data, loading, error } = useQuery(GET_ALL_WIDGETS, {
-    fetchPolicy: "cache-and-network",
-  });
-
-  const widgets = data?.widgets ?? [];
-  const total = widgets.length;
-  const active = widgets.filter((w: { publishedAt?: string | null }) =>
-    Boolean(w.publishedAt)
-  ).length;
-
-  // Calculate total locations for active SmartMenus
-  const activeWidgets = widgets.filter((w: { publishedAt?: string | null }) =>
-    Boolean(w.publishedAt)
-  );
-  const totalLocations = activeWidgets.reduce(
-    (sum: number, w: { numberOfLocations?: number | null }) =>
-      sum + (w.numberOfLocations || 0),
-    0
-  );
-
-  // Use the new GraphQL quarterly metrics hook
+  // Use consolidated dashboard data hook with proper caching
   const {
+    widgets,
+    total,
+    active,
+    totalLocations,
     quarterlyData,
     totalOrders,
     ordersDelta,
-    loading: quarterlyLoading,
-    error: quarterlyError,
-  } = useQuarterlyMetricsGraphQL();
+    analyticsData,
+    loading,
+    error,
+  } = useDashboardData();
 
   console.log("Dashboard: quarterlyData:", quarterlyData);
-  console.log("Dashboard: quarterlyLoading:", quarterlyLoading);
-  console.log("Dashboard: quarterlyError:", quarterlyError);
+  console.log("Dashboard: analyticsData:", analyticsData);
 
   // compute 30-day trending deltas
   const now = new Date();
   const startCurrent = subDays(now, 30);
   const startPrev = subDays(startCurrent, 30);
 
-  const createdCurr = widgets.filter((w: { createdAt: string }) =>
+  const createdCurr = widgets.filter((w) =>
     isAfter(new Date(w.createdAt), startCurrent)
   ).length;
   const createdPrev = widgets.filter(
-    (w: { createdAt: string }) =>
+    (w) =>
       isAfter(new Date(w.createdAt), startPrev) &&
       !isAfter(new Date(w.createdAt), startCurrent)
   ).length;
 
   const activeCurr = widgets.filter(
-    (w: { publishedAt?: string | null }) =>
-      w.publishedAt && isAfter(new Date(w.publishedAt), startCurrent)
+    (w) => w.publishedAt && isAfter(new Date(w.publishedAt), startCurrent)
   ).length;
   const activePrev = widgets.filter(
-    (w: { publishedAt?: string | null }) =>
+    (w) =>
       w.publishedAt &&
       isAfter(new Date(w.publishedAt), startPrev) &&
       !isAfter(new Date(w.publishedAt), startCurrent)
@@ -80,26 +50,17 @@ export default function Dashboard() {
   // Calculate location trends for active SmartMenus
   const locationsCurr = widgets
     .filter(
-      (w: { publishedAt?: string | null; numberOfLocations?: number | null }) =>
-        w.publishedAt && isAfter(new Date(w.publishedAt), startCurrent)
+      (w) => w.publishedAt && isAfter(new Date(w.publishedAt), startCurrent)
     )
-    .reduce(
-      (sum: number, w: { numberOfLocations?: number | null }) =>
-        sum + (w.numberOfLocations || 0),
-      0
-    );
+    .reduce((sum, w) => sum + (w.numberOfLocations || 0), 0);
   const locationsPrev = widgets
     .filter(
-      (w: { publishedAt?: string | null; numberOfLocations?: number | null }) =>
+      (w) =>
         w.publishedAt &&
         isAfter(new Date(w.publishedAt), startPrev) &&
         !isAfter(new Date(w.publishedAt), startCurrent)
     )
-    .reduce(
-      (sum: number, w: { numberOfLocations?: number | null }) =>
-        sum + (w.numberOfLocations || 0),
-      0
-    );
+    .reduce((sum, w) => sum + (w.numberOfLocations || 0), 0);
 
   const pct = (curr: number, prev: number) => {
     if (prev === 0) return curr > 0 ? "+100%" : "0%";
@@ -154,21 +115,19 @@ export default function Dashboard() {
           title="Total Orders"
           value={totalOrders.toLocaleString()}
           delta={ordersDelta}
-          loading={quarterlyLoading}
+          loading={loading}
         />
       </div>
 
       {/* Quarterly Metrics Table */}
       <QuarterlyMetricsTable
         data={quarterlyData}
-        loading={quarterlyLoading}
-        error={quarterlyError}
+        loading={loading}
+        error={error}
       />
 
-      <PlayerAnalyticsSection />
-
-      {/* GraphQL Test Component */}
-      {/* <GraphQLTest /> */}
+      {/* Player Analytics Section with consolidated data */}
+      <PlayerAnalyticsSection analyticsData={analyticsData} loading={loading} />
     </div>
   );
 }

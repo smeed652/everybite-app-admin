@@ -1,37 +1,42 @@
-import { AlertTriangle } from "lucide-react";
-
 import { Card } from "../../../components/ui/Card";
 import { Skeleton } from "../../../components/ui/Skeleton";
 import { ConcentricDonutChart } from "../components/ConcentricDonutChart";
 import { DonutStatCard } from "../components/DonutStatCard";
 import { LegendItem } from "../components/LegendItem";
-import { usePlayerAnalytics } from "../hooks/usePlayerAnalytics";
+
+interface AnalyticsData {
+  totalActive: number;
+  withImages: number;
+  withCardLayout: number;
+  withOrdering: number;
+  withByo: number;
+}
+
+interface PlayerAnalyticsSectionProps {
+  analyticsData?: AnalyticsData;
+  loading?: boolean;
+}
 
 /**
  * Section that displays feature-usage analytics across active SmartMenus.
- * Now displays both GraphQL and Metabase Lambda analytics.
+ * Now uses consolidated data from the dashboard hook.
  */
-export function PlayerAnalyticsSection() {
-  const {
-    loading,
-    error,
-    totalActive,
-    withImages,
-    withCardLayout,
-    withOrdering,
-    withByo,
-  } = usePlayerAnalytics();
+export function PlayerAnalyticsSection({
+  analyticsData,
+  loading = false,
+}: PlayerAnalyticsSectionProps) {
+  const { totalActive, withImages, withCardLayout, withOrdering, withByo } =
+    analyticsData || {
+      totalActive: 0,
+      withImages: 0,
+      withCardLayout: 0,
+      withOrdering: 0,
+      withByo: 0,
+    };
 
   return (
     <section className="space-y-4">
       <h2 className="text-lg font-semibold">Active SmartMenu Features</h2>
-
-      {error && (
-        <div className="p-4 flex items-center gap-2 text-red-600 text-sm">
-          <AlertTriangle aria-hidden="true" className="h-4 w-4" /> Failed to
-          load widget analytics
-        </div>
-      )}
 
       {/* Stat cards (GraphQL) */}
       <div className="space-y-4">

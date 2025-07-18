@@ -69,6 +69,7 @@ function getCachedData(operationName: string) {
       QuarterlyMetrics: "dashboard",
       WidgetAnalytics: "dashboard",
       DailyInteractions: "dashboard",
+      GetDashboardWidgets: "dashboard", // New consolidated dashboard query
     };
 
     const cacheKey = operationNameToCacheKey[operationName] || operationName;
@@ -106,6 +107,7 @@ function setCachedData(operationName: string, data: unknown) {
       QuarterlyMetrics: "dashboard",
       WidgetAnalytics: "dashboard",
       DailyInteractions: "dashboard",
+      GetDashboardWidgets: "dashboard", // New consolidated dashboard query
     };
 
     const cacheKey = operationNameToCacheKey[operationName] || operationName;
@@ -258,6 +260,7 @@ export const cacheUtils = {
         QuarterlyMetrics: "dashboard",
         WidgetAnalytics: "dashboard",
         DailyInteractions: "dashboard",
+        GetDashboardWidgets: "dashboard", // New consolidated dashboard query
       };
 
       const keys = Object.keys(localStorage);
