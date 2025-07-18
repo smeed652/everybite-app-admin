@@ -70,6 +70,7 @@ function getCachedData(operationName: string) {
       WidgetAnalytics: "dashboard",
       DailyInteractions: "dashboard",
       GetDashboardWidgets: "dashboard", // New consolidated dashboard query
+      GetSmartMenus: "smartMenus", // SmartMenus list query
     };
 
     const cacheKey = operationNameToCacheKey[operationName] || operationName;
@@ -108,6 +109,7 @@ function setCachedData(operationName: string, data: unknown) {
       WidgetAnalytics: "dashboard",
       DailyInteractions: "dashboard",
       GetDashboardWidgets: "dashboard", // New consolidated dashboard query
+      GetSmartMenus: "smartMenus", // SmartMenus list query
     };
 
     const cacheKey = operationNameToCacheKey[operationName] || operationName;

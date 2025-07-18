@@ -19,7 +19,7 @@ interface UseSmartMenusResult {
 
 export function useSmartMenus(): UseSmartMenusResult {
   const { data, loading, error } = useQuery(GET_SMART_MENUS, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "cache-first", // Use cache-first for better performance
   });
   return {
     loading,

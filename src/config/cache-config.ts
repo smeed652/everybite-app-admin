@@ -15,6 +15,7 @@ export interface CacheConfig {
   queryTTLs: {
     dashboard: number; // TTL for dashboard page data (24 hours default)
     metabaseUsers: number; // TTL for metabase users data (12 hours default)
+    smartMenus: number; // TTL for SmartMenus list data (12 hours default)
   };
 }
 
@@ -33,6 +34,7 @@ const defaultConfig: CacheConfig = {
   queryTTLs: {
     dashboard: 24 * 60 * 60 * 1000, // 24 hours
     metabaseUsers: 12 * 60 * 60 * 1000, // 12 hours
+    smartMenus: 12 * 60 * 60 * 1000, // 12 hours
   },
 };
 
