@@ -13,7 +13,7 @@ vi.mock("../features/dashboard/sections/PlayerAnalyticsSection", () => ({
 }));
 
 const GET_ALL_WIDGETS = gql`
-  query GetAllWidgetsForDashboardTest {
+  query GetAllWidgetsForDashboard {
     widgets {
       id
       createdAt
@@ -73,7 +73,7 @@ const errorMocks = [
 ];
 
 const renderDashboard = (
-  mocks: Array<{
+  testMocks: Array<{
     request: { query: DocumentNode };
     result?: {
       data: {
@@ -85,10 +85,10 @@ const renderDashboard = (
       };
     };
     error?: Error;
-  }> = []
+  }> = mocks
 ) => {
   return render(
-    <MockedProvider mocks={mocks} addTypename={false}>
+    <MockedProvider mocks={testMocks} addTypename={false}>
       <Dashboard />
     </MockedProvider>
   );
