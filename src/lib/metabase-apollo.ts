@@ -67,6 +67,7 @@ function getCachedData(operationName: string) {
     const operationNameToCacheKey: Record<string, string> = {
       MetabaseUsers: "metabaseUsers",
       QuarterlyMetrics: "dashboard",
+      GetQuarterlyMetrics: "dashboard", // Add the correct operation name
       WidgetAnalytics: "dashboard",
       DailyInteractions: "dashboard",
       GetDashboardWidgets: "dashboard", // New consolidated dashboard query
@@ -106,6 +107,7 @@ function setCachedData(operationName: string, data: unknown) {
     const operationNameToCacheKey: Record<string, string> = {
       MetabaseUsers: "metabaseUsers",
       QuarterlyMetrics: "dashboard",
+      GetQuarterlyMetrics: "dashboard", // Add the correct operation name
       WidgetAnalytics: "dashboard",
       DailyInteractions: "dashboard",
       GetDashboardWidgets: "dashboard", // New consolidated dashboard query
@@ -332,6 +334,35 @@ export const cacheUtils = {
       await metabaseClient?.resetStore();
     } catch (error) {
       console.error("[MetabaseApollo] Error refreshing operation:", error);
+    }
+  },
+
+  // Clear cache and force refresh for quarterly metrics
+  refreshQuarterlyMetrics: async () => {
+    if (!isCachingEnabled()) {
+      console.log("[MetabaseApollo] Caching disabled, no cache to refresh");
+      return;
+    }
+
+    try {
+      // Clear both possible cache keys
+      const keys = [
+        `${CACHE_KEY_PREFIX}-QuarterlyMetrics`,
+        `${CACHE_KEY_PREFIX}-GetQuarterlyMetrics`,
+      ];
+      keys.forEach((key) => {
+        localStorage.removeItem(key);
+        console.log(`[MetabaseApollo] Cleared cache key: ${key}`);
+      });
+
+      // Trigger a refetch by clearing Apollo cache
+      await metabaseClient?.resetStore();
+      console.log("[MetabaseApollo] Forced refresh for quarterly metrics");
+    } catch (error) {
+      console.error(
+        "[MetabaseApollo] Error refreshing quarterly metrics:",
+        error
+      );
     }
   },
 

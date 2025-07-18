@@ -92,6 +92,11 @@ export function useQuarterlyMetricsGraphQL() {
   console.log("[QuarterlyMetrics] Raw quarterly data:", rawQuarterlyData);
   console.log("[QuarterlyMetrics] Raw data type:", typeof rawQuarterlyData);
   console.log("[QuarterlyMetrics] Raw data length:", rawQuarterlyData.length);
+  console.log("[QuarterlyMetrics] Full data object:", data);
+  console.log(
+    "[QuarterlyMetrics] Data keys:",
+    data ? Object.keys(data) : "no data"
+  );
   if (rawQuarterlyData.length > 0) {
     console.log(
       "[QuarterlyMetrics] First item keys:",
