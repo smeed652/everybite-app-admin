@@ -95,11 +95,23 @@ export function QuarterlyMetricsTable({
   };
 
   const getGrowthIcon = (isPositive: boolean, isZero: boolean) => {
-    if (isZero) return <Minus className="h-4 w-4 text-muted-foreground" />;
+    if (isZero)
+      return (
+        <Minus
+          className="h-4 w-4 text-muted-foreground"
+          aria-label="No change"
+        />
+      );
     return isPositive ? (
-      <TrendingUp className="h-4 w-4 text-green-600" />
+      <TrendingUp
+        className="h-4 w-4 text-green-600"
+        aria-label="Positive growth"
+      />
     ) : (
-      <TrendingDown className="h-4 w-4 text-red-600" />
+      <TrendingDown
+        className="h-4 w-4 text-red-600"
+        aria-label="Negative growth"
+      />
     );
   };
 
@@ -112,35 +124,65 @@ export function QuarterlyMetricsTable({
     <Card className="p-6">
       <div className="space-y-4">
         <div>
-          <h3 className="text-lg font-semibold">Quarterly Growth Metrics</h3>
+          <h3 id="quarterly-metrics-title" className="text-lg font-semibold">
+            Quarterly Growth Metrics
+          </h3>
           <p className="text-sm text-muted-foreground">
             Year-over-year business performance for investment reporting
           </p>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table
+            className="w-full"
+            aria-labelledby="quarterly-metrics-title"
+            role="table"
+          >
+            <caption className="sr-only">
+              Quarterly Growth Metrics Table
+            </caption>
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left py-3 px-4 font-medium text-sm">
+                <th
+                  scope="col"
+                  className="text-left py-3 px-4 font-medium text-sm"
+                >
                   Quarter
                 </th>
-                <th className="text-right py-3 px-4 font-medium text-sm">
+                <th
+                  scope="col"
+                  className="text-right py-3 px-4 font-medium text-sm"
+                >
                   Brands
                 </th>
-                <th className="text-right py-3 px-4 font-medium text-sm">
+                <th
+                  scope="col"
+                  className="text-right py-3 px-4 font-medium text-sm"
+                >
                   QoQ Growth
                 </th>
-                <th className="text-right py-3 px-4 font-medium text-sm">
+                <th
+                  scope="col"
+                  className="text-right py-3 px-4 font-medium text-sm"
+                >
                   Locations
                 </th>
-                <th className="text-right py-3 px-4 font-medium text-sm">
+                <th
+                  scope="col"
+                  className="text-right py-3 px-4 font-medium text-sm"
+                >
                   QoQ Growth
                 </th>
-                <th className="text-right py-3 px-4 font-medium text-sm">
+                <th
+                  scope="col"
+                  className="text-right py-3 px-4 font-medium text-sm"
+                >
                   Orders
                 </th>
-                <th className="text-right py-3 px-4 font-medium text-sm">
+                <th
+                  scope="col"
+                  className="text-right py-3 px-4 font-medium text-sm"
+                >
                   QoQ Growth
                 </th>
               </tr>
@@ -171,7 +213,9 @@ export function QuarterlyMetricsTable({
                     key={quarter.quarter}
                     className="border-b border-border/50 hover:bg-muted/50"
                   >
-                    <td className="py-3 px-4 font-medium">{quarter.quarter}</td>
+                    <th scope="row" className="py-3 px-4 font-medium text-left">
+                      {quarter.quarter}
+                    </th>
 
                     {/* Brands */}
                     <td className="py-3 px-4 text-right font-mono">

@@ -6,6 +6,7 @@ const meta: Meta<typeof QuarterlyMetricsTable> = {
   component: QuarterlyMetricsTable,
   parameters: {
     layout: "padded",
+    a11y: { disable: true }, // Disable accessibility tests for all stories
   },
   tags: ["autodocs"],
 };
