@@ -67,11 +67,8 @@ function getCachedData(operationName: string) {
     const operationNameToCacheKey: Record<string, string> = {
       MetabaseUsers: "metabaseUsers",
       QuarterlyMetrics: "dashboard",
-      GetQuarterlyMetrics: "dashboard", // Add the correct operation name
       WidgetAnalytics: "dashboard",
       DailyInteractions: "dashboard",
-      GetDashboardWidgets: "dashboard", // New consolidated dashboard query
-      GetSmartMenus: "smartMenus", // SmartMenus list query
     };
 
     const cacheKey = operationNameToCacheKey[operationName] || operationName;
@@ -107,11 +104,8 @@ function setCachedData(operationName: string, data: unknown) {
     const operationNameToCacheKey: Record<string, string> = {
       MetabaseUsers: "metabaseUsers",
       QuarterlyMetrics: "dashboard",
-      GetQuarterlyMetrics: "dashboard", // Add the correct operation name
       WidgetAnalytics: "dashboard",
       DailyInteractions: "dashboard",
-      GetDashboardWidgets: "dashboard", // New consolidated dashboard query
-      GetSmartMenus: "smartMenus", // SmartMenus list query
     };
 
     const cacheKey = operationNameToCacheKey[operationName] || operationName;
@@ -131,28 +125,58 @@ function setCachedData(operationName: string, data: unknown) {
 }
 
 // Apollo client factory (so we can re-initialize)
-let metabaseClient: ApolloClient<unknown> | null = null;
+let lambdaClient: ApolloClient<unknown> | null = null;
 
-function createMetabaseClient() {
+function createLambdaClient() {
   const cachingEnabled = isCachingEnabled();
 
   // Custom link for cache-first strategy
   const cacheFirstLink = new ApolloLink((operation, forward) => {
     const operationName = operation.operationName;
-    if (!cachingEnabled) {
+
+    // Check if this operation should bypass cache (network-only, no-cache)
+    const context = operation.getContext();
+    const fetchPolicy = context.fetchPolicy || "cache-first";
+
+    console.log(
+      `[MetabaseApollo] Operation: ${operationName}, FetchPolicy: ${fetchPolicy}, CachingEnabled: ${cachingEnabled}`
+    );
+
+    if (
+      !cachingEnabled ||
+      fetchPolicy === "network-only" ||
+      fetchPolicy === "no-cache"
+    ) {
+      console.log(
+        `[MetabaseApollo] Bypassing cache for ${operationName} due to fetchPolicy: ${fetchPolicy}`
+      );
       return new Observable((observer) => {
         const subscription = forward(operation).subscribe({
-          next: (result) => observer.next(result),
+          next: (result) => {
+            // Only cache if caching is enabled and not network-only/no-cache
+            if (
+              result.data &&
+              cachingEnabled &&
+              fetchPolicy !== "network-only" &&
+              fetchPolicy !== "no-cache"
+            ) {
+              setCachedData(operationName, result.data);
+            }
+            observer.next(result);
+          },
           error: (error) => observer.error(error),
           complete: () => observer.complete(),
         });
         return () => subscription.unsubscribe();
       });
     }
+
     const cachedData = getCachedData(operationName);
     if (cachedData) {
+      console.log(`[MetabaseApollo] Serving cached data for ${operationName}`);
       return Observable.of({ data: cachedData });
     }
+
     return new Observable((observer) => {
       const subscription = forward(operation).subscribe({
         next: (result) => {
@@ -179,7 +203,20 @@ function createMetabaseClient() {
           detailedAnalytics: { merge: false },
           // Metabase users query
           metabaseUsers: { merge: false },
+          // Lambda queries
+          db_widgetsList: { merge: false },
         },
+      },
+      // Add type policies for Lambda response types
+      DbWidgetsList: {
+        keyFields: ["__typename"], // Use typename as key since no ID field
+        fields: {
+          items: { merge: false },
+          pagination: { merge: false },
+        },
+      },
+      PaginationInfo: {
+        keyFields: ["__typename"],
       },
     },
   });
@@ -211,14 +248,14 @@ function createMetabaseClient() {
   });
 }
 
-export function reinitializeMetabaseClient() {
-  metabaseClient = createMetabaseClient();
+export function reinitializeLambdaClient() {
+  lambdaClient = createLambdaClient();
 }
 
 // Initialize on first load
-reinitializeMetabaseClient();
+reinitializeLambdaClient();
 
-export { metabaseClient };
+export { lambdaClient };
 
 // Cache management utilities
 export const cacheUtils = {
@@ -261,10 +298,9 @@ export const cacheUtils = {
       // Map GraphQL operation names to cache keys
       const operationNameToCacheKey: Record<string, string> = {
         MetabaseUsers: "metabaseUsers",
-        QuarterlyMetrics: "dashboard",
+        QuarterlyMetrics: "dashboard", // Part of dashboard page cache
         WidgetAnalytics: "dashboard",
         DailyInteractions: "dashboard",
-        GetDashboardWidgets: "dashboard", // New consolidated dashboard query
       };
 
       const keys = Object.keys(localStorage);
@@ -331,38 +367,9 @@ export const cacheUtils = {
       console.log(`[MetabaseApollo] Forced refresh for ${operationName}`);
 
       // Trigger a refetch by clearing Apollo cache for this query
-      await metabaseClient?.resetStore();
+      await lambdaClient?.resetStore();
     } catch (error) {
       console.error("[MetabaseApollo] Error refreshing operation:", error);
-    }
-  },
-
-  // Clear cache and force refresh for quarterly metrics
-  refreshQuarterlyMetrics: async () => {
-    if (!isCachingEnabled()) {
-      console.log("[MetabaseApollo] Caching disabled, no cache to refresh");
-      return;
-    }
-
-    try {
-      // Clear both possible cache keys
-      const keys = [
-        `${CACHE_KEY_PREFIX}-QuarterlyMetrics`,
-        `${CACHE_KEY_PREFIX}-GetQuarterlyMetrics`,
-      ];
-      keys.forEach((key) => {
-        localStorage.removeItem(key);
-        console.log(`[MetabaseApollo] Cleared cache key: ${key}`);
-      });
-
-      // Trigger a refetch by clearing Apollo cache
-      await metabaseClient?.resetStore();
-      console.log("[MetabaseApollo] Forced refresh for quarterly metrics");
-    } catch (error) {
-      console.error(
-        "[MetabaseApollo] Error refreshing quarterly metrics:",
-        error
-      );
     }
   },
 

@@ -1,62 +1,8 @@
-import { gql, useQuery } from "@apollo/client";
-import { logger } from "../lib/logger";
-import { metabaseClient } from "../lib/metabase-apollo";
-
-const GET_QUARTERLY_METRICS = gql`
-  query GetQuarterlyMetrics {
-    quarterlyMetrics {
-      quarter
-      year
-      quarterLabel
-      orders {
-        count
-        qoqGrowth
-        qoqGrowthPercent
-      }
-      locations {
-        count
-        qoqGrowth
-        qoqGrowthPercent
-      }
-      activeSmartMenus {
-        count
-        qoqGrowth
-        qoqGrowthPercent
-      }
-      brands {
-        count
-        qoqGrowth
-        qoqGrowthPercent
-      }
-      totalRevenue {
-        amount
-        qoqGrowth
-        qoqGrowthPercent
-      }
-    }
-  }
-`;
-
-interface MetricWithGrowth {
-  count: number;
-  qoqGrowth: number;
-  qoqGrowthPercent: number;
-}
-
-interface QuarterlyMetricsData {
-  quarter: string;
-  year: number;
-  quarterLabel: string;
-  orders: MetricWithGrowth;
-  locations: MetricWithGrowth;
-  activeSmartMenus: MetricWithGrowth;
-  brands: MetricWithGrowth;
-  totalRevenue: MetricWithGrowth;
-}
-
-interface QuarterlyMetricsResponse {
-  quarterlyMetrics: QuarterlyMetricsData[];
-}
+import { useQuery } from "@apollo/client";
+import { lambdaClient } from "../../../../lib/datawarehouse-lambda-apollo";
+import { logger } from "../../../../lib/logger";
+import { LAMBDA_GET_QUARTERLY_METRICS } from "../../graphql/lambda/queries";
+import type { QuarterlyMetricsResponse } from "../../graphql/types";
 
 // Interface expected by QuarterlyMetricsTable
 interface QuarterlyData {
@@ -68,21 +14,21 @@ interface QuarterlyData {
   ordersQoQGrowth?: number;
 }
 
-export function useQuarterlyMetricsGraphQL() {
+export function useQuarterlyMetricsLambda() {
   const { data, loading, error } = useQuery<QuarterlyMetricsResponse>(
-    GET_QUARTERLY_METRICS,
+    LAMBDA_GET_QUARTERLY_METRICS,
     {
-      client: metabaseClient!,
-      fetchPolicy: "cache-first", // Enable caching for better performance
+      client: lambdaClient!,
+      fetchPolicy: "network-only", // Force network request
       errorPolicy: "all",
     }
   );
 
   // Logging for debugging
-  logger.info("[QuarterlyMetrics] GraphQL data:", data);
+  logger.info("[QuarterlyMetrics] Lambda data:", data);
   logger.info("[QuarterlyMetrics] Loading state:", loading);
   if (error) {
-    logger.error("[QuarterlyMetrics] GraphQL error:", error);
+    logger.error("[QuarterlyMetrics] Lambda error:", error);
     console.error("[QuarterlyMetrics] Full error details:", error);
   }
 
@@ -92,11 +38,6 @@ export function useQuarterlyMetricsGraphQL() {
   console.log("[QuarterlyMetrics] Raw quarterly data:", rawQuarterlyData);
   console.log("[QuarterlyMetrics] Raw data type:", typeof rawQuarterlyData);
   console.log("[QuarterlyMetrics] Raw data length:", rawQuarterlyData.length);
-  console.log("[QuarterlyMetrics] Full data object:", data);
-  console.log(
-    "[QuarterlyMetrics] Data keys:",
-    data ? Object.keys(data) : "no data"
-  );
   if (rawQuarterlyData.length > 0) {
     console.log(
       "[QuarterlyMetrics] First item keys:",

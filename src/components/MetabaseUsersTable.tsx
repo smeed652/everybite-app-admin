@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMetabaseUsersGraphQL } from "../hooks/useMetabaseGraphQL";
+import { useDataWarehouseUsers_Lambda } from "../hooks/useDataWarehouse_Lambda";
 import { useTableSort } from "../hooks/useTableSort";
 import { MetabaseUser } from "../types/metabase";
 import { MetabaseUsersTableError } from "./MetabaseUsersTableError";
@@ -9,14 +9,36 @@ import { Card } from "./ui/Card";
 import { Skeleton } from "./ui/Skeleton";
 import { Table, TBody, TD, TH, THead, TR } from "./ui/Table";
 
-export const MetabaseUsersTable = () => {
-  const { users, loading, error, refetch } = useMetabaseUsersGraphQL();
+export default function MetabaseUsersTable() {
+  const pageSize = 50;
+
+  const { users, loading, error, refetch } = useDataWarehouseUsers_Lambda({
+    page: 1,
+    pageSize,
+  });
+
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Convert DataWarehouseUser to MetabaseUser for compatibility
+  const metabaseUsers: MetabaseUser[] = users.users.map((user) => ({
+    ...user,
+    name:
+      user.name ||
+      `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
+      user.email,
+    firstName: user.firstName || null,
+    lastName: user.lastName || null,
+    dateJoined: user.dateJoined || "",
+    lastLogin: user.lastLogin || null,
+    locale: user.locale || null,
+    ssoSource: user.ssoSource || null,
+  }));
+
   const { handleSort, sortData } = useTableSort<MetabaseUser>("dateJoined");
 
   // Filter users based on search term
   const filteredUsers =
-    users?.users?.filter(
+    metabaseUsers?.filter(
       (user) =>
         user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -120,4 +142,4 @@ export const MetabaseUsersTable = () => {
       )}
     </Card>
   );
-};
+}

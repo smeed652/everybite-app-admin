@@ -3,36 +3,14 @@ import { Skeleton } from "../../../components/ui/Skeleton";
 import { ConcentricDonutChart } from "../components/ConcentricDonutChart";
 import { DonutStatCard } from "../components/DonutStatCard";
 import { LegendItem } from "../components/LegendItem";
-
-interface AnalyticsData {
-  totalActive: number;
-  withImages: number;
-  withCardLayout: number;
-  withOrdering: number;
-  withByo: number;
-}
-
-interface PlayerAnalyticsSectionProps {
-  analyticsData?: AnalyticsData;
-  loading?: boolean;
-}
+import { usePlayerAnalyticsLambda } from "../hooks/lambda";
 
 /**
  * Section that displays feature-usage analytics across active SmartMenus.
- * Now uses consolidated data from the dashboard hook.
+ * Now uses Lambda hooks for data fetching.
  */
-export function PlayerAnalyticsSection({
-  analyticsData,
-  loading = false,
-}: PlayerAnalyticsSectionProps) {
-  const { totalActive, withImages, withCardLayout, withOrdering, withByo } =
-    analyticsData || {
-      totalActive: 0,
-      withImages: 0,
-      withCardLayout: 0,
-      withOrdering: 0,
-      withByo: 0,
-    };
+export function PlayerAnalyticsSection() {
+  const { analytics, loading } = usePlayerAnalyticsLambda();
 
   return (
     <section className="space-y-4">
@@ -53,26 +31,26 @@ export function PlayerAnalyticsSection({
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <DonutStatCard
               title="Images"
-              countOn={withImages}
-              total={totalActive}
+              countOn={analytics.withImages}
+              total={analytics.totalActive}
               color="#a855f7"
             />
             <DonutStatCard
               title="Card Layout"
-              countOn={withCardLayout}
-              total={totalActive}
+              countOn={analytics.withCardLayout}
+              total={analytics.totalActive}
               color="#7c3aed"
             />
             <DonutStatCard
               title="Ordering"
-              countOn={withOrdering}
-              total={totalActive}
+              countOn={analytics.withOrdering}
+              total={analytics.totalActive}
               color="#5b21b6"
             />
             <DonutStatCard
               title="BYO"
-              countOn={withByo}
-              total={totalActive}
+              countOn={analytics.withByo}
+              total={analytics.totalActive}
               color="#c084fc"
             />
           </div>
@@ -85,11 +63,11 @@ export function PlayerAnalyticsSection({
           <Skeleton className="h-64 w-64 rounded-full" />
         ) : (
           <ConcentricDonutChart
-            total={totalActive}
-            images={withImages}
-            cardLayout={withCardLayout}
-            ordering={withOrdering}
-            byo={withByo}
+            total={analytics.totalActive}
+            images={analytics.withImages}
+            cardLayout={analytics.withCardLayout}
+            ordering={analytics.withOrdering}
+            byo={analytics.withByo}
           />
         )}
       </Card>

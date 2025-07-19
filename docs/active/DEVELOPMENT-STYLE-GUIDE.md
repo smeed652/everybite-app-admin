@@ -189,6 +189,66 @@ src/
 - **Types**: PascalCase (e.g., `UserData`)
 - **Constants**: UPPER_SNAKE_CASE (e.g., `API_ENDPOINTS`)
 
+### Data Source Naming Convention
+
+#### Pattern: `{DataSource}_{Transport}`
+
+**Hook Naming:**
+
+- `useDataWarehouse_Lambda` - Data from EveryBite Data Warehouse via Lambda (GraphQL interface)
+- `useAPI_GraphQL` - Data from old API via GraphQL
+- `useAPI_REST` - Data from old API via REST (if needed)
+
+**File Naming:**
+
+- `datawarehouse-lambda-apollo.ts` - Apollo client for Data Warehouse via Lambda
+- `api-graphql-apollo.ts` - Apollo client for API via GraphQL
+- `useDataWarehouse_Lambda.ts` - Hook for Data Warehouse via Lambda
+
+**Directory Structure:**
+
+```
+src/
+├── lib/
+│   ├── datawarehouse-lambda-apollo.ts    # Transport-specific client
+│   └── api-graphql-apollo.ts            # Transport-specific client
+├── hooks/
+│   ├── datawarehouse/                    # Data source grouping
+│   │   ├── useDataWarehouse_Lambda.ts
+│   │   └── useDataWarehouseUsers_Lambda.ts
+│   └── api/                             # Data source grouping
+│       └── useAPI_GraphQL.ts
+└── features/dashboard/
+    ├── hooks/
+    │   ├── datawarehouse-lambda/         # Source + transport
+    │   └── api-graphql/                  # Source + transport
+    └── graphql/
+        ├── datawarehouse-lambda/         # Source + transport
+        └── api-graphql/                  # Source + transport
+```
+
+**Naming Rules:**
+
+- **Use PascalCase** for hook names: `useDataWarehouse_Lambda`
+- **Use kebab-case** for files: `datawarehouse-lambda-apollo.ts`
+- **Use camelCase** for variables: `dataWarehouseLambdaClient`
+- **Separate with underscores** for multiple concepts: `Source_Transport`
+- **Be explicit about data source** (DataWarehouse vs API)
+- **Distinguish transport layer** (Lambda vs GraphQL vs REST)
+- **Assume GraphQL interface** unless specified otherwise
+
+**Documentation:**
+
+```typescript
+/**
+ * Hook for fetching dashboard data from EveryBite Data Warehouse
+ * via AWS Lambda function with GraphQL interface
+ */
+export function useDataWarehouse_Lambda() {
+  // Implementation
+}
+```
+
 ## API Integration
 
 ### Data Fetching

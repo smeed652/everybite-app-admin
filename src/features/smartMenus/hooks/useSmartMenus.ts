@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { Widget } from "../../../generated/graphql";
+import { legacyClient } from "../../../lib/legacy-apollo";
 import { WIDGET_BASIC_FIELDS } from "../graphql/fragments";
 
 export const GET_SMART_MENUS = gql`
@@ -19,7 +20,8 @@ interface UseSmartMenusResult {
 
 export function useSmartMenus(): UseSmartMenusResult {
   const { data, loading, error } = useQuery(GET_SMART_MENUS, {
-    fetchPolicy: "cache-first", // Use cache-first for better performance
+    client: legacyClient,
+    fetchPolicy: "cache-and-network",
   });
   return {
     loading,

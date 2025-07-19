@@ -1,48 +1,26 @@
-import type { Preview } from '@storybook/react';
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from '../src/context/AuthContext';
-import { ThemeProvider } from '../src/context/ThemeContext';
-import { ApolloProvider } from '@apollo/client';
-import { initialize, mswDecorator } from 'msw-storybook-addon';
-import '../src/index.css'; // tailwind styles
-import { client as apolloClient } from '../src/lib/apollo';
-
-// Initialize MSW once
-initialize({ onUnhandledRequest: 'warn' });
-
-const globalDecorators: Preview['decorators'] = [
-  // Tailwind styles are global via import above
-  (Story) => (
-    <BrowserRouter>
-      <AuthProvider>
-        <ThemeProvider>
-          <ApolloProvider client={apolloClient}>
-        <Story />
-                </ApolloProvider>
-        </ThemeProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  ),
-  mswDecorator,
-];
-
-// Export for Storybook to pick up
-export const decorators = globalDecorators;
-
-export const parameters: Preview['parameters'] = {
-  actions: { argTypesRegex: '^on[A-Z].*' },
-  controls: {
-    matchers: {
-      color: /(background|color)$/i,
-      date: /Date$/,
-    },
-  },
-};
+import { ApolloProvider } from "@apollo/client";
+import type { Preview } from "@storybook/react";
+import React from "react";
+import "../src/index.css";
+import { lambdaClient } from "../src/lib/datawarehouse-lambda-apollo";
 
 const preview: Preview = {
-  decorators: globalDecorators,
-  parameters,
+  parameters: {
+    actions: { argTypesRegex: "^on[A-Z].*" },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+  },
+  decorators: [
+    (Story) => (
+      <ApolloProvider client={lambdaClient!}>
+        <Story />
+      </ApolloProvider>
+    ),
+  ],
 };
 
 export default preview;

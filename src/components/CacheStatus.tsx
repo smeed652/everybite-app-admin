@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { cacheUtils, getScheduledRefreshInfo } from "../lib/metabase-apollo";
+import {
+  cacheUtils,
+  getScheduledRefreshInfo,
+} from "../lib/datawarehouse-lambda-apollo";
 import { Badge } from "./ui/Badge";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";

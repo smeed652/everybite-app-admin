@@ -10,15 +10,20 @@ import {
   WidgetAnalyticsData,
   WidgetAnalyticsFilters,
 } from "../generated/metabase-graphql";
-import { metabaseClient } from "../lib/metabase-apollo";
+import { lambdaClient } from "../lib/datawarehouse-lambda-apollo";
 import { DashboardMetrics, DetailedAnalytics } from "../types/cache";
+
+/**
+ * Hook for fetching analytics data from EveryBite Data Warehouse
+ * via AWS Lambda function with GraphQL interface
+ */
 
 // Legacy individual query hooks (for backward compatibility)
 export const useWidgetAnalytics = (filters?: WidgetAnalyticsFilters) => {
   return useQuery<{ widgetAnalytics: WidgetAnalyticsData }>(
     WIDGET_ANALYTICS_QUERY,
     {
-      client: metabaseClient || undefined,
+      client: lambdaClient || undefined,
       variables: { filters },
       errorPolicy: "all",
     }
@@ -29,7 +34,7 @@ export const useDailyInteractions = (filters?: DailyInteractionsFilters) => {
   return useQuery<{ dailyInteractions: DailyInteractionsData[] }>(
     DAILY_INTERACTIONS_QUERY,
     {
-      client: metabaseClient || undefined,
+      client: lambdaClient || undefined,
       variables: { filters },
       errorPolicy: "all",
     }
@@ -40,7 +45,7 @@ export const useQuarterlyMetrics = (filters?: QuarterlyMetricsFilters) => {
   return useQuery<{ quarterlyMetrics: QuarterlyMetricsData[] }>(
     QUARTERLY_METRICS_QUERY,
     {
-      client: metabaseClient || undefined,
+      client: lambdaClient || undefined,
       variables: { filters },
       errorPolicy: "all",
     }
@@ -54,7 +59,7 @@ export const useDashboardMetrics = () => {
   return useQuery<{ dashboardMetrics: DashboardMetrics }>(
     QUARTERLY_METRICS_QUERY, // Temporary fallback
     {
-      client: metabaseClient || undefined,
+      client: lambdaClient || undefined,
       errorPolicy: "all",
     }
   );
@@ -65,24 +70,24 @@ export const useDetailedAnalytics = (filters?: DailyInteractionsFilters) => {
   return useQuery<{ detailedAnalytics: DetailedAnalytics }>(
     DAILY_INTERACTIONS_QUERY, // Temporary fallback
     {
-      client: metabaseClient || undefined,
+      client: lambdaClient || undefined,
       variables: { filters },
       errorPolicy: "all",
     }
   );
 };
 
-// Utility function to check if Metabase GraphQL is configured
-export const isMetabaseGraphQLConfigured = () => {
+// Utility function to check if Data Warehouse GraphQL is configured
+export const isDataWarehouseGraphQLConfigured = () => {
   const lambdaGraphqlUri = import.meta.env.VITE_LAMBDA_GRAPHQL_URI;
   const lambdaApiKey = import.meta.env.VITE_LAMBDA_API_KEY;
 
   return !!(lambdaGraphqlUri && lambdaApiKey);
 };
 
-// GraphQL query for Metabase users
+// GraphQL query for Data Warehouse users
 // Operation name: MetabaseUsers (this will be used as the cache key)
-const METABASE_USERS_QUERY = gql`
+const DATA_WAREHOUSE_USERS_QUERY = gql`
   query MetabaseUsers($page: Int, $pageSize: Int) {
     metabaseUsers(page: $page, pageSize: $pageSize) {
       users {
@@ -104,7 +109,7 @@ const METABASE_USERS_QUERY = gql`
   }
 `;
 
-interface MetabaseUser {
+interface DataWarehouseUser {
   id: number;
   email: string;
   firstName?: string;
@@ -119,39 +124,41 @@ interface MetabaseUser {
   ssoSource?: string;
 }
 
-interface MetabaseUsersResponse {
+interface DataWarehouseUsersResponse {
   metabaseUsers: {
-    users: MetabaseUser[];
+    users: DataWarehouseUser[];
     total: number;
   };
 }
 
-interface UseMetabaseUsersOptions {
+interface UseDataWarehouseUsersOptions {
   page?: number;
   pageSize?: number;
 }
 
-export const useMetabaseUsersGraphQL = (
-  options: UseMetabaseUsersOptions = {}
+/**
+ * Hook for fetching users data from EveryBite Data Warehouse
+ * via AWS Lambda function with GraphQL interface
+ */
+export const useDataWarehouseUsers_Lambda = (
+  options: UseDataWarehouseUsersOptions = {}
 ) => {
   const { page = 1, pageSize = 50 } = options;
 
-  console.log("🔍 [useMetabaseUsersGraphQL] Hook called with options:", {
+  console.log("🔍 [useDataWarehouseUsers_Lambda] Hook called with options:", {
     page,
     pageSize,
   });
 
-  const { data, loading, error, refetch } = useQuery<MetabaseUsersResponse>(
-    METABASE_USERS_QUERY,
-    {
-      client: metabaseClient || undefined,
+  const { data, loading, error, refetch } =
+    useQuery<DataWarehouseUsersResponse>(DATA_WAREHOUSE_USERS_QUERY, {
+      client: lambdaClient || undefined,
       variables: { page, pageSize },
       fetchPolicy: "cache-and-network", // Use cache but also fetch fresh data
       errorPolicy: "all",
-    }
-  );
+    });
 
-  console.log("🔍 [useMetabaseUsersGraphQL] Query result:", {
+  console.log("🔍 [useDataWarehouseUsers_Lambda] Query result:", {
     data: data?.metabaseUsers,
     loading,
     error: error?.message,

@@ -1,14 +1,14 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { MetabaseUsersTable } from "../components/MetabaseUsersTable";
-import { useMetabaseUsersGraphQL } from "../hooks/useMetabaseGraphQL";
+import MetabaseUsersTable from "../components/MetabaseUsersTable";
+import { useDataWarehouseUsers_Lambda } from "../hooks/useDataWarehouse_Lambda";
 
 // Mock the useMetabaseUsersGraphQL hook
-vi.mock("../hooks/useMetabaseGraphQL", () => ({
-  useMetabaseUsersGraphQL: vi.fn(),
+vi.mock("../hooks/useDataWarehouse_Lambda", () => ({
+  useDataWarehouseUsers_Lambda: vi.fn(),
 }));
 
-const mockUseMetabaseUsersGraphQL = useMetabaseUsersGraphQL as ReturnType<
+const mockUseMetabaseUsersGraphQL = useDataWarehouseUsers_Lambda as ReturnType<
   typeof vi.fn
 >;
 

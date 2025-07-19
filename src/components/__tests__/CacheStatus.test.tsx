@@ -1,10 +1,13 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
-import { cacheUtils, getScheduledRefreshInfo } from "../../lib/metabase-apollo";
+import {
+  cacheUtils,
+  getScheduledRefreshInfo,
+} from "../../lib/datawarehouse-lambda-apollo";
 import { CacheStatus } from "../CacheStatus";
 
 // Mock the cacheUtils
-vi.mock("../../lib/metabase-apollo", () => ({
+vi.mock("../../lib/datawarehouse-lambda-apollo", () => ({
   cacheUtils: {
     getCacheStatus: vi.fn(),
     clearCache: vi.fn(),

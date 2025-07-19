@@ -1,4 +1,5 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { lambdaClient } from "../../../lib/datawarehouse-lambda-apollo";
 import { WIDGET_FIELDS } from "../graphql/fragments";
 
 export const ACTIVATE_WIDGET = gql`
@@ -20,7 +21,7 @@ export const DEACTIVATE_WIDGET = gql`
 `;
 
 export function useToggleWidget() {
-  const client = useApolloClient();
+  const client = lambdaClient!;
 
   const activateWidget = async (id: string) => {
     return client.mutate({

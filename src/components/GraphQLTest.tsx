@@ -1,49 +1,71 @@
-import React from "react";
+import { useState } from "react";
 import {
-  isMetabaseGraphQLConfigured,
-  useTestGraphQLConnection,
-} from "../hooks/useMetabaseGraphQL";
+  isDataWarehouseGraphQLConfigured,
+  useDailyInteractions,
+  useQuarterlyMetrics,
+  useWidgetAnalytics,
+} from "../hooks/useDataWarehouse_Lambda";
+import { Button } from "./ui/Button";
+import { Card } from "./ui/Card";
 
 export const GraphQLTest: React.FC = () => {
-  const isConfigured = isMetabaseGraphQLConfigured();
-  const { data, loading, error } = useTestGraphQLConnection();
+  const [isConfigured, setIsConfigured] = useState<boolean | null>(null);
+
+  const handleTestConnection = () => {
+    const configured = isDataWarehouseGraphQLConfigured();
+    setIsConfigured(configured);
+  };
+
+  // Test the hooks
+  const widgetAnalytics = useWidgetAnalytics();
+  const dailyInteractions = useDailyInteractions();
+  const quarterlyMetrics = useQuarterlyMetrics();
 
   return (
-    <div className="p-4 border rounded-lg">
-      <h3 className="text-lg font-semibold mb-4">GraphQL Connection Test</h3>
+    <div className="p-6 space-y-4">
+      <h2 className="text-2xl font-bold">Data Warehouse GraphQL Test</h2>
 
-      <div className="space-y-2">
-        <div>
-          <strong>Configuration:</strong>{" "}
-          {isConfigured ? "✅ Configured" : "❌ Not Configured"}
-        </div>
-
-        <div>
-          <strong>Status:</strong> {loading ? "🔄 Loading..." : "✅ Ready"}
-        </div>
-
-        {error && (
-          <div className="text-red-600">
-            <strong>Error:</strong> {error.message}
-          </div>
+      <Card className="p-4">
+        <h3 className="text-lg font-semibold mb-2">Configuration Test</h3>
+        <Button onClick={handleTestConnection} className="mb-2">
+          Test Configuration
+        </Button>
+        {isConfigured !== null && (
+          <p className={isConfigured ? "text-green-600" : "text-red-600"}>
+            {isConfigured ? "✅ Configured" : "❌ Not configured"}
+          </p>
         )}
+      </Card>
 
-        {data && (
-          <div className="text-green-600">
-            <strong>Success:</strong> GraphQL connection working
-          </div>
-        )}
-
-        <div className="text-sm text-gray-600">
-          <strong>Environment Variables:</strong>
-          <br />
-          VITE_LAMBDA_GRAPHQL_URI:{" "}
-          {import.meta.env.VITE_LAMBDA_GRAPHQL_URI ? "✅ Set" : "❌ Not Set"}
-          <br />
-          VITE_LAMBDA_API_KEY:{" "}
-          {import.meta.env.VITE_LAMBDA_API_KEY ? "✅ Set" : "❌ Not Set"}
+      <Card className="p-4">
+        <h3 className="text-lg font-semibold mb-2">Hook Tests</h3>
+        <div className="space-y-2">
+          <p>
+            Widget Analytics:{" "}
+            {widgetAnalytics.loading
+              ? "Loading..."
+              : widgetAnalytics.error
+                ? "Error"
+                : "Loaded"}
+          </p>
+          <p>
+            Daily Interactions:{" "}
+            {dailyInteractions.loading
+              ? "Loading..."
+              : dailyInteractions.error
+                ? "Error"
+                : "Loaded"}
+          </p>
+          <p>
+            Quarterly Metrics:{" "}
+            {quarterlyMetrics.loading
+              ? "Loading..."
+              : quarterlyMetrics.error
+                ? "Error"
+                : "Loaded"}
+          </p>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

@@ -212,7 +212,7 @@ const analyticsSchema = `
     updatedAt: String!
     deletedAt: String
     backgroundColor: String
-    higlightColor: String
+    highlightColor: String
     name: String!
     primaryBrandColor: String
     displayImages: Boolean
@@ -366,9 +366,9 @@ const analyticsSchema = `
     backgroundColor: String
     backgroundColor_in: [String]
     backgroundColor_like: String
-    higlightColor: String
-    higlightColor_in: [String]
-    higlightColor_like: String
+    highlightColor: String
+    highlightColor_in: [String]
+    highlightColor_like: String
     name: String
     name_in: [String]
     name_like: String

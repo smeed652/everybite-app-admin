@@ -32,8 +32,6 @@ function generateTableResolvers() {
   keyTables.forEach((tableName) => {
     resolvers[tableName] = async (_, { id }, { executeMetabaseQuery }) => {
       try {
-        console.log(`🔍 ${tableName} resolver called with id: ${id}`);
-
         const query = {
           database: 2,
           type: "native",
@@ -58,7 +56,6 @@ function generateTableResolvers() {
           record[fieldName] = row[index];
         });
 
-        console.log(`✅ ${tableName} record found:`, record);
         return record;
       } catch (error) {
         console.error(`❌ Error in ${tableName} resolver:`, error);
@@ -93,11 +90,6 @@ function generateTableListResolvers() {
       { executeMetabaseQuery }
     ) => {
       try {
-        console.log(
-          `🔍 ${listResolverName} resolver called with filter:`,
-          filter
-        );
-
         // Build WHERE clause from filter
         const whereClause = buildWhereClause(tableName, filter);
 
@@ -105,14 +97,34 @@ function generateTableListResolvers() {
         const limit = filter.limit || 100;
         const offset = filter.offset || 0;
 
-        // Build query
-        const query = {
-          database: 2,
-          type: "native",
-          native: {
-            query: `SELECT * FROM everybite_analytics.${tableName} WHERE ${whereClause} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`,
-          },
-        };
+        // Build query - Athena doesn't support OFFSET, so we'll use a different approach
+        let query;
+        if (offset === 0) {
+          // Simple case: no offset, just limit
+          query = {
+            database: 2,
+            type: "native",
+            native: {
+              query: `SELECT * FROM everybite_analytics.${tableName} WHERE ${whereClause} LIMIT ${limit}`,
+            },
+          };
+        } else {
+          // For offset > 0, we need to use a window function approach
+          query = {
+            database: 2,
+            type: "native",
+            native: {
+              query: `
+                SELECT * FROM (
+                  SELECT *, ROW_NUMBER() OVER (ORDER BY id) as rn 
+                  FROM everybite_analytics.${tableName} 
+                  WHERE ${whereClause}
+                ) t 
+                WHERE rn > ${offset} AND rn <= ${offset + limit}
+              `,
+            },
+          };
+        }
 
         // Get total count for pagination
         const countQuery = {
@@ -158,12 +170,6 @@ function generateTableListResolvers() {
           hasPrevious,
         };
 
-        console.log(`✅ ${listResolverName} result:`, {
-          itemsCount: items.length,
-          total,
-          pagination: paginationInfo,
-        });
-
         return {
           items,
           pagination: paginationInfo,
@@ -201,11 +207,6 @@ function generateTableCountResolvers() {
       { executeMetabaseQuery }
     ) => {
       try {
-        console.log(
-          `🔍 ${countResolverName} resolver called with filter:`,
-          filter
-        );
-
         // Build WHERE clause from filter
         const whereClause = buildWhereClause(tableName, filter);
 
@@ -220,7 +221,6 @@ function generateTableCountResolvers() {
         const result = await executeMetabaseQuery(query);
         const count = result.data?.rows?.[0]?.[0] || 0;
 
-        console.log(`✅ ${countResolverName} result:`, count);
         return count;
       } catch (error) {
         console.error(`❌ Error in ${countResolverName} resolver:`, error);
@@ -234,7 +234,7 @@ function generateTableCountResolvers() {
 
 // Helper function to build WHERE clause from filter
 function buildWhereClause(tableName, filter) {
-  let whereClause = "1 = 1";
+  let whereClause = "1=1";
 
   // Handle different filter types
   Object.entries(filter).forEach(([key, value]) => {
@@ -274,11 +274,19 @@ function buildWhereClause(tableName, filter) {
 
 // Helper function to convert snake_case to camelCase
 function toCamelCase(str) {
+  // Handle the typo in the database column name
+  if (str === "higlight_color") {
+    return "highlightColor";
+  }
   return str.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
 }
 
 // Helper function to convert camelCase to snake_case
 function toSnakeCase(str) {
+  // Handle the typo in the database column name
+  if (str === "highlightColor") {
+    return "higlight_color";
+  }
   return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 }
 

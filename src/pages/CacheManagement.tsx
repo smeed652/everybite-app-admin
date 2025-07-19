@@ -10,10 +10,10 @@ import { getCacheConfig, setCacheConfig } from "../config/cache-config";
 import {
   cacheUtils,
   getScheduledRefreshInfo,
-  reinitializeMetabaseClient,
+  reinitializeLambdaClient,
   startScheduledRefresh,
   stopScheduledRefresh,
-} from "../lib/metabase-apollo";
+} from "../lib/datawarehouse-lambda-apollo";
 import {
   CacheConfig,
   CacheStatusResponse,
@@ -129,7 +129,7 @@ export default function CacheManagement() {
       setCacheConfig(newConfig);
 
       // Reinitialize Apollo client and cache logic with new config
-      reinitializeMetabaseClient();
+      reinitializeLambdaClient();
 
       // Restart scheduled refresh with new settings
       stopScheduledRefresh();

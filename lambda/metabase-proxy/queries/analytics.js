@@ -22,7 +22,7 @@ const analyticsQueries = {
             SUM(number_of_locations) AS total_locations
           FROM everybite_analytics.db_widgets
           WHERE published_at IS NOT NULL
-            AND published_at >= '2024-03-27'
+            AND published_at >= TIMESTAMP '2024-03-27 00:00:00'
           GROUP BY date_trunc('quarter', published_at)
         ),
         widget_summary AS (
@@ -190,7 +190,7 @@ const analyticsQueries = {
             SUM(number_of_locations) AS total_locations
           FROM everybite_analytics.db_widgets
           WHERE published_at IS NOT NULL
-            AND published_at >= '2024-03-27'
+            AND published_at >= TIMESTAMP '2024-03-27 00:00:00'
           GROUP BY date_trunc('quarter', published_at)
         )
         SELECT

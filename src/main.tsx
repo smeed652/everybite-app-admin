@@ -8,7 +8,7 @@ import awsExports from "./aws-exports";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import "./index.css";
-import { client } from "./lib/apollo";
+import { lambdaClient } from "./lib/datawarehouse-lambda-apollo";
 import "./lib/sentry";
 
 // Configure Amplify
@@ -20,7 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <BrowserRouter
       future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
-      <ApolloProvider client={client}>
+      <ApolloProvider client={lambdaClient!}>
         <ThemeProvider>
           <AuthProvider>
             <App />

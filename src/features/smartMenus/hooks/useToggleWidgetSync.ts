@@ -1,4 +1,5 @@
-import { gql, useApolloClient } from '@apollo/client';
+import { gql } from "@apollo/client";
+import { lambdaClient } from "../../../lib/datawarehouse-lambda-apollo";
 
 const ACTIVATE_WIDGET_SYNC = gql`
   mutation ActivateWidgetSync($id: ID!) {
@@ -19,7 +20,7 @@ const DEACTIVATE_WIDGET_SYNC = gql`
 `;
 
 export function useToggleWidgetSync() {
-  const client = useApolloClient();
+  const client = lambdaClient!;
 
   const toggleWidgetSync = async (id: string, enable: boolean) => {
     const MUTATION = enable ? ACTIVATE_WIDGET_SYNC : DEACTIVATE_WIDGET_SYNC;
@@ -27,8 +28,8 @@ export function useToggleWidgetSync() {
       mutation: MUTATION,
       variables: { id },
       optimisticResponse: {
-        [enable ? 'activateWidgetSync' : 'deactivateWidgetSync']: {
-          __typename: 'Widget',
+        [enable ? "activateWidgetSync" : "deactivateWidgetSync"]: {
+          __typename: "Widget",
           id,
           isSyncEnabled: enable,
         },
