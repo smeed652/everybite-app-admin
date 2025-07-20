@@ -150,25 +150,135 @@
   - [x] Implement test failure notifications (CI pipeline notifications)
   - [x] Add automated test result analysis (comprehensive test reporting)
 
-### Step 6: Final Test Fixes & Clean Release (Week 6) - CURRENT
+### Step 6: Complete Test Suite Restoration (Week 6) - CURRENT
 
-- [ ] **Fix Remaining 16 Test Failures**:
-  - [ ] Fix Dashboard tests (4 failures) - Mock data structure mismatches
-  - [ ] Fix SmartMenu Hook tests (8 failures) - GraphQL schema type mismatches
-  - [ ] Fix API Integration tests (2 failures) - Authentication configuration issues
-  - [ ] Fix Component tests (2 failures) - Test data factory updates needed
+- [ ] **Fix All 16 Test Failures**:
+  - [ ] **Dashboard Tests (4 failures)**:
+    - [ ] Fix mock data structure mismatches in `src/__tests__/SmartMenuDashboard.test.tsx`
+    - [ ] Update test expectations for percentage calculations
+    - [ ] Fix error state test expectations
+    - [ ] Ensure proper loading state handling
+  - [ ] **SmartMenu Hook Tests (8 failures)**:
+    - [ ] Fix GraphQL schema type mismatches ("Widget" vs "DbWidgets")
+    - [ ] Update test mocks to use correct schema types
+    - [ ] Fix mutation schema configuration issues
+    - [ ] Ensure proper test data return from mocks
+  - [ ] **API Integration Tests (2 failures)**:
+    - [ ] Fix invalid API key configuration in test environment
+    - [ ] Resolve authentication issues in smoke tests
+  - [ ] **Component Tests (2 failures)**:
+    - [ ] Update test data factories to match current schema
+    - [ ] Fix component integration test expectations
 
-- [ ] **Clean Release to Main**:
-  - [ ] Ensure all tests pass (0 failures)
-  - [ ] Deploy to staging environment
-  - [ ] Run full E2E test suite
-  - [ ] Deploy to production
-  - [ ] Create release tag
-  - [ ] Move story to completed directory
+### Step 7: Comprehensive Test Categories (Week 7)
 
-## 📊 Current Test Status
+- [ ] **Unit Tests (100% Coverage)**:
+  - [ ] Ensure all components have unit tests
+  - [ ] Verify all hooks have comprehensive unit tests
+  - [ ] Test all utility functions and helpers
+  - [ ] Achieve 100% line coverage for critical paths
+  - [ ] Add unit tests for any missing coverage areas
 
-### Test Failure Analysis (16 failed / 290 total) ✅ IMPROVED
+- [ ] **Integration Tests (Complete Coverage)**:
+  - [ ] Test all service layer interactions
+  - [ ] Verify GraphQL query and mutation integrations
+  - [ ] Test cache integration and invalidation
+  - [ ] Ensure proper error handling in integration scenarios
+  - [ ] Test authentication and authorization flows
+
+- [ ] **Smoke Tests (Production Ready)**:
+  - [ ] Verify all critical user flows work end-to-end
+  - [ ] Test authentication and login flows
+  - [ ] Ensure dashboard loads with real data
+  - [ ] Verify SmartMenu management functionality
+  - [ ] Test error handling and recovery scenarios
+
+- [ ] **E2E Tests (Cypress)**:
+  - [ ] Restore all Cypress E2E tests to working state
+  - [ ] Test complete user journeys from login to logout
+  - [ ] Verify responsive design on different screen sizes
+  - [ ] Test accessibility compliance (WCAG 2.1 AA)
+  - [ ] Ensure cross-browser compatibility
+
+### Step 8: CI/CD Pipeline Restoration (Week 8)
+
+- [ ] **GitHub Actions Pipeline**:
+  - [ ] Fix all CI pipeline failures
+  - [ ] Ensure tests run successfully in CI environment
+  - [ ] Add test coverage reporting and thresholds
+  - [ ] Implement automated test result analysis
+  - [ ] Add performance monitoring and alerts
+
+- [ ] **Deployment Pipeline**:
+  - [ ] Verify staging deployment works correctly
+  - [ ] Ensure production deployment pipeline is functional
+  - [ ] Test rollback procedures
+  - [ ] Verify environment variable management
+  - [ ] Test database migrations and data integrity
+
+- [ ] **Quality Gates**:
+  - [ ] Implement test coverage thresholds (minimum 80%)
+  - [ ] Add code quality checks (linting, formatting)
+  - [ ] Ensure security scanning passes
+  - [ ] Verify accessibility compliance checks
+  - [ ] Add performance budget enforcement
+
+### Step 9: Production Deployment & Validation (Week 9)
+
+- [ ] **Staging Environment**:
+  - [ ] Deploy to staging with all tests passing
+  - [ ] Run full test suite against staging environment
+  - [ ] Verify all functionality works in staging
+  - [ ] Test user acceptance scenarios
+  - [ ] Validate performance metrics
+
+- [ ] **Production Deployment**:
+  - [ ] Deploy to production with zero test failures
+  - [ ] Run smoke tests against production environment
+  - [ ] Verify all critical functionality works
+  - [ ] Monitor error rates and performance
+  - [ ] Validate user experience
+
+- [ ] **Post-Deployment Validation**:
+  - [ ] Monitor application health and performance
+  - [ ] Verify all integrations work correctly
+  - [ ] Test user workflows in production
+  - [ ] Validate data integrity and consistency
+  - [ ] Document any issues and resolutions
+
+### Step 10: Documentation & Handoff (Week 10)
+
+- [ ] **Test Documentation**:
+  - [ ] Update all test documentation with current patterns
+  - [ ] Create troubleshooting guides for common test issues
+  - [ ] Document test environment setup and configuration
+  - [ ] Create test maintenance procedures
+  - [ ] Document test data management strategies
+
+- [ ] **Deployment Documentation**:
+  - [ ] Update deployment procedures and checklists
+  - [ ] Document environment configuration requirements
+  - [ ] Create rollback and recovery procedures
+  - [ ] Document monitoring and alerting setup
+  - [ ] Create incident response procedures
+
+- [ ] **Team Handoff**:
+  - [ ] Train team on new testing patterns and procedures
+  - [ ] Document lessons learned and best practices
+  - [ ] Create maintenance schedules and responsibilities
+  - [ ] Establish ongoing quality assurance processes
+  - [ ] Create feedback loops for continuous improvement
+
+## 📊 Current Test Status - COMPREHENSIVE SCOPE
+
+### Test Failure Analysis (16 failed / 290 total) - CRITICAL PRIORITY
+
+### Test Categories Status
+
+- **Unit Tests**: 🔴 CRITICAL - 16 failures preventing 100% pass rate
+- **Integration Tests**: 🟡 PARTIAL - Some working, others failing
+- **Smoke Tests**: 🟡 PARTIAL - API integration issues
+- **E2E Tests**: 🟡 PARTIAL - Need restoration and validation
 
 ### Lambda Testing Status ✅ COMPLETED
 
@@ -177,7 +287,14 @@
 - **Lambda End-to-End Tests**: ✅ Implemented (E2E tests with Cypress)
 - **Total Lambda Test Coverage**: ✅ Comprehensive testing strategy implemented
 
-#### **Remaining Failures (Lower Priority)**
+### CI/CD Pipeline Status 🟡 NEEDS WORK
+
+- **GitHub Actions**: 🟡 Some tests failing in CI
+- **Test Coverage**: 🟡 Below 80% threshold
+- **Quality Gates**: 🟡 Not fully implemented
+- **Deployment Pipeline**: 🟡 Needs validation
+
+#### **Critical Failures (HIGH PRIORITY)**
 
 - **Dashboard Tests**: 4 failures - Mock data structure mismatches
 - **SmartMenu Hook Tests**: 8 failures - GraphQL schema type mismatches
@@ -208,13 +325,18 @@
 - [x] Hybrid SmartMenu service (Completed)
 - [x] Release tagging system (Completed)
 
-## ⏱️ Timeline
+## ⏱️ Timeline - EXTENDED SCOPE
 
-- **Week 1 (Jul 20-26)**: Critical Architecture Fixes (Dashboard, SmartMenu, Component tests)
-- **Week 2 (Jul 27-Aug 2)**: API Integration Fixes (Lambda GraphQL, Hybrid Service, SmartMenu Settings)
-- **Week 3 (Aug 3-9)**: Test Infrastructure & Quality (Utilities, Coverage, Documentation)
-- **Week 4 (Aug 10-16)**: Lambda Function Testing Strategy (Unit, Integration, E2E)
-- **Week 5 (Aug 17)**: Performance & Optimization (CI/CD, Performance, Monitoring)
+- **Week 1-5 (Jul 20-Aug 17)**: ✅ COMPLETED - Initial test infrastructure and fixes
+- **Week 6 (Aug 18-24)**: Complete Test Suite Restoration (Fix all 16 remaining failures)
+- **Week 7 (Aug 25-31)**: Comprehensive Test Categories (Unit, Integration, Smoke, E2E)
+- **Week 8 (Sep 1-7)**: CI/CD Pipeline Restoration (GitHub Actions, Quality Gates)
+- **Week 9 (Sep 8-14)**: Production Deployment & Validation (Staging → Production)
+- **Week 10 (Sep 15-21)**: Documentation & Team Handoff (Complete handoff)
+
+**Total Duration**: 10 weeks (extended from original 5 weeks)
+**Current Progress**: 50% complete (5/10 weeks)
+**Remaining Work**: 5 weeks to achieve 100% test pass rate and successful deployment
 
 ## ⚠️ Risk Assessment
 
@@ -223,15 +345,18 @@
 - **Low Risk**: Test infrastructure improvements (established patterns)
 - **Low Risk**: Performance optimization (incremental improvements)
 
-## 🎯 Success Criteria ✅ ACHIEVED
+## 🎯 Success Criteria - COMPREHENSIVE SCOPE
 
-- [x] **Test Pass Rate**: 95%+ of all tests passing (94.5% achieved)
-- [x] **Critical Fixes**: All dashboard and SmartMenu tests working
-- [x] **API Integration**: All Lambda GraphQL tests passing
-- [x] **Infrastructure**: Robust test utilities and patterns established
-- [x] **Lambda Testing**: Comprehensive Lambda function testing strategy implemented
-- [x] **Performance**: Optimized test execution and CI/CD integration
-- [x] **Documentation**: Complete testing patterns and standards
+- [ ] **Test Pass Rate**: 100% of all tests passing (0 failures)
+- [ ] **Unit Tests**: 100% coverage for all critical components and functions
+- [ ] **Integration Tests**: Complete coverage of all service layer interactions
+- [ ] **Smoke Tests**: All critical user flows working end-to-end
+- [ ] **E2E Tests**: All Cypress tests passing and comprehensive
+- [ ] **CI/CD Pipeline**: All GitHub Actions passing with quality gates
+- [ ] **Staging Deployment**: Successful deployment with all tests passing
+- [ ] **Production Deployment**: Clean production deployment with validation
+- [ ] **Documentation**: Complete test and deployment documentation
+- [ ] **Team Handoff**: Team trained on new testing patterns and procedures
 
 ## 🏆 Major Accomplishments
 
@@ -300,17 +425,27 @@
 
 ## ✅ Completion Criteria
 
-### **Definition of Done:** ✅ COMPLETED
+### **Definition of Done:** - COMPREHENSIVE SCOPE
 
-- [x] **All 30 tasks completed** and checked off
-- [x] **21/21 story points completed** (100% story point completion)
-- [x] **95%+ test pass rate** achieved (94.5% - 16 failed / 290 total)
-- [x] **All critical test failures resolved** (Dashboard, SmartMenu, Component tests)
-- [x] **Lambda testing strategy implemented** (Unit, Integration, E2E)
-- [x] **Test documentation updated** with new patterns and standards
-- [x] **CI/CD integration working** with all tests passing
-- [x] **Release tag created** for completed features
-- [x] **Story ready for completion** directory
+- [ ] **100% Test Pass Rate**: All 290 tests passing (0 failures)
+- [ ] **Complete Test Coverage**: Unit, Integration, Smoke, and E2E tests all working
+- [ ] **CI/CD Pipeline**: All GitHub Actions passing with quality gates
+- [ ] **Staging Deployment**: Successful deployment with all tests passing
+- [ ] **Production Deployment**: Clean production deployment with validation
+- [ ] **Documentation**: Complete test and deployment documentation
+- [ ] **Team Handoff**: Team trained on new testing patterns and procedures
+- [ ] **Release Tag**: Create final release tag for completed story
+- [ ] **Story Completion**: Move story to completed directory
+
+### **Quality Gates (Must Pass Before Completion)**
+
+- [ ] **Test Coverage**: Minimum 80% line coverage
+- [ ] **Performance**: All tests complete within acceptable time limits
+- [ ] **Security**: No security vulnerabilities in dependencies
+- [ ] **Accessibility**: WCAG 2.1 AA compliance verified
+- [ ] **Browser Compatibility**: Cross-browser testing completed
+- [ ] **Error Monitoring**: No critical errors in production
+- [ ] **Performance Monitoring**: All performance metrics within acceptable ranges
 
 ### **Completion Approval Required:**
 
