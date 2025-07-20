@@ -220,6 +220,71 @@ const active = widgets.filter((w) => w.publishedAt).length; // Frontend filterin
 - User interaction responses (client-side search, sorting)
 - Performance optimization for large datasets (with clear justification)
 
+## Bug Fixing Workflow
+
+### When Tests Pass But Bugs Exist
+
+**CRITICAL**: If we find a bug in production but our tests are passing, we must follow this workflow:
+
+1. **First, fix the tests to catch the issue**
+   - Add a test that reproduces the exact bug scenario
+   - Use real-world data structures and edge cases
+   - Ensure the test fails when the bug is present
+   - Document what the test is checking and why
+
+2. **Then, fix the actual bug**
+   - Implement the fix that makes the test pass
+   - Verify the fix works in the real application
+   - Ensure no regressions are introduced
+
+3. **Validate the complete fix**
+   - Run all tests to ensure they still pass
+   - Test the fix manually in the application
+   - Document the root cause and solution
+
+### Why This Order Matters
+
+- **Tests are our safety net**: If tests don't catch bugs, they're not doing their job
+- **Prevents regressions**: A test that catches the bug will prevent it from happening again
+- **Documents issues**: The test serves as documentation of what went wrong
+- **Builds confidence**: We know our testing strategy actually works
+
+### Example Workflow
+
+```typescript
+// 1. Add test that reproduces the bug
+it("catches the specific bug we encountered", () => {
+  // Use real-world data that caused the issue
+  const widget = makeWidget({
+    orderUrl: "https://example.com/web?id=123#!/?utm_source=test",
+  });
+
+  // Simulate the exact scenario that caused the bug
+  act(() => {
+    result.current.handleFieldChange({
+      orderUrl: "https://example.com/web?id=123#!/", // Buggy parsing
+    });
+  });
+
+  // Test should FAIL when bug is present
+  expect(result.current.dirty).toBe(true);
+});
+
+// 2. Fix the bug in the actual code
+// 3. Verify test now passes
+// 4. Ensure all other tests still pass
+```
+
+### Test Quality Guidelines
+
+When writing tests to catch bugs:
+
+- **Use realistic data**: Don't use simplified test data that doesn't match real scenarios
+- **Test edge cases**: Include complex URLs, nested objects, undefined values, etc.
+- **Document the scenario**: Explain what the test is checking and why it's important
+- **Make it specific**: Target the exact issue, not just general functionality
+- **Keep it maintainable**: Use helper functions and clear test names
+
 ## Testing Strategy
 
 ### Unit Tests

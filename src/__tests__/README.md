@@ -1,47 +1,56 @@
-# Test Suite Documentation
+# Testing Guide
 
-This directory contains comprehensive tests for the EveryBite Admin App, covering unit tests, integration tests, and end-to-end tests.
+## Overview
+
+This directory contains all tests for the EveryBite Admin Application. We use **Vitest** as our testing framework with **React Testing Library** for component testing and **MSW** for API mocking.
 
 ## Test Structure
 
 ```
 src/__tests__/
-├── README.md                    # This documentation
-├── test-utils.tsx              # Common test utilities and helpers
-├── run-tests.sh                # Test runner script
-├── MetabaseUsersTable.test.tsx # Component tests for MetabaseUsersTable
-├── useMetabase.test.ts         # Hook tests for useMetabase
-├── Dashboard.test.tsx          # Component tests for Dashboard
-├── MetabaseUsersPage.test.tsx  # Page tests for MetabaseUsers
-├── metabase-integration.test.tsx # Integration tests
-└── [existing test files...]
+├── api/                    # API and service layer tests
+│   ├── lambda-graphql.smoke.test.ts
+│   ├── smartmenu-hybrid.smoke.test.ts
+│   └── smartmenu-hybrid-edge-cases.test.ts
+├── integration/            # Integration tests
+│   ├── auth-routing.test.tsx
+│   └── smartmenu-detail-flow.test.tsx
+├── utils/                  # Test utilities and helpers
+│   └── service-layer-test-utils.ts
+├── factories/              # Test data factories
+│   └── widget.ts
+└── README.md              # This file
 ```
 
-## Testing Strategy
+## Test Categories
 
-### 1. Unit Tests
+### 1. **Unit Tests** (`*.test.ts` / `*.test.tsx`)
 
-- **Components**: Test individual React components in isolation
-- **Hooks**: Test custom hooks with proper mocking
-- **Utilities**: Test helper functions and utilities
-- **Coverage**: Aim for >90% code coverage
+- Test individual functions, components, or services in isolation
+- Use mocks for external dependencies
+- Fast execution, focused scope
 
-### 2. Integration Tests
+### 2. **Integration Tests** (`*.integration.test.tsx`)
 
-- **Component Integration**: Test how components work together
-- **API Integration**: Test GraphQL and REST API interactions
-- **Routing**: Test navigation and routing behavior
-- **Authentication**: Test role-based access control
+- Test interactions between multiple components/services
+- May use real dependencies where appropriate
+- Test complete workflows
 
-### 3. End-to-End Tests
+### 3. **Smoke Tests** (`*.smoke.test.ts`)
 
-- **User Flows**: Test complete user journeys
-- **Cross-browser**: Test in multiple browsers
-- **Performance**: Test loading times and responsiveness
+- Quick tests to verify basic functionality
+- Minimal assertions, fast execution
+- Used in CI/CD pipelines
+
+### 4. **Edge Case Tests** (`*.edge-cases.test.ts`)
+
+- Test error scenarios, boundary conditions
+- Validate error handling and edge cases
+- Ensure robustness
 
 ## Running Tests
 
-### Quick Start
+### Basic Commands
 
 ```bash
 # Run all tests
@@ -50,24 +59,20 @@ npm test
 # Run tests in watch mode
 npm run test:watch
 
-# Run specific test file
-npm test MetabaseUsersTable.test.tsx
-
 # Run tests with coverage
 npm run test:coverage
+
+# Run specific test file
+npm test ComponentName.test.tsx
+
+# Run tests matching pattern
+npm test -- --grep "should render"
+
+# Run tests in specific directory
+npm test src/__tests__/api/
 ```
 
-### Using the Test Runner Script
-
-```bash
-# Make script executable (first time only)
-chmod +x src/__tests__/run-tests.sh
-
-# Run comprehensive test suite
-./src/__tests__/run-tests.sh
-```
-
-### Individual Test Commands
+### Test Scripts
 
 ```bash
 # Unit tests only
@@ -76,227 +81,500 @@ npm run test:unit
 # Integration tests only
 npm run test:integration
 
-# E2E tests only
-npm run test:e2e
+# Smoke tests only
+npm run test:smoke
 
-# Type checking
-npm run type-check
+# Tests with verbose output
+npm run test:verbose
 
-# Linting
-npm run lint
+# Tests with debug output
+npm run test:debug
 ```
 
-## Test Categories
+## Writing Tests
 
-### Component Tests (`*.test.tsx`)
-
-#### MetabaseUsersTable.test.tsx
-
-Tests the Metabase users table component:
-
-- ✅ Rendering with different data states
-- ✅ Loading states and error handling
-- ✅ User interaction (search, sort, filter)
-- ✅ Badge display for user status and roles
-- ✅ Date formatting and null handling
-- ✅ Refresh functionality
-
-#### Dashboard.test.tsx
-
-Tests the main dashboard component:
-
-- ✅ Metrics calculation and display
-- ✅ Trending delta calculations
-- ✅ GraphQL data integration
-- ✅ Error state handling
-- ✅ Loading states
-
-#### MetabaseUsersPage.test.tsx
-
-Tests the Metabase users page:
-
-- ✅ Page layout and structure
-- ✅ Component integration
-- ✅ Navigation state
-
-### Hook Tests (`*.test.ts`)
-
-#### useMetabase.test.ts
-
-Tests the Metabase API hook:
-
-- ✅ API calls and data fetching
-- ✅ Error handling and retry logic
-- ✅ Loading state management
-- ✅ Data transformation
-- ✅ Network error scenarios
-
-### Integration Tests (`*-integration.test.tsx`)
-
-#### metabase-integration.test.tsx
-
-Tests end-to-end Metabase functionality:
-
-- ✅ Navigation between pages
-- ✅ Authentication and authorization
-- ✅ Data flow between components
-- ✅ URL state management
-- ✅ Error boundaries
-
-## Test Utilities
-
-### test-utils.tsx
-
-Common utilities for all tests:
-
-- `customRender()`: Enhanced render function with providers
-- `mockMetabaseUsers`: Mock user data
-- `mockWidgets`: Mock widget data
-- `createMockFetchResponse()`: Mock fetch responses
-- `createGraphQLMock()`: Create GraphQL mocks
-- `mockAuth`: Authentication mocks
-- `waitForLoadingToFinish()`: Wait for loading states
-
-### Mock Data
+### Component Testing
 
 ```typescript
-// Example usage
-import { mockMetabaseUsers, customRender } from './test-utils';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ComponentName } from './ComponentName';
 
-test('renders users table', () => {
-  customRender(<MetabaseUsersTable />, {
-    mocks: [createGraphQLMock(GET_USERS, mockMetabaseUsers)]
+describe('ComponentName', () => {
+  const renderComponent = (props = {}) => {
+    return render(<ComponentName {...props} />);
+  };
+
+  beforeEach(() => {
+    // Setup mocks and test data
+  });
+
+  afterEach(() => {
+    // Cleanup
+    vi.clearAllMocks();
+  });
+
+  it('should render with default props', () => {
+    renderComponent();
+    expect(screen.getByRole('main')).toBeInTheDocument();
+  });
+
+  it('should handle user interactions', async () => {
+    const user = userEvent.setup();
+    const mockOnClick = vi.fn();
+
+    renderComponent({ onClick: mockOnClick });
+
+    await user.click(screen.getByRole('button'));
+    expect(mockOnClick).toHaveBeenCalled();
   });
 });
 ```
 
-## Testing Best Practices
+### Service Testing
 
-### 1. Test Organization
+```typescript
+import { ServiceName } from "./ServiceName";
+import { createMockServiceResponse } from "./utils/service-layer-test-utils";
 
-- Group related tests using `describe` blocks
-- Use descriptive test names that explain the behavior
-- Follow the AAA pattern: Arrange, Act, Assert
+describe("ServiceName", () => {
+  let service: ServiceName;
 
-### 2. Mocking Strategy
+  beforeEach(() => {
+    service = new ServiceName();
+  });
 
-- Mock external dependencies (APIs, libraries)
-- Use realistic mock data
-- Test error scenarios with mocks
+  afterEach(() => {
+    service.clearCache();
+    vi.clearAllMocks();
+  });
 
-### 3. Component Testing
+  it("should fetch data successfully", async () => {
+    const result = await service.getData();
 
-- Test user interactions (clicks, form inputs)
-- Test loading and error states
-- Test accessibility features
+    expect(result).toBeDefined();
+    expect(result.success).toBe(true);
+  });
 
-### 4. Hook Testing
+  it("should handle errors gracefully", async () => {
+    // Mock API to fail
+    mockApiClient.query.mockRejectedValue(new Error("Network error"));
 
-- Test all hook states (loading, success, error)
-- Test hook dependencies and cleanup
-- Test custom hook logic
+    const result = await service.getData();
 
-### 5. Integration Testing
+    // Should still return structure, even with errors
+    expect(result.smartMenus).toBeDefined();
+  });
+});
+```
 
-- Test component interactions
-- Test data flow between components
-- Test routing and navigation
+### Hook Testing
 
-## Coverage Goals
+```typescript
+import { renderHook, waitFor } from "@testing-library/react";
+import { useCustomHook } from "./useCustomHook";
 
-| Category    | Target Coverage |
-| ----------- | --------------- |
-| Components  | >95%            |
-| Hooks       | >90%            |
-| Utilities   | >95%            |
-| Integration | >85%            |
-| Overall     | >90%            |
+describe("useCustomHook", () => {
+  it("should return initial state", () => {
+    const { result } = renderHook(() => useCustomHook());
+
+    expect(result.current.data).toBeNull();
+    expect(result.current.loading).toBe(true);
+  });
+
+  it("should fetch data successfully", async () => {
+    const { result } = renderHook(() => useCustomHook());
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    expect(result.current.data).toBeDefined();
+  });
+});
+```
+
+## Test Utilities
+
+### Service Layer Test Utils
+
+Located in `src/__tests__/utils/service-layer-test-utils.ts`, this file provides:
+
+- **Mock factories** for common test data
+- **Error creation utilities** for GraphQL and network errors
+- **Performance testing helpers**
+- **Retry logic utilities**
+- **Validation helpers**
+
+```typescript
+import {
+  createMockWidget,
+  createGraphQLError,
+  createNetworkError,
+  measurePerformance,
+  retryWithBackoff,
+} from "./utils/service-layer-test-utils";
+
+// Use in tests
+const mockWidget = createMockWidget({ name: "Test Widget" });
+const graphQLError = createGraphQLError("Field not found", ["widgets", "name"]);
+```
+
+### Test Data Factories
+
+Located in `src/__tests__/factories/`, these provide reusable test data:
+
+```typescript
+import { createWidget } from "./factories/widget";
+
+// Create test data with defaults
+const widget = createWidget();
+
+// Override specific properties
+const customWidget = createWidget({
+  name: "Custom Widget",
+  isActive: false,
+});
+```
+
+## Mocking Strategies
+
+### API Mocking
+
+```typescript
+// Mock API client
+vi.mock("./api-client", () => ({
+  apiClient: {
+    query: vi.fn().mockResolvedValue({ data: {} }),
+    mutate: vi.fn().mockResolvedValue({ data: {} }),
+  },
+}));
+
+// Use in tests
+const mockedApiClient = vi.mocked(apiClient);
+mockedApiClient.query.mockResolvedValue({
+  data: { widgets: [mockWidget] },
+});
+```
+
+### Component Mocking
+
+```typescript
+// Mock child components
+vi.mock('./ChildComponent', () => ({
+  ChildComponent: ({ children, ...props }) => (
+    <div data-testid="child-component" {...props}>
+      {children}
+    </div>
+  ),
+}));
+
+// Mock hooks
+vi.mock('./useCustomHook', () => ({
+  useCustomHook: () => ({
+    data: mockData,
+    loading: false,
+    error: null,
+  }),
+}));
+```
+
+### Service Mocking
+
+```typescript
+// Mock service class
+vi.mock("./Service", () => ({
+  Service: vi.fn().mockImplementation(() => ({
+    getData: vi.fn().mockResolvedValue([]),
+    updateData: vi.fn().mockResolvedValue({}),
+  })),
+}));
+```
+
+## Best Practices
+
+### 1. **AAA Pattern (Arrange, Act, Assert)**
+
+```typescript
+it("should create user with valid data", () => {
+  // Arrange - Set up test data and mocks
+  const userData = { name: "John", email: "john@example.com" };
+  const mockRepo = createMockUserRepository();
+
+  // Act - Execute the code being tested
+  const result = userService.createUser(userData, mockRepo);
+
+  // Assert - Verify the expected behavior
+  expect(result.success).toBe(true);
+  expect(mockRepo.save).toHaveBeenCalledWith(userData);
+});
+```
+
+### 2. **Test Behavior, Not Implementation**
+
+```typescript
+// ❌ Bad - tests implementation details
+expect(userService.userRepository.save).toHaveBeenCalled();
+
+// ✅ Good - tests observable behavior
+expect(await userService.createUser(userData)).toHaveProperty("id");
+```
+
+### 3. **Use Descriptive Test Names**
+
+```typescript
+// ❌ Bad
+it("should work", () => {});
+
+// ✅ Good
+it("should create user with valid email and return user ID", () => {});
+```
+
+### 4. **Test One Thing at a Time**
+
+```typescript
+// ❌ Bad - tests multiple behaviors
+it("should create user and send email", () => {
+  // Tests both user creation and email sending
+});
+
+// ✅ Good - separate tests
+it("should create user with valid data", () => {
+  // Tests only user creation
+});
+
+it("should send welcome email after user creation", () => {
+  // Tests only email sending
+});
+```
+
+### 5. **Keep Tests Independent**
+
+```typescript
+// ❌ Bad - tests depend on each other
+let userId;
+
+it("should create user", () => {
+  userId = userService.createUser(data);
+  expect(userId).toBeDefined();
+});
+
+it("should update user", () => {
+  // Depends on previous test
+  userService.updateUser(userId, newData);
+});
+
+// ✅ Good - each test is independent
+it("should create user", () => {
+  const userId = userService.createUser(data);
+  expect(userId).toBeDefined();
+});
+
+it("should update user", () => {
+  const userId = "test-user-id";
+  userService.updateUser(userId, newData);
+});
+```
+
+## Error Testing
+
+### GraphQL Errors
+
+```typescript
+it("should handle GraphQL errors", async () => {
+  const graphQLError = createApolloError([
+    createGraphQLError("Field not found", ["widgets", "name"]),
+  ]);
+
+  mockClient.query.mockRejectedValue(graphQLError);
+
+  await expect(service.fetchData()).rejects.toThrow("Apollo Error");
+});
+```
+
+### Network Errors
+
+```typescript
+it("should handle network errors", async () => {
+  const networkError = createNetworkError(500, "Internal Server Error");
+
+  mockClient.query.mockRejectedValue(networkError);
+
+  await expect(service.fetchData()).rejects.toThrow("Network Error");
+});
+```
+
+### Validation Errors
+
+```typescript
+it("should validate input data", async () => {
+  const invalidData = { name: "", email: "invalid-email" };
+
+  await expect(service.createUser(invalidData)).rejects.toThrow(
+    ValidationError
+  );
+});
+```
+
+## Performance Testing
+
+### Timing Tests
+
+```typescript
+it("should complete within time limit", async () => {
+  const startTime = performance.now();
+
+  await service.getData();
+
+  const endTime = performance.now();
+  const duration = endTime - startTime;
+
+  expect(duration).toBeLessThan(5000); // 5 seconds
+});
+```
+
+### Memory Leak Testing
+
+```typescript
+it("should not leak memory", () => {
+  const initialMemory = process.memoryUsage().heapUsed;
+
+  // Perform operations that might leak memory
+  for (let i = 0; i < 1000; i++) {
+    service.doSomething();
+  }
+
+  const finalMemory = process.memoryUsage().heapUsed;
+  const memoryIncrease = finalMemory - initialMemory;
+
+  expect(memoryIncrease).toBeLessThan(1024 * 1024); // 1MB
+});
+```
+
+## Coverage
+
+### Coverage Configuration
+
+```typescript
+// vitest.config.ts
+export default defineConfig({
+  test: {
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json", "html"],
+      exclude: [
+        "node_modules/",
+        "src/**/*.d.ts",
+        "src/**/*.stories.tsx",
+        "src/**/*.config.ts",
+      ],
+      thresholds: {
+        branches: 80,
+        functions: 80,
+        lines: 80,
+        statements: 80,
+      },
+    },
+  },
+});
+```
+
+### Coverage Commands
+
+```bash
+# Generate coverage report
+npm run test:coverage
+
+# Generate HTML coverage report
+npm run test:coverage:html
+
+# Check coverage thresholds
+npm run test:coverage:check
+```
 
 ## Debugging Tests
 
-### Common Issues
+### Console Debugging
 
-1. **Async Tests**: Use `waitFor()` for async operations
-2. **Mocking**: Ensure mocks are properly set up
-3. **Timing**: Add delays for loading states
-4. **Environment**: Check test environment variables
+```typescript
+it('should debug test', () => {
+  console.log('Test data:', testData);
+  console.log('Component props:', props);
 
-### Debug Commands
+  render(<Component {...props} />);
 
-```bash
-# Run tests with verbose output
-npm test -- --verbose
-
-# Run single test with debug
-npm test -- --run --reporter=verbose MetabaseUsersTable.test.tsx
-
-# Debug failing tests
-npm test -- --run --reporter=verbose --bail
+  // Use screen.debug() to see DOM
+  screen.debug();
+});
 ```
 
-## Continuous Integration
-
-Tests are automatically run in CI/CD pipeline:
-
-- Unit tests on every commit
-- Integration tests on pull requests
-- E2E tests on deployment
-- Coverage reports generated automatically
-
-## Adding New Tests
-
-### For New Components
-
-1. Create `ComponentName.test.tsx`
-2. Import test utilities
-3. Test rendering, interactions, and edge cases
-4. Add to test suite
-
-### For New Hooks
-
-1. Create `useHookName.test.ts`
-2. Test all hook states
-3. Test error scenarios
-4. Test cleanup and dependencies
-
-### For New Pages
-
-1. Create `PageName.test.tsx`
-2. Test routing and layout
-3. Test component integration
-4. Test user flows
-
-## Test Environment
-
-### Environment Variables
+### Debug Mode
 
 ```bash
-NODE_ENV=test
-VITE_METABASE_API_URL=https://api.metabase.test
-VITE_GRAPHQL_URI=https://api.everybite.com/graphql
-VITE_LOG_LEVEL=debug
+# Run tests in debug mode
+npx vitest --reporter=verbose
+
+# Run specific test with debug
+npx vitest --reporter=verbose Component.test.tsx
 ```
 
-### Dependencies
+### Breakpoint Debugging
 
-- `@testing-library/react`: React component testing
-- `@testing-library/jest-dom`: Custom matchers
-- `vitest`: Test runner
-- `@apollo/client/testing`: GraphQL testing
-- `react-router-dom`: Router testing
+```typescript
+it('should debug with breakpoint', () => {
+  debugger; // Set breakpoint here
+  render(<Component />);
+  // Continue debugging
+});
+```
 
-## Contributing
+## Common Issues and Solutions
 
-When adding new features:
+### Tests Timing Out
 
-1. Write tests first (TDD approach)
-2. Ensure all tests pass
-3. Maintain or improve coverage
-4. Update this documentation
+```typescript
+// Increase timeout for slow operations
+it("should complete slow operation", async () => {
+  const result = await service.slowOperation();
+  expect(result).toBeDefined();
+}, 10000); // 10 second timeout
+```
+
+### Async Operations Not Being Awaited
+
+```typescript
+// Always await async operations
+it("should update data", async () => {
+  await service.updateData(data);
+  expect(screen.getByText("Updated")).toBeInTheDocument();
+});
+```
+
+### Mocks Not Working
+
+```typescript
+// Ensure mocks are hoisted
+vi.mock("./api-client", () => ({
+  apiClient: {
+    query: vi.fn(),
+  },
+}));
+
+// Clear mocks between tests
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+```
 
 ## Resources
 
-- [Testing Library Documentation](https://testing-library.com/)
-- [Vitest Documentation](https://vitest.dev/)
-- [React Testing Best Practices](https://react.dev/learn/testing)
-- [GraphQL Testing Guide](https://www.apollographql.com/docs/react/development-testing/testing/)
+- [Testing Patterns](./TESTING-PATTERNS.md) - Comprehensive testing patterns
+- [Test Templates](./templates/test-templates.md) - Reusable test templates
+- [Test Troubleshooting](./TEST-TROUBLESHOOTING.md) - Common issues and solutions
+- [Vitest Documentation](https://vitest.dev/guide/)
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- [Testing Library Best Practices](https://testing-library.com/docs/guiding-principles)
+
+---
+
+_This README should be updated as testing patterns evolve._

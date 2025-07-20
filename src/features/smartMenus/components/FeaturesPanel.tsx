@@ -1,14 +1,17 @@
 import { ThumbsUp } from "lucide-react";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "../../../components/ui/Panel";
 import { SettingToggle } from "../../../components/ui/SettingToggle";
-import type { Widget } from "../../../generated/graphql";
-import { AllergenType, DietType } from "../../../generated/graphql";
+import {
+  AllergenType,
+  DietType,
+  type Widget,
+} from "../../../generated/graphql";
 import { logger } from "../../../lib/logger";
-import AllergensSection from "./AllergensSection";
-import DietarySection from "./DietarySection";
-import NutrientsSection from "./NutrientsSection";
-import OrderingSection from "./OrderingSection";
+import { AllergensSection } from "./AllergensSection";
+import { DietarySection } from "./DietarySection";
+import { NutrientsSection } from "./NutrientsSection";
+import { OrderingSection } from "./OrderingSection";
 
 interface FeaturesPanelProps {
   widget: Widget;
@@ -19,64 +22,96 @@ const FeaturesPanel = memo(function FeaturesPanel({
   widget,
   onFieldChange,
 }: FeaturesPanelProps) {
+  // Track if we've mounted to avoid emitting on initial render
+  const mountedRef = useRef(false);
+
   /* ------------------------------------------------------------------
-   * State
+   * Local state for all feature settings
    * ------------------------------------------------------------------ */
   const [enableDiets, setEnableDiets] = useState(
     (widget.supportedDietaryPreferences?.length ?? 0) > 0
   );
-  const [selectedDiets, setSelectedDiets] = useState<DietType[]>(
+  const [selectedDiets, setSelectedDiets] = useState(
     widget.supportedDietaryPreferences ?? []
   );
-
   const [enableIngredients, setEnableIngredients] = useState(
-    widget.displayIngredients
+    widget.displayIngredients ?? false
   );
-
   const [enableAllergens, setEnableAllergens] = useState(
     (widget.supportedAllergens?.length ?? 0) > 0
   );
-  const [selectedAllergens, setSelectedAllergens] = useState<AllergenType[]>(
+  const [selectedAllergens, setSelectedAllergens] = useState(
     widget.supportedAllergens ?? []
   );
-
   const [enableNutrients, setEnableNutrients] = useState(
-    widget.displayNutrientPreferences
+    widget.displayNutrientPreferences ?? false
   );
   const [enableCalories, setEnableCalories] = useState(
-    widget.displayMacronutrients
+    widget.displayMacronutrients ?? false
   );
-
   const [feedbackButton, setFeedbackButton] = useState(
-    widget.displayFeedbackButton
+    widget.displayFeedbackButton ?? false
   );
-
   const [enableBuildYourOwn, setEnableBuildYourOwn] = useState(
-    widget.isByoEnabled
+    widget.isByoEnabled ?? false
   );
-
   const [enableOrdering, setEnableOrdering] = useState(
-    widget.isOrderButtonEnabled
+    widget.isOrderButtonEnabled ?? false
   );
-  const [baseUrl, setBaseUrl] = useState(widget.orderUrl?.split("?")[0] ?? "");
-  const [utmTags, setUtmTags] = useState(widget.orderUrl?.split("?")[1] ?? "");
 
-  /* ------------------------------------------------------------------
-   * Memoized values
-   * ------------------------------------------------------------------ */
+  // Parse the URL properly to handle multiple query parameters and fragments
+  const parseOrderUrl = (url: string | null | undefined) => {
+    if (!url) return { baseUrl: "", utmTags: "" };
+
+    try {
+      // Handle URLs with fragments like '#!/' by temporarily replacing them
+      const tempUrl = url.replace("#", "___FRAGMENT___");
+      const urlObj = new URL(tempUrl);
+
+      // Extract the base URL (protocol + host + pathname)
+      const baseUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+
+      // Extract the full query string and restore fragments
+      let utmTags = urlObj.search.slice(1); // Remove the leading '?'
+      utmTags = utmTags.replace("___FRAGMENT___", "#");
+
+      return { baseUrl, utmTags };
+    } catch {
+      // Fallback to simple split if URL parsing fails
+      const parts = url.split("?");
+      return {
+        baseUrl: parts[0] || "",
+        utmTags: parts.slice(1).join("?") || "",
+      };
+    }
+  };
+
+  const { baseUrl: initialBaseUrl, utmTags: initialUtmTags } = parseOrderUrl(
+    widget.orderUrl
+  );
+  const [baseUrl, setBaseUrl] = useState(initialBaseUrl);
+  const [utmTags, setUtmTags] = useState(initialUtmTags);
+
+  const allergenOptions = useMemo(() => Object.values(AllergenType), []);
+  const dietOptions = useMemo(() => Object.values(DietType), []);
+
+  // Compute the full URL for display
   const fullUrl = useMemo(() => {
     if (!enableOrdering || !baseUrl) return null;
     return `${baseUrl}${utmTags ? `?${utmTags}` : ""}`;
   }, [enableOrdering, baseUrl, utmTags]);
 
-  const allergenOptions = useMemo(() => Object.values(AllergenType), []);
-  const dietOptions = useMemo(() => Object.values(DietType), []);
-
   /* ------------------------------------------------------------------
    * Emit diff upward whenever any setting changes
    * ------------------------------------------------------------------ */
   useEffect(() => {
-    const raw: Record<string, unknown> = {
+    // Skip first run on mount to avoid emitting default-diff noise
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
+
+    const diff: Record<string, unknown> = {
       supportedDietaryPreferences: enableDiets ? selectedDiets : [],
       displayIngredients: enableIngredients,
       supportedAllergens: enableAllergens ? selectedAllergens : [],
@@ -85,41 +120,20 @@ const FeaturesPanel = memo(function FeaturesPanel({
       displayFeedbackButton: feedbackButton,
       isByoEnabled: enableBuildYourOwn,
       isOrderButtonEnabled: enableOrdering,
-      orderUrl: fullUrl || null,
     };
 
-    // send only the keys that differ from the original widget to avoid
-    // false-positive dirty states
-    const diff: Record<string, unknown> = {};
-    Object.entries(raw).forEach(([k, v]) => {
-      // @ts-expect-error – dynamic widget field access
-      const originalValue = widget[k];
-
-      // Special handling for allergens and dietary preferences to account for normalization
-      if (k === "supportedAllergens" || k === "supportedDietaryPreferences") {
-        // No normalization needed since we're using the correct enum values
-        if (JSON.stringify(v) !== JSON.stringify(originalValue)) {
-          diff[k] = v;
-        }
-      } else {
-        if (JSON.stringify(v) !== JSON.stringify(originalValue)) {
-          diff[k] = v;
-        }
-      }
-    });
+    // Only include orderUrl if it's different from the original
+    const reconstructedUrl = fullUrl || null;
+    if (reconstructedUrl !== widget.orderUrl) {
+      diff.orderUrl = reconstructedUrl;
+    }
 
     // Debug logging for timing issues
     if (Object.keys(diff).length > 0) {
       logger.debug("[FeaturesPanel] emitting diff:", diff);
-      logger.debug(
-        "[FeaturesPanel] widget allergens:",
-        widget.supportedAllergens
-      );
-      logger.debug("[FeaturesPanel] selected allergens:", selectedAllergens);
-      logger.debug("[FeaturesPanel] enable allergens:", enableAllergens);
     }
 
-    if (Object.keys(diff).length) onFieldChange(diff);
+    onFieldChange(diff);
   }, [
     enableDiets,
     selectedDiets,
@@ -132,8 +146,6 @@ const FeaturesPanel = memo(function FeaturesPanel({
     enableBuildYourOwn,
     enableOrdering,
     fullUrl,
-    widget,
-    onFieldChange,
   ]);
 
   return (
@@ -172,8 +184,9 @@ const FeaturesPanel = memo(function FeaturesPanel({
 
         {/* Build Your Own */}
         <SettingToggle
+          icon={<ThumbsUp aria-hidden="true" className="h-4 w-4" />}
           title="Build Your Own"
-          description="Allow users to customize their orders"
+          description="Allow users to customize their orders."
           checked={enableBuildYourOwn}
           onChange={setEnableBuildYourOwn}
         />
@@ -190,9 +203,9 @@ const FeaturesPanel = memo(function FeaturesPanel({
 
         {/* Feedback Button */}
         <SettingToggle
-          icon={<ThumbsUp className="h-4 w-4" />}
+          icon={<ThumbsUp aria-hidden="true" className="h-4 w-4" />}
           title="Feedback Button"
-          description="Show a feedback button for users to rate dishes"
+          description="Show a feedback button for users to rate dishes."
           checked={feedbackButton}
           onChange={setFeedbackButton}
         />

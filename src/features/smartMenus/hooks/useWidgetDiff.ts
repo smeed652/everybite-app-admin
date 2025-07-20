@@ -67,14 +67,15 @@ export function useWidgetDiff<T extends { id?: string }>(
     // Ignore noop calls that contain no actual changes so we don't clear existing diffs
     if (!changes || Object.keys(changes).length === 0) return;
     // If every incoming key equals its snapshot value, treat as no-op.
-    const matchesSnapshot = Object.entries(changes).every(([k, v]) =>
-      isEqual(
-        originalRef.current
-          ? (originalRef.current as Record<string, unknown>)[k]
-          : undefined,
-        v
-      )
-    );
+    const matchesSnapshot = Object.entries(changes).every(([k, v]) => {
+      const originalValue = originalRef.current
+        ? (originalRef.current as Record<string, unknown>)[k]
+        : undefined;
+      const isEqualResult = isEqual(originalValue, v);
+
+      return isEqualResult;
+    });
+
     if (matchesSnapshot) return;
 
     setPendingChanges((prev) => {
@@ -182,7 +183,7 @@ export function useWidgetDiff<T extends { id?: string }>(
   return {
     formKey,
     pendingChanges,
-    dirty: Object.keys(pendingChanges).length > 0,
+    dirty: widget ? Object.keys(pendingChanges).length > 0 : false, // Ensure dirty is false when widget is null
     handleFieldChange,
     reset,
     refreshSnapshot,

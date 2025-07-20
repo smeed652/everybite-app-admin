@@ -42,8 +42,7 @@
     "editor.rulers": [80, 100],
     "editor.wordWrap": "on",
     "editor.minimap.enabled": false,
-    "explorer.fileNesting.enabled": true,
-    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.enabled": false,
     "explorer.fileNesting.patterns": {
       "*.ts": "${capture}.js",
       "*.jsx": "${capture}.js",
@@ -52,7 +51,7 @@
       "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml",
       ".eslintrc.*": ".eslintrc.*, eslint.config.*",
       "tailwind.config.*": "tailwind.config.*, postcss.config.*",
-      "vite.config.*": "vite.config.*, *.config.*",
+      "vite.config.*": "vite.config.*",
     },
     "search.exclude": {
       "**/node_modules": true,

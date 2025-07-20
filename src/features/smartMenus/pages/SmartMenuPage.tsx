@@ -49,7 +49,7 @@ export default function SmartMenuPage({
     handleFieldChange,
     reset,
     refreshSnapshot,
-  } = useWidgetDiff(widget ?? null);
+  } = useWidgetDiff(widget ?? null, { coerceArrayUndefined: true });
 
   const {
     saving,

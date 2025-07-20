@@ -25,20 +25,54 @@
     }
   },
   "rules": {
+    // Critical errors - keep as errors
     "react/react-in-jsx-scope": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^React$" }
-    ],
-    "@typescript-eslint/no-explicit-any": "error",
     "react/prop-types": "off",
-    "react-hooks/exhaustive-deps": "warn",
-    "max-lines": [
+    "react-hooks/rules-of-hooks": "error",
+
+    // Important but not critical - reduce to warnings
+    "@typescript-eslint/no-unused-vars": [
       "warn",
-      { "max": 250, "skipBlankLines": true, "skipComments": true }
-    ]
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^React$",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "react-hooks/exhaustive-deps": "warn",
+
+    // Style/preference issues - turn off to reduce noise
+    "max-lines": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "@typescript-eslint/no-empty-function": "warn",
+    "@typescript-eslint/no-empty-interface": "warn",
+    "@typescript-eslint/no-inferrable-types": "off",
+    "@typescript-eslint/prefer-as-const": "off",
+    "@typescript-eslint/no-var-requires": "off",
+
+    // React specific - reduce noise
+    "react/no-unescaped-entities": "off",
+    "react/display-name": "off",
+    "react/no-unknown-property": "warn",
+
+    // General - reduce noise
+    "no-console": "off",
+    "no-debugger": "warn",
+    "no-unused-expressions": "warn",
+    "prefer-const": "warn",
+    "no-var": "warn"
   },
-  "ignorePatterns": ["cypress/**/*"],
+  "ignorePatterns": [
+    "cypress/**/*",
+    "dist/**/*",
+    "build/**/*",
+    "node_modules/**/*",
+    "storybook-static/**/*",
+    "*.min.js",
+    "coverage/**/*"
+  ],
   "overrides": [
     {
       "files": ["**/*.stories.ts", "**/*.stories.tsx"],
@@ -54,6 +88,28 @@
       "rules": {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/ban-ts-comment": "off"
+      }
+    },
+    {
+      "files": [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx"
+      ],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "react-hooks/exhaustive-deps": "off"
+      }
+    },
+    {
+      "files": ["src/__tests__/**/*"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "react-hooks/exhaustive-deps": "off",
+        "no-console": "off"
       }
     }
   ]

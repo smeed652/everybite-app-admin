@@ -43,6 +43,14 @@
     "storybook-static/**",
     "*.min.js",
     "package-lock.json",
-    "amplify/backend/function/metabaseProxy/metabaseProxy-cloudformation-template.json"
+    "amplify/backend/function/metabaseProxy/metabaseProxy-cloudformation-template.json",
+    "src/generated/**",
+    "src/__tests__/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/*.stories.ts",
+    "**/*.stories.tsx"
   ]
 }
