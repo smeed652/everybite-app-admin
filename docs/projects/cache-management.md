@@ -88,9 +88,9 @@ Complete cache management system with Apollo Client integration, UI controls, an
 
 ## References
 
-- **Current Phase**: `docs/phases/current/PHASE-6-TEST-SUITE-RESTORATION.md`
-- **Completed Phase**: `docs/phases/completed/PHASE-5-DATA-PROCESSING-FOUNDATION.md`
-- **Future Phase**: `docs/phases/future/PHASE-7-ADVANCED-OPTIMIZATION.md`
+- **Current Phase**: `docs/phases/current/PHASE-6-TEST-SUITE-RESTORATION-SPRINT-11.md`
+- **Completed Phase**: `docs/phases/completed/PHASE-5-DATA-PROCESSING-FOUNDATION-SPRINT-9.md`
+- **Future Phase**: `docs/phases/future/PHASE-7-ADVANCED-OPTIMIZATION-SPRINT-12.md`
 - **Sprint**: `docs/sprints/2025-07-20_sprint-11.md`
 - **Architecture**: `docs/architecture/data-processing-pattern.md`
 - **Release Tagging**: `docs/active/RELEASE-TAGGING-GUIDE.md`

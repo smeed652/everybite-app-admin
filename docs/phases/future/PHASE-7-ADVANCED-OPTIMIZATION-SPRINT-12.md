@@ -183,9 +183,9 @@
 
 ## 🔗 References
 
-- **Sprint**: TBD - Sprint 11
+- **Sprint**: TBD - Sprint 12
 - **Project**: `docs/projects/cache-management.md`
-- **Previous Phase**: `docs/phases/current/PHASE-6-TEST-SUITE-RESTORATION.md`
+- **Previous Phase**: `docs/phases/current/PHASE-6-TEST-SUITE-RESTORATION-SPRINT-11.md`
 - **Architecture**: `docs/architecture/data-processing-pattern.md`
 
 ## 📝 Notes

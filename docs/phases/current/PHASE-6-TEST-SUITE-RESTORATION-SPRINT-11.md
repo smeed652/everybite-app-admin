@@ -195,7 +195,7 @@
 
 - **Sprint**: `docs/sprints/2025-07-20_sprint-11.md`
 - **Project**: `docs/projects/cache-management.md`
-- **Previous Phase**: `docs/phases/completed/PHASE-5-DATA-PROCESSING-FOUNDATION.md`
+- **Previous Phase**: `docs/phases/completed/PHASE-5-DATA-PROCESSING-FOUNDATION-SPRINT-9.md`
 - **Test Analysis**: Based on current test run results
 
 ## 📝 Notes
