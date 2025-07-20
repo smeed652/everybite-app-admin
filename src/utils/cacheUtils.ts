@@ -1,7 +1,5 @@
-import { METABASE_USERS_QUERY } from "../components/cache/constants";
 import { getCacheConfig } from "../config/cache-config";
 import { lambdaService } from "../services/base/lambdaService";
-import { dashboardService } from "../services/datawarehouse-lambda/dashboardService";
 import { OperationCacheStatus, ScheduledRefreshInfo } from "../types/cache";
 
 export function updateCacheStatus(): OperationCacheStatus[] {
@@ -45,23 +43,11 @@ export async function clearAllCaches(): Promise<void> {
 }
 
 export async function refreshAllOperations(): Promise<void> {
-  const refreshPromises = [];
+  // Clear all operation caches
+  lambdaService.clearAllOperationCaches();
 
-  // Refresh dashboard operations
-  refreshPromises.push(dashboardService.refreshAllDashboardData());
-
-  // Refresh MetabaseUsers operation
-  const networkConfig = { defaultFetchPolicy: "network-only" as const };
-  refreshPromises.push(
-    lambdaService.query(
-      METABASE_USERS_QUERY,
-      { page: 1, pageSize: 50 },
-      networkConfig
-    )
-  );
-
-  // Wait for all operations to complete
-  await Promise.all(refreshPromises);
+  // Clear Apollo cache to prevent field conflicts
+  await lambdaService.clearCache();
 
   // Wait a moment for cache to be updated
   await new Promise((resolve) => setTimeout(resolve, 2000));

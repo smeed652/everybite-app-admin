@@ -35,7 +35,7 @@ export default function SmartMenuPage({
   console.log("[SmartMenuPage] Widget ID:", id);
   console.log("[SmartMenuPage] Params:", params);
 
-  const { widget, loading, error } = useWidget(id);
+  const { widget, loading, error, refetch } = useWidget(id);
 
   console.log("[SmartMenuPage] Loading:", loading);
   console.log("[SmartMenuPage] Error:", error);
@@ -51,15 +51,33 @@ export default function SmartMenuPage({
     refreshSnapshot,
   } = useWidgetDiff(widget ?? null);
 
-  const { saving, syncing, handleSave, handleCancel, handleSyncNow } =
-    useSmartMenuActions({
-      widget: widget ?? ({} as Widget), // Provide a fallback to satisfy the hook
-      dirty,
-      pendingChanges,
-      refreshSnapshot,
-      reset,
-      onSave,
-    });
+  const {
+    saving,
+    syncing,
+    handleSave: originalHandleSave,
+    handleCancel,
+    handleSyncNow,
+  } = useSmartMenuActions({
+    widget: widget ?? ({} as Widget), // Provide a fallback to satisfy the hook
+    dirty,
+    pendingChanges,
+    refreshSnapshot,
+    reset,
+    onSave,
+  });
+
+  // Custom save handler that refetches data after successful save
+  const handleSave = async () => {
+    if (!dirty || !widget?.id) return;
+    try {
+      await originalHandleSave();
+      // Refetch data from server after successful save
+      await refetch();
+    } catch (error) {
+      // Error handling is already done in originalHandleSave
+      console.error("Save failed:", error);
+    }
+  };
 
   /* ---------- loading / error ---------- */
   if (loading) {

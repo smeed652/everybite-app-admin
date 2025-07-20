@@ -1,6 +1,5 @@
 // Comprehensive SmartMenu settings query (combines dashboard + analytics)
 export * from "./smartmenu-settings";
-
 // Dashboard queries - Core dashboard metrics (real-time)
 export * from "./dashboard";
 

@@ -1,4 +1,4 @@
-import { Database, Gauge, Menu, Settings, Users } from "lucide-react";
+import { Gauge, Menu, Settings, Users } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import SmartMenusNav from "../features/smartMenus/components/SmartMenusNav";
 import { Button } from "./ui/Button";
@@ -29,7 +29,7 @@ export default function Layout() {
     {
       heading: "Admin",
       items: [
-        { label: "Users", to: "/users" },
+        { label: "Cognito Users", to: "/users" },
         { label: "Metabase Users", to: "/metabase-users" },
         { label: "Cache Management", to: "/admin/cache" },
       ],
@@ -71,10 +71,10 @@ export default function Layout() {
                       const Icon =
                         label === "Dashboard"
                           ? Gauge
-                          : label === "Users"
+                          : label === "Cognito Users"
                             ? Users
                             : label === "Metabase Users"
-                              ? Database
+                              ? Users
                               : label === "Cache Management"
                                 ? Settings
                                 : label === "SmartMenus"
@@ -153,10 +153,10 @@ export default function Layout() {
                 const Icon =
                   label === "Dashboard"
                     ? Gauge
-                    : label === "Users"
+                    : label === "Cognito Users"
                       ? Users
                       : label === "Metabase Users"
-                        ? Database
+                        ? Users
                         : label === "Cache Management"
                           ? Settings
                           : label === "SmartMenus"

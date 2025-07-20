@@ -23,7 +23,7 @@ export function useSmartMenus(): UseSmartMenusResult {
     widgets: Widget[];
   }>(GET_SMART_MENUS, {
     client: apiGraphQLClient,
-    fetchPolicy: "cache-first",
+    fetchPolicy: "network-only",
   });
   return {
     loading,

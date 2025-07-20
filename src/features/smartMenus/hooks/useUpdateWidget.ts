@@ -1,11 +1,11 @@
 import { gql } from "@apollo/client";
 import type { UpdateWidget, Widget } from "../../../generated/graphql";
-import { lambdaClient } from "../../../lib/datawarehouse-lambda-apollo";
+import { apiGraphQLClient } from "../../../lib/api-graphql-apollo";
 import { logger } from "../../../lib/logger";
 import { WIDGET_FIELDS } from "../graphql/fragments";
 
 export function useUpdateWidget() {
-  const client = lambdaClient!;
+  const client = apiGraphQLClient!;
 
   const updateWidgetFields = (id: string, data: Partial<Widget>) => {
     // backend uses dedicated mutations for sync

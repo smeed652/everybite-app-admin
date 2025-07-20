@@ -36,7 +36,12 @@
     "workflow:help": "./scripts/git-workflow.sh help",
     "amplify:configure-gates": "./scripts/configure-amplify-gates.sh",
     "migrate:us-west-1": "./scripts/migrate-to-us-west-1.sh",
-    "migrate:amplify:automated": "./scripts/amplify-migration-automation.sh"
+    "migrate:amplify:automated": "./scripts/amplify-migration-automation.sh",
+    "release:tag": "./scripts/workflow/create-release-tag.sh",
+    "release:hotfix": "./scripts/workflow/create-release-tag.sh --hotfix",
+    "release:list": "./scripts/workflow/list-recent-tags.sh",
+    "build:number": "./scripts/workflow/get-build-number.sh",
+    "version:next": "./scripts/workflow/get-next-version.sh"
   },
   "keywords": [],
   "author": "",
