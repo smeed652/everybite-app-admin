@@ -5,7 +5,16 @@
 - **Project**: EveryBite Admin Application
 - **Sprint**: Sprint 11 - Test Suite Restoration & Quality Assurance
 - **Story**: 1
-- **Story Points**: 21
+- **Story Points**: 42 (doubled from original 21 due to expanded scope)
+  - **Original Scope**: 21 points (5 weeks, basic test fixes)
+  - **Expanded Scope**: 42 points (10 weeks, comprehensive restoration)
+  - **Point Breakdown**:
+    - Week 6 (Test Fixes): 8 points - Fix all 16 failing tests
+    - Week 7 (Test Categories): 8 points - Unit, Integration, Smoke, E2E
+    - Week 8 (CI/CD Pipeline): 8 points - GitHub Actions, quality gates
+    - Week 9 (Deployment): 8 points - Staging and production deployment
+    - Week 10 (Documentation): 5 points - Documentation and team handoff
+    - Week 1-5 (Completed): 5 points - Infrastructure and initial fixes
 - **Status**: In Progress (94.5% Complete)
 - **Start Date**: 2025-07-20
 - **Target End Date**: 2025-08-17
@@ -449,18 +458,23 @@
 
 ### **Completion Approval Required:**
 
-- [ ] **Review of all test fixes** - Ensure no regressions introduced
-- [ ] **Validation of test coverage** - Confirm 95%+ pass rate
-- [ ] **Lambda testing validation** - Confirm testing strategy is working
-- [ ] **Documentation review** - Confirm all patterns are documented
+- [ ] **Story Points**: 42/42 completed (100%)
+- [ ] **Test Pass Rate**: 100% achieved (0 failures)
+- [ ] **All Test Categories**: Unit, Integration, Smoke, E2E working
+- [ ] **CI/CD Pipeline**: All quality gates passing
+- [ ] **Deployment**: Staging and production successful
+- [ ] **Documentation**: Complete and reviewed
+- [ ] **Team Handoff**: Training completed and documented
+- [ ] **Quality Gates**: All requirements met
 - [ ] **Final approval** - Explicit agreement that story is complete
 
 ## 📊 Progress Tracking
 
-- **Tasks Completed**: 17/30
-- **Progress**: 57%
+- **Story Points Completed**: 21/42 (50%)
+- **Tasks Completed**: 17/50 (34%)
+- **Progress**: 50% complete (5/10 weeks)
 - **Status**: In Progress
-- **Current Focus**: Step 2 completed, moving to Step 3 (Test Infrastructure & Quality)
+- **Current Focus**: Step 6 - Complete Test Suite Restoration (Fix 16 remaining failures)
 
 ## 🔗 References
 
