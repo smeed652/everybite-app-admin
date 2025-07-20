@@ -8,7 +8,8 @@ Complete cache management system with Apollo Client integration, UI controls, an
 
 **Current Phase**: Phase 5 - Data Processing Foundation (In Progress)  
 **Overall Progress**: 80% (4/5 phases completed)  
-**Sprint**: Sprint 9 - Cache Management & UI Enhancement
+**Sprint**: Sprint 9 - Cache Management & UI Enhancement  
+**Latest Release**: `v1.0.1+249` (2025-07-20)
 
 ## Phases
 
@@ -41,6 +42,7 @@ Complete cache management system with Apollo Client integration, UI controls, an
   - Frontend integration patterns with Lambda data
   - Dashboard integration and testing fixes
   - Scalable data architecture for growing widget counts
+  - Release tagging system with build numbers ✅
 
 - [ ] **Phase 6**: Cache Advanced Features (Future)
   - Scheduled cache refresh implementation
@@ -64,6 +66,7 @@ Complete cache management system with Apollo Client integration, UI controls, an
 - ✅ Cache contents viewer with data visibility
 - ✅ Comprehensive testing with real Lambda data
 - ✅ Data processing pattern documentation
+- ✅ Release tagging system with build numbers
 
 ## Technical Stack
 
@@ -82,4 +85,6 @@ Complete cache management system with Apollo Client integration, UI controls, an
 - **Future Phase**: `docs/phases/future/PHASE-6-CACHE-ADVANCED.md`
 - **Sprint**: `docs/sprints/2025-01-15_sprint-9.md`
 - **Architecture**: `docs/architecture/data-processing-pattern.md`
+- **Release Tagging**: `docs/active/RELEASE-TAGGING-GUIDE.md`
 - **Code**: `src/components/cache/`, `src/lib/cacheUtils.ts`, `src/config/cache-config.ts`
+- **Scripts**: `scripts/workflow/create-release-tag.sh`, `scripts/workflow/list-recent-tags.sh`
