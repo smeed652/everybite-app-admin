@@ -1,0 +1,156 @@
+# Sprint 10 – Test Suite Restoration & Quality Assurance (2025-07-20 → 2025-08-10)
+
+## 📊 Progress Tracking
+
+- **Overall Progress**: 0% (0/24 tasks complete)
+- **Status**: In Progress
+
+**Phase Breakdown**:
+
+- **PHASE-6-TEST-SUITE-RESTORATION**: 0% (0/24 tasks)
+
+## 🏷️ Release Tags
+
+- **Latest Tag**: `v1.0.1+249` - "Initial release tagging system implementation"
+- **Build Number**: 249
+- **Tag Date**: 2025-07-20
+- **Branch**: main
+
+## 🎯 Goal / Definition of Done
+
+Restore test suite functionality after Phase 5 architecture changes, achieve 95%+ test pass rate, and establish robust testing patterns for future development.
+
+---
+
+## 📋 Current Test Status
+
+### Test Failure Analysis (42 failed / 299 total)
+
+#### **Critical Failures (High Priority)**
+
+- **Dashboard Tests**: 6 failures - Architecture mismatch with new hybrid service
+- **SmartMenu Hook Tests**: 8 failures - GraphQL schema and mutation issues
+- **Component Tests**: 5 failures - Missing mocks and outdated data structures
+
+#### **API Integration Failures (Medium Priority)**
+
+- **Lambda GraphQL Tests**: 12 failures - Timeout and authentication issues
+- **Hybrid Service Tests**: 3 failures - Cache configuration and service layer issues
+- **SmartMenu Settings Tests**: 3 failures - Query and schema validation issues
+
+#### **Infrastructure Issues (Low Priority)**
+
+- **Test Configuration**: 5 failures - Mock setup and test data issues
+
+---
+
+## Rank-Ordered Backlog
+
+| #   | Task                                                              | Owner | Est.  | DoD                      |
+| --- | ----------------------------------------------------------------- | ----- | ----- | ------------------------ |
+| 1   | **Dashboard Tests Restoration** - Fix SmartMenuDashboard.test.tsx |       | 2 d   | All dashboard tests pass |
+| 2   | **SmartMenu Hook Tests** - Fix useToggleWidget.test.tsx           |       | 1.5 d | All hook tests pass      |
+| 3   | **Component Tests** - Fix metabase-integration.test.tsx           |       | 1 d   | All component tests pass |
+| 4   | **Lambda GraphQL Tests** - Fix authentication and timeouts        |       | 2 d   | All API tests pass       |
+| 5   | **Hybrid Service Tests** - Fix cache configuration                |       | 1 d   | All hybrid tests pass    |
+| 6   | **SmartMenu Settings Tests** - Fix query expectations             |       | 1 d   | All settings tests pass  |
+| 7   | **Test Infrastructure** - Create shared utilities                 |       | 1.5 d | Standardized patterns    |
+| 8   | **Coverage Improvements** - Add missing test cases                |       | 1 d   | 95%+ coverage            |
+| 9   | **Test Documentation** - Update patterns and standards            |       | 0.5 d | Documentation complete   |
+| 10  | **Performance Optimization** - Optimize test execution            |       | 1 d   | Tests run efficiently    |
+
+---
+
+## 📝 Implementation Plan
+
+### Week 1: Critical Architecture Fixes
+
+- **Days 1-2**: Dashboard Tests Restoration
+  - Replace Apollo mocks with hybrid service mocks
+  - Update test expectations for new quarterly metrics data structure
+  - Fix loading state expectations and error handling
+
+- **Days 3-4**: SmartMenu Hook Tests Restoration
+  - Update GraphQL schema references (`Widget` → `DbWidgets`)
+  - Fix mutation schema configuration issues
+  - Update test data structures
+
+- **Day 5**: Component Tests Restoration
+  - Add missing MetabaseUsersTable mock
+  - Update component test mocks for new service layer
+
+### Week 2: API Integration Fixes
+
+- **Days 1-3**: Lambda GraphQL Tests Restoration
+  - Fix authentication configuration
+  - Add proper timeouts (30s instead of 5s)
+  - Update schema expectations
+  - Add retry logic for flaky tests
+
+- **Days 4-5**: Hybrid Service Tests Restoration
+  - Add missing cache configuration
+  - Fix service layer mocks and test expectations
+
+### Week 3: Test Infrastructure & Quality
+
+- **Days 1-2**: Test Infrastructure Improvements
+  - Create shared test utilities for service layer testing
+  - Standardize mock patterns across all test files
+  - Add better error handling and retry logic
+
+- **Days 3-4**: Coverage Improvements
+  - Add missing test cases for edge cases
+  - Improve error scenario coverage
+  - Add integration tests for service layer interactions
+
+- **Day 5**: Test Documentation & Standards
+  - Document testing patterns and best practices
+  - Create test templates for new components/services
+
+### Week 4: Performance & Optimization
+
+- **Days 1-2**: Test Performance Optimization
+  - Optimize test execution time
+  - Reduce flaky test occurrences
+  - Implement parallel test execution where possible
+
+- **Days 3-5**: CI/CD Integration
+  - Ensure all tests pass in CI environment
+  - Add test coverage reporting
+  - Implement test failure notifications
+
+---
+
+## 🎯 Success Metrics
+
+- **Week 1**: Reduce failures from 42 to <15 (Critical fixes)
+- **Week 2**: Reduce failures from 15 to <5 (API integration fixes)
+- **Week 3**: Achieve 95%+ test pass rate (Infrastructure improvements)
+- **Week 4**: Achieve 98%+ test pass rate with performance optimization
+
+---
+
+## Ceremonies
+
+- Planning: Mon 07-20, 1 h
+- Daily stand-up: 10 min
+- Mid-sprint demo: Fri 07-25 – Critical fixes complete
+- Review & retro: Fri 08-08
+
+---
+
+## Risks / Mitigations
+
+- **Flaky tests** → Add retries and better error handling
+- **API timeouts** → Increase timeouts and add retry logic
+- **Schema changes** → Update test expectations systematically
+- **Mock complexity** → Create standardized mock patterns
+
+---
+
+## 🔗 References
+
+- **Phase**: `docs/phases/current/PHASE-6-TEST-SUITE-RESTORATION.md`
+- **Project**: `docs/projects/cache-management.md`
+- **Previous Sprint**: `docs/sprints/2025-07-20_sprint-release-tagging.md`
+- **Test Analysis**: Based on current test run results (42 failed / 299 total)
