@@ -19,6 +19,7 @@
 - [ ] **Improve test coverage and quality**
 - [ ] **Establish robust testing patterns for future development**
 - [ ] **Achieve 95%+ test pass rate**
+- [ ] **Implement comprehensive Lambda function testing strategy**
 
 ## 📝 Implementation Steps
 
@@ -82,7 +83,27 @@
   - [ ] Add troubleshooting guides for common test issues
   - [ ] Update test README with current patterns
 
-### Step 4: Performance & Optimization (Week 4)
+### Step 4: Lambda Function Testing Strategy (Week 4)
+
+- [ ] **Lambda Unit Testing**:
+  - [ ] Create unit tests for Lambda resolvers and business logic
+  - [ ] Test GraphQL schema validation and error handling
+  - [ ] Mock external dependencies (Athena, Metabase proxy)
+  - [ ] Test data transformation and aggregation functions
+
+- [ ] **Lambda Integration Testing**:
+  - [ ] Test Lambda function endpoints with real GraphQL queries
+  - [ ] Validate query performance and response times
+  - [ ] Test error scenarios and edge cases
+  - [ ] Verify data consistency across different queries
+
+- [ ] **Lambda End-to-End Testing**:
+  - [ ] Test complete data flow from Lambda to frontend
+  - [ ] Validate cache integration with Lambda responses
+  - [ ] Test real-time data updates and synchronization
+  - [ ] Verify error handling and fallback mechanisms
+
+### Step 5: Performance & Optimization (Week 5)
 
 - [ ] **Test Performance Optimization**:
   - [ ] Optimize test execution time
@@ -99,6 +120,13 @@
 ## 📊 Current Test Status
 
 ### Test Failure Analysis (42 failed / 299 total)
+
+### Lambda Testing Status
+
+- **Lambda Unit Tests**: 0% coverage (Not implemented)
+- **Lambda Integration Tests**: 0% coverage (Not implemented)
+- **Lambda End-to-End Tests**: 0% coverage (Not implemented)
+- **Total Lambda Test Coverage**: 0% (Critical gap)
 
 #### **Critical Failures (High Priority)**
 
@@ -121,7 +149,8 @@
 - **Week 1**: Reduce failures from 42 to <15 (Critical fixes)
 - **Week 2**: Reduce failures from 15 to <5 (API integration fixes)
 - **Week 3**: Achieve 95%+ test pass rate (Infrastructure improvements)
-- **Week 4**: Achieve 98%+ test pass rate with performance optimization
+- **Week 4**: Implement Lambda testing strategy (Unit, Integration, E2E)
+- **Week 5**: Achieve 98%+ test pass rate with performance optimization
 
 ## 🔗 Dependencies
 
@@ -135,7 +164,8 @@
 - **Week 1**: Critical Architecture Fixes (Dashboard, SmartMenu, Component tests)
 - **Week 2**: API Integration Fixes (Lambda GraphQL, Hybrid Service, SmartMenu Settings)
 - **Week 3**: Test Infrastructure & Quality (Utilities, Coverage, Documentation)
-- **Week 4**: Performance & Optimization (CI/CD, Performance, Monitoring)
+- **Week 4**: Lambda Function Testing Strategy (Unit, Integration, E2E)
+- **Week 5**: Performance & Optimization (CI/CD, Performance, Monitoring)
 
 ## ⚠️ Risk Assessment
 
@@ -150,12 +180,13 @@
 - [ ] **Critical Fixes**: All dashboard and SmartMenu tests working
 - [ ] **API Integration**: All Lambda GraphQL tests passing
 - [ ] **Infrastructure**: Robust test utilities and patterns established
+- [ ] **Lambda Testing**: Comprehensive Lambda function testing strategy implemented
 - [ ] **Performance**: Optimized test execution and CI/CD integration
 - [ ] **Documentation**: Complete testing patterns and standards
 
 ## 📊 Progress Tracking
 
-- **Tasks Completed**: 0/24
+- **Tasks Completed**: 0/30
 - **Progress**: 0%
 - **Status**: In Progress
 - **Current Focus**: Critical architecture fixes

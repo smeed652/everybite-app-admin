@@ -46,18 +46,21 @@ Restore test suite functionality after Phase 5 architecture changes, achieve 95%
 
 ## Rank-Ordered Backlog
 
-| #   | Task                                                              | Owner | Est.  | DoD                      |
-| --- | ----------------------------------------------------------------- | ----- | ----- | ------------------------ |
-| 1   | **Dashboard Tests Restoration** - Fix SmartMenuDashboard.test.tsx |       | 2 d   | All dashboard tests pass |
-| 2   | **SmartMenu Hook Tests** - Fix useToggleWidget.test.tsx           |       | 1.5 d | All hook tests pass      |
-| 3   | **Component Tests** - Fix metabase-integration.test.tsx           |       | 1 d   | All component tests pass |
-| 4   | **Lambda GraphQL Tests** - Fix authentication and timeouts        |       | 2 d   | All API tests pass       |
-| 5   | **Hybrid Service Tests** - Fix cache configuration                |       | 1 d   | All hybrid tests pass    |
-| 6   | **SmartMenu Settings Tests** - Fix query expectations             |       | 1 d   | All settings tests pass  |
-| 7   | **Test Infrastructure** - Create shared utilities                 |       | 1.5 d | Standardized patterns    |
-| 8   | **Coverage Improvements** - Add missing test cases                |       | 1 d   | 95%+ coverage            |
-| 9   | **Test Documentation** - Update patterns and standards            |       | 0.5 d | Documentation complete   |
-| 10  | **Performance Optimization** - Optimize test execution            |       | 1 d   | Tests run efficiently    |
+| #   | Task                                                              | Owner | Est.  | DoD                       |
+| --- | ----------------------------------------------------------------- | ----- | ----- | ------------------------- |
+| 1   | **Dashboard Tests Restoration** - Fix SmartMenuDashboard.test.tsx |       | 2 d   | All dashboard tests pass  |
+| 2   | **SmartMenu Hook Tests** - Fix useToggleWidget.test.tsx           |       | 1.5 d | All hook tests pass       |
+| 3   | **Component Tests** - Fix metabase-integration.test.tsx           |       | 1 d   | All component tests pass  |
+| 4   | **Lambda GraphQL Tests** - Fix authentication and timeouts        |       | 2 d   | All API tests pass        |
+| 5   | **Hybrid Service Tests** - Fix cache configuration                |       | 1 d   | All hybrid tests pass     |
+| 6   | **SmartMenu Settings Tests** - Fix query expectations             |       | 1 d   | All settings tests pass   |
+| 7   | **Test Infrastructure** - Create shared utilities                 |       | 1.5 d | Standardized patterns     |
+| 8   | **Coverage Improvements** - Add missing test cases                |       | 1 d   | 95%+ coverage             |
+| 9   | **Test Documentation** - Update patterns and standards            |       | 0.5 d | Documentation complete    |
+| 10  | **Lambda Unit Testing** - Setup Lambda test infrastructure        |       | 1.5 d | Lambda unit tests running |
+| 11  | **Lambda Integration Testing** - Test GraphQL queries             |       | 2 d   | All Lambda queries tested |
+| 12  | **Lambda E2E Testing** - Test Lambda to frontend flow             |       | 1.5 d | E2E Lambda tests working  |
+| 13  | **Performance Optimization** - Optimize test execution            |       | 1 d   | Tests run efficiently     |
 
 ---
 
@@ -107,7 +110,24 @@ Restore test suite functionality after Phase 5 architecture changes, achieve 95%
   - Document testing patterns and best practices
   - Create test templates for new components/services
 
-### Week 4: Performance & Optimization
+### Week 4: Lambda Function Testing Strategy
+
+- **Days 1-2**: Lambda Unit Testing Setup
+  - Create Lambda test infrastructure and directory structure
+  - Set up Vitest configuration for Lambda environment
+  - Create mock data and test utilities
+
+- **Days 3-4**: Lambda Integration Testing
+  - Test GraphQL queries with real Lambda endpoints
+  - Validate query performance and response times
+  - Test error scenarios and edge cases
+
+- **Day 5**: Lambda End-to-End Testing
+  - Test complete data flow from Lambda to frontend
+  - Validate cache integration with Lambda responses
+  - Test error handling and fallback mechanisms
+
+### Week 5: Performance & Optimization
 
 - **Days 1-2**: Test Performance Optimization
   - Optimize test execution time
@@ -126,7 +146,9 @@ Restore test suite functionality after Phase 5 architecture changes, achieve 95%
 - **Week 1**: Reduce failures from 42 to <15 (Critical fixes)
 - **Week 2**: Reduce failures from 15 to <5 (API integration fixes)
 - **Week 3**: Achieve 95%+ test pass rate (Infrastructure improvements)
-- **Week 4**: Achieve 98%+ test pass rate with performance optimization
+- **Week 4**: Implement Lambda testing strategy (Unit, Integration, E2E)
+- **Week 5**: Achieve 98%+ test pass rate with performance optimization
+- **Lambda Testing**: 90%+ unit test coverage, 100% query coverage
 
 ---
 

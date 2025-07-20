@@ -94,5 +94,6 @@ Complete cache management system with Apollo Client integration, UI controls, an
 - **Sprint**: `docs/sprints/2025-07-20_sprint-test-restoration.md`
 - **Architecture**: `docs/architecture/data-processing-pattern.md`
 - **Release Tagging**: `docs/active/RELEASE-TAGGING-GUIDE.md`
+- **Lambda Testing**: `docs/active/LAMBDA-TESTING-STRATEGY.md`
 - **Code**: `src/components/cache/`, `src/lib/cacheUtils.ts`, `src/config/cache-config.ts`
 - **Scripts**: `scripts/workflow/create-release-tag.sh`, `scripts/workflow/list-recent-tags.sh`
