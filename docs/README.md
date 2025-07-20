@@ -74,27 +74,33 @@ This creates a release tag and updates story documentation with the release info
 
 ## 📋 Workflow
 
-### Sprint Planning
+### Story Planning & Scope Agreement
 
-1. Create or update sprint file in `docs/sprints/`
-2. Create story files using `scripts/docs/new-story.sh`
-3. Assign story points and estimate effort
-4. Plan sprint capacity and velocity
+1. **Create story file** using `scripts/docs/new-story.sh`
+2. **Define scope** - List approved areas and areas requiring permission
+3. **Agree on scope** - Get explicit approval before starting work
+4. **Define completion criteria** - Clear definition of when story is done
+5. **Assign story points** and estimate effort
+6. **Plan sprint capacity** and velocity
 
 ### During Sprint
 
-1. Update task checkboxes in story files as you work
-2. Run `scripts/docs/track-sprint-progress.js` to update sprint progress
-3. Update story status (Planning → In Progress → Completed)
-4. Track story point completion
+1. **Work within approved scope** - No permission needed for approved areas
+2. **Ask permission** for changes outside scope
+3. **Update task checkboxes** in story files as you work
+4. **Run progress tracking** - `scripts/docs/track-sprint-progress.js`
+5. **Update story status** (Planning → In Progress → Completed)
+6. **Track story point completion**
 
-### Sprint Completion
+### Story Completion & Handoff
 
-1. Complete stories using `scripts/docs/complete-story.sh`
-2. Move completed stories to `docs/stories/completed/`
-3. Create release tags for completed features
-4. Update story documentation with release information
-5. Archive sprint file if all stories are complete
+1. **Review completion criteria** - Ensure all criteria are met
+2. **Get completion approval** - Explicit agreement that story is done
+3. **Complete story** using `scripts/docs/complete-story.sh`
+4. **Move to completed** - Move story to `docs/stories/completed/`
+5. **Create release tags** for completed features
+6. **Update documentation** with release information
+7. **Archive sprint** if all stories are complete
 
 ## 📊 Progress Tracking
 
@@ -120,6 +126,22 @@ Each story includes a scope section that defines:
 - Files and directories that require explicit permission to modify
 - Includes core architecture, configuration, and other stories
 - Prevents unintended changes outside the story's scope
+
+## 🤝 Story Agreement Process
+
+### **Before Starting Work:**
+
+1. **Scope Review** - Review and agree on approved areas
+2. **Scope Approval** - Get explicit approval before starting
+3. **Completion Criteria** - Define clear definition of done
+4. **Story Point Agreement** - Confirm story point estimates
+
+### **Before Moving On:**
+
+1. **Completion Review** - Review all completion criteria
+2. **Validation** - Ensure all requirements are met
+3. **Final Approval** - Get explicit agreement that story is complete
+4. **Handoff** - Move story to completed and create release tag
 
 ## 🏷️ Release Tracking
 
