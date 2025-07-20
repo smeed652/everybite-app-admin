@@ -11,6 +11,9 @@
 - **Target End Date**: TBD
 - **Actual End Date**: TBD
 - **Latest Release**: `v1.0.1+249` (2025-07-20)
+- **Release Tags**:
+  - `v1.0.1+249` - "Data processing foundation and service layer implementation"
+  - `v1.0.0+200` - "Initial cache management system"
 
 ## 🎯 Goals & Objectives
 
