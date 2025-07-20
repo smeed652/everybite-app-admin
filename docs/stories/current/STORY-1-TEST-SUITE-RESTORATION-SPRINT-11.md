@@ -1,10 +1,10 @@
-# Phase 1: Test Suite Restoration & Quality Assurance
+# Story 1: Test Suite Restoration & Quality Assurance
 
 ## 📋 Overview
 
-- **Project**: Cache Management System
+- **Project**: EveryBite Admin Application
 - **Sprint**: Sprint 11 - Test Suite Restoration & Quality Assurance
-- **Phase**: 1
+- **Story**: 1
 - **Status**: In Progress
 - **Start Date**: 2025-07-20
 - **Target End Date**: 2025-08-17
@@ -194,8 +194,7 @@
 ## 🔗 References
 
 - **Sprint**: `docs/sprints/2025-07-20_sprint-11.md`
-- **Project**: `docs/projects/cache-management.md`
-- **Previous Phase**: `docs/phases/completed/PHASE-1-DATA-PROCESSING-FOUNDATION-SPRINT-9.md`
+- **Previous Story**: `docs/stories/completed/STORY-1-DATA-PROCESSING-FOUNDATION-SPRINT-9.md`
 - **Test Analysis**: Based on current test run results
 
 ## 📝 Notes

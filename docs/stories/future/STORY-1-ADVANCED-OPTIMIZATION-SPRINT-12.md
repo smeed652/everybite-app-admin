@@ -1,10 +1,10 @@
-# Phase 1: Advanced Optimization & Enhancement
+# Story 1: Advanced Optimization & Enhancement
 
 ## 📋 Overview
 
-- **Project**: Cache Management System
+- **Project**: EveryBite Admin Application
 - **Sprint**: Sprint 11 - Advanced Optimization & Enhancement
-- **Phase**: 1
+- **Story**: 1
 - **Status**: Future
 - **Start Date**: TBD
 - **Target End Date**: TBD
@@ -184,8 +184,7 @@
 ## 🔗 References
 
 - **Sprint**: TBD - Sprint 12
-- **Project**: `docs/projects/cache-management.md`
-- **Previous Phase**: `docs/phases/current/PHASE-1-TEST-SUITE-RESTORATION-SPRINT-11.md`
+- **Previous Story**: `docs/stories/current/STORY-1-TEST-SUITE-RESTORATION-SPRINT-11.md`
 - **Architecture**: `docs/architecture/data-processing-pattern.md`
 
 ## 📝 Notes
