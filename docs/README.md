@@ -105,6 +105,22 @@ The system automatically tracks:
 - **Story point completion** and velocity tracking
 - **Release tag tracking** for completed features
 
+## 🎯 Scope Management
+
+Each story includes a scope section that defines:
+
+### **Approved Areas (No Permission Required):**
+
+- Files and directories that can be modified without asking permission
+- Typically includes story-specific code and documentation
+- Allows for efficient work within the story's scope
+
+### **Ask Permission Required:**
+
+- Files and directories that require explicit permission to modify
+- Includes core architecture, configuration, and other stories
+- Prevents unintended changes outside the story's scope
+
 ## 🏷️ Release Tracking
 
 Each story includes release tag information:

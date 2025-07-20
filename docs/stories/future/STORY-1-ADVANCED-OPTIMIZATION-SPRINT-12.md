@@ -23,6 +23,28 @@
 - [ ] **Implement chain classification enhancements**
 - [ ] **Optimize for production scale deployment**
 
+## 🎯 Scope
+
+### **Approved Areas (No Permission Required):**
+
+- **Performance Optimization**: `src/services/` (performance improvements), `src/hooks/` (memoization)
+- **Advanced Caching**: `src/components/cache/`, `src/hooks/useCache*.ts`, `src/utils/cache*.ts`
+- **Documentation**: `docs/architecture/`, `docs/active/` (new documentation)
+- **Chain Classifications**: `src/services/smartmenus/`, `src/features/smartMenus/`
+- **Production Optimization**: `src/` (performance improvements only)
+- **Story Documentation**: This story file and related sprint documentation
+
+### **Ask Permission Required:**
+
+- **Core Architecture**: `src/App.tsx`, `src/index.tsx`, `src/main.tsx`
+- **Authentication**: `src/context/AuthContext.tsx`, `src/lib/auth.ts`
+- **API Layer**: `src/lib/api-graphql-apollo.ts`, `src/generated/`
+- **Configuration**: `package.json`, `tsconfig.json`, `amplify.yml`
+- **Deployment**: `amplify/`, `api/` directories
+- **Build System**: `vite.config.ts`, `vitest.config.ts`
+- **Other Stories**: Files in `docs/stories/` (except this story)
+- **Other Sprints**: Files in `docs/sprints/` (except current sprint)
+
 ## 📝 Implementation Steps
 
 ### Step 1: Performance Optimization (Moved from Phase 5)

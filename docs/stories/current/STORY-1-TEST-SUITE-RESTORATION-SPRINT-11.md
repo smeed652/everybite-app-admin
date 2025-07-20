@@ -25,6 +25,27 @@
 - [ ] **Achieve 95%+ test pass rate**
 - [ ] **Implement comprehensive Lambda function testing strategy**
 
+## 🎯 Scope
+
+### **Approved Areas (No Permission Required):**
+
+- **Test Files**: All files in `src/__tests__/` and `src/**/__tests__/`
+- **Test Configuration**: `vitest.config.ts`, `test-runner.config.ts`
+- **Test Utilities**: `src/__tests__/utils/`, `src/__tests__/factories/`
+- **Test Mocks**: `src/mocks/`, `src/__tests__/__mocks__/`
+- **Lambda Test Files**: `lambda/__tests__/` (when created)
+- **Story Documentation**: This story file and related sprint documentation
+- **Test Documentation**: `docs/active/LAMBDA-TESTING-STRATEGY.md`
+
+### **Ask Permission Required:**
+
+- **Production Code**: `src/components/`, `src/pages/`, `src/hooks/`, `src/services/`
+- **Configuration Files**: `package.json`, `tsconfig.json`, `amplify.yml`
+- **Build Scripts**: `scripts/` directory (except test-related scripts)
+- **Deployment Files**: `amplify/`, `api/` directories
+- **Other Stories**: Files in `docs/stories/` (except this story)
+- **Other Sprints**: Files in `docs/sprints/` (except current sprint)
+
 ## 📝 Implementation Steps
 
 ### Step 1: Critical Architecture Fixes (Week 1)

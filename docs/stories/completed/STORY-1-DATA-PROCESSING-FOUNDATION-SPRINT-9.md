@@ -27,6 +27,28 @@
 - [x] **Update Dashboard to use hybrid SmartMenu service**
 - [x] **Implement release tagging system with build numbers**
 
+## 🎯 Scope
+
+### **Approved Areas (No Permission Required):**
+
+- **Service Layer**: `src/services/` directory
+- **Cache Management**: `src/components/cache/`, `src/hooks/useCache*.ts`
+- **Dashboard**: `src/pages/Dashboard.tsx`, `src/features/dashboard/`
+- **SmartMenu Services**: `src/services/smartmenus/`, `src/hooks/useSmartMenu*.ts`
+- **Release Scripts**: `scripts/workflow/create-release-tag.sh`, `scripts/workflow/list-recent-tags.sh`
+- **Story Documentation**: This story file and related sprint documentation
+- **Documentation**: `docs/active/RELEASE-TAGGING-GUIDE.md`
+
+### **Ask Permission Required:**
+
+- **Core Components**: `src/components/ui/`, `src/layout/`
+- **Authentication**: `src/context/AuthContext.tsx`, `src/lib/auth.ts`
+- **API Layer**: `src/lib/api-graphql-apollo.ts`, `src/generated/`
+- **Configuration**: `package.json`, `tsconfig.json`, `amplify.yml`
+- **Deployment**: `amplify/`, `api/` directories
+- **Other Stories**: Files in `docs/stories/` (except this story)
+- **Other Sprints**: Files in `docs/sprints/` (except current sprint)
+
 ## 📝 Implementation Steps
 
 ### Step 1: Service Layer Implementation
