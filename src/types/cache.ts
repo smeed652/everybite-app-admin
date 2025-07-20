@@ -22,26 +22,43 @@ export interface ScheduledRefreshInfo {
   scheduledTime?: string;
 }
 
+// Service-level cache status (new)
+export interface OperationCacheStatus {
+  exists: boolean;
+  operationName: string;
+  age?: number; // minutes
+  ttl?: number; // minutes
+  isExpired?: boolean;
+  expiresIn?: number; // minutes until expiry
+  error?: Error;
+}
+
 export interface CacheConfig {
   enableCaching: boolean;
   scheduledRefreshEnabled: boolean;
   scheduledRefreshTime: string;
   scheduledRefreshTimezone: string;
   cacheTTLHours: number;
-  // Individual TTLs for different pages
-  queryTTLs: {
-    dashboard: number;
-    metabaseUsers: number;
+  // Operation-level TTLs for different operations
+  operationTTLs: {
+    [operationName: string]: number;
   };
 }
 
 export interface CacheOperation {
   operation: string;
-  displayName?: string; // Page-focused display name
+  displayName?: string; // Operation-focused display name
   age?: number;
   isStale?: boolean;
   isCached: boolean;
   ttl?: number; // TTL in minutes
+}
+
+// Service groups for organization
+export interface ServiceGroup {
+  name: string;
+  operations: string[];
+  displayName: string;
 }
 
 // New types for grouped analytics queries

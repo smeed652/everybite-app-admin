@@ -1,90 +1,128 @@
-import { RefreshCw } from "lucide-react";
+import { Eye, RefreshCw, Trash2 } from "lucide-react";
 import { CacheOperation } from "../../types/cache";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
-import { formatAge } from "./utils/cacheFormatters";
+import { formatAge, formatTTLMs } from "./utils/cacheFormatters";
 
 interface CacheOperationsListProps {
   operations: CacheOperation[];
-  refreshingOperations: Set<string>;
   onRefreshOperation: (operationName: string) => void;
+  onClearOperation: (operationName: string) => void;
+  onViewContents?: (operation: CacheOperation) => void;
 }
 
 export function CacheOperationsList({
   operations,
-  refreshingOperations,
   onRefreshOperation,
+  onClearOperation,
+  onViewContents,
 }: CacheOperationsListProps) {
+  // Add safety checks
+  if (!operations || !Array.isArray(operations)) {
+    return (
+      <div className="text-sm text-muted-foreground">
+        No operations data available.
+      </div>
+    );
+  }
+
+  if (operations.length === 0) {
+    return (
+      <div className="text-sm text-muted-foreground">
+        No operations found for this service group.
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-2">
-      <h4 className="font-medium text-sm">Cache Operations</h4>
       <div className="space-y-2 max-h-64 overflow-y-auto">
-        {operations.map((operation) => (
-          <div
-            key={operation.operation}
-            className={`flex items-center justify-between p-3 border rounded-lg transition-colors ${
-              operation.isCached
-                ? "bg-green-50 border-green-200"
-                : "bg-gray-50 border-gray-200"
-            }`}
-          >
-            <div className="flex items-center space-x-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-sm">
-                    {operation.displayName || operation.operation}
-                  </span>
-                  {operation.isCached ? (
-                    <Badge variant="default" className="text-xs">
-                      {operation.isStale ? "Stale" : "Fresh"}
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary" className="text-xs">
-                      Not Cached
-                    </Badge>
+        {operations.map((operation) => {
+          // Add safety checks for each operation
+          if (!operation || !operation.operation) {
+            return null;
+          }
+
+          return (
+            <div
+              key={operation.operation}
+              className={`flex items-center justify-between p-3 border rounded-lg transition-colors ${
+                operation.isCached
+                  ? "bg-green-50 border-green-200"
+                  : "bg-gray-50 border-gray-200"
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-sm">
+                      {operation.displayName || operation.operation}
+                    </span>
+                    {operation.isCached ? (
+                      <Badge variant="default" className="text-xs">
+                        {operation.isStale ? "Stale" : "Fresh"}
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="text-xs">
+                        Not Cached
+                      </Badge>
+                    )}
+                  </div>
+                  {operation.isCached && operation.age !== undefined && (
+                    <div className="text-xs text-muted-foreground mt-1">
+                      <div>
+                        Age:{" "}
+                        {formatAge(Math.floor(operation.age / (1000 * 60)))}
+                      </div>
+                      {operation.ttl && (
+                        <div>TTL: {formatTTLMs(operation.ttl)}</div>
+                      )}
+                    </div>
+                  )}
+                  {!operation.isCached && operation.ttl && (
+                    <div className="text-xs text-muted-foreground mt-1">
+                      <div>TTL: {formatTTLMs(operation.ttl)}</div>
+                    </div>
                   )}
                 </div>
-                {operation.isCached && operation.age !== undefined && (
-                  <div className="text-xs text-muted-foreground mt-1">
-                    <div>Age: {formatAge(operation.age)}</div>
-                    {operation.ttl && <div>TTL: {operation.ttl}m</div>}
-                  </div>
-                )}
-                {!operation.isCached && operation.ttl && (
-                  <div className="text-xs text-muted-foreground mt-1">
-                    <div>TTL: {operation.ttl}m</div>
-                  </div>
-                )}
               </div>
-            </div>
 
-            <div className="flex items-center gap-2">
-              {operation.isCached ? (
+              <div className="flex items-center gap-2">
+                {operation.isCached && onViewContents && (
+                  <Button
+                    onClick={() => onViewContents(operation)}
+                    variant="outline"
+                    size="sm"
+                    className="gap-1"
+                  >
+                    <Eye className="h-3 w-3" />
+                    View
+                  </Button>
+                )}
                 <Button
                   onClick={() => onRefreshOperation(operation.operation)}
-                  disabled={refreshingOperations.has(operation.operation)}
                   variant="outline"
                   size="sm"
                   className="gap-1"
                 >
-                  {refreshingOperations.has(operation.operation) ? (
-                    <>
-                      <RefreshCw className="h-3 w-3 animate-spin" />
-                      Refreshing
-                    </>
-                  ) : (
-                    <>
-                      <RefreshCw className="h-3 w-3" />
-                      Refresh
-                    </>
-                  )}
+                  <RefreshCw className="h-3 w-3" />
+                  Refresh
                 </Button>
-              ) : (
-                <span className="text-xs text-muted-foreground">No data</span>
-              )}
+                {operation.isCached && (
+                  <Button
+                    onClick={() => onClearOperation(operation.operation)}
+                    variant="outline"
+                    size="sm"
+                    className="gap-1"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                    Clear
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

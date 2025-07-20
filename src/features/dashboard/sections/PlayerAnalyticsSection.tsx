@@ -3,14 +3,14 @@ import { Skeleton } from "../../../components/ui/Skeleton";
 import { ConcentricDonutChart } from "../components/ConcentricDonutChart";
 import { DonutStatCard } from "../components/DonutStatCard";
 import { LegendItem } from "../components/LegendItem";
-import { usePlayerAnalyticsLambda } from "../hooks/lambda";
+import { usePlayerAnalyticsHybrid } from "../hooks/lambda/usePlayerAnalyticsHybrid";
 
 /**
  * Section that displays feature-usage analytics across active SmartMenus.
- * Now uses Lambda hooks for data fetching.
+ * Now uses hybrid service for data fetching and caching.
  */
 export function PlayerAnalyticsSection() {
-  const { analytics, loading } = usePlayerAnalyticsLambda();
+  const { analytics, loading } = usePlayerAnalyticsHybrid();
 
   return (
     <section className="space-y-4">

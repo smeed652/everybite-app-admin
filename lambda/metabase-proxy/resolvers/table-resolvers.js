@@ -12,6 +12,75 @@ const tableResolvers = {
     // This will handle queries like: tableNameCount(filter: TypeFilter): Int!
     ...generateTableCountResolvers(),
   },
+
+  // Custom resolvers for DbWidgets chain classifications - temporarily disabled for performance
+  // DbWidgets: {
+  //   chain_nra_classifications: async (parent, _, { executeMetabaseQuery }) => {
+  //     try {
+  //       const query = {
+  //         database: 2,
+  //         type: "native",
+  //         native: {
+  //           query: `
+  //             SELECT nra_classification
+  //             FROM everybite_analytics.chain_nra_classifications
+  //             WHERE lower(regexp_replace(restaurant_chain, '[^a-zA-Z ]', '')) = lower(regexp_replace('${parent.name}', '[^a-zA-Z ]', ''))
+  //           `,
+  //         },
+  //       };
+
+  //       const result = await executeMetabaseQuery(query);
+  //       return result.data?.rows?.map(row => ({ nra_classification: row[0] })) || [];
+  //     } catch (error) {
+  //       console.error("❌ Error in chain_nra_classifications resolver:", error);
+  //       return [];
+  //     }
+  //   },
+
+  //   chain_menu_classifications: async (parent, _, { executeMetabaseQuery }) => {
+  //     try {
+  //       const query = {
+  //         database: 2,
+  //         type: "native",
+  //         native: {
+  //           query: `
+  //             SELECT menu_type
+  //             FROM everybite_analytics.chain_menu_classifications
+  //             WHERE lower(regexp_replace(restaurant_chain, '[^a-zA-Z ]', '')) = lower(regexp_replace('${parent.name}', '[^a-zA-Z ]', ''))
+  //           `,
+  //         },
+  //       };
+
+  //       const result = await executeMetabaseQuery(query);
+  //       return result.data?.rows?.map(row => ({ menu_type: row[0] })) || [];
+  //     } catch (error) {
+  //       console.error("❌ Error in chain_menu_classifications resolver:", error);
+  //       return [];
+  //     }
+  //   },
+
+  //   chain_cuisine_classifications: async (parent, _, { executeMetabaseQuery }) => {
+  //     try {
+  //       const query = {
+  //         database: 2,
+  //         type: "native",
+  //         native: {
+  //           query: `
+  //             SELECT cuisine_type
+  //             FROM everybite_analytics.chain_cuisine_classifications
+  //             WHERE lower(regexp_replace(restaurant_chain, '[^a-zA-Z ]', '')) = lower(regexp_replace('${parent.name}', '[^a-zA-Z ]', ''))
+  //           `,
+  //         },
+  //       };
+
+  //       const result = await executeMetabaseQuery(query);
+  //       return result.data?.rows?.map(row => ({ cuisine_type: row[0] })) || [];
+  //     } catch (error) {
+  //       console.error("❌ Error in chain_cuisine_classifications resolver:", error);
+  //       return [];
+  //     }
+  //   },
+  // },
 };
 
 // Generate resolvers for all tables

@@ -1,28 +1,41 @@
 import { AlertTriangle } from "lucide-react";
 import { MetricsCard } from "../components/MetricsCard";
 import { QuarterlyMetricsTable } from "../components/QuarterlyMetricsTable";
-import {
-  useDashboardLambda,
-  useQuarterlyMetricsLambda,
-} from "../features/dashboard/hooks/lambda";
+import { useSmartMenuDashboard } from "../features/dashboard/hooks/lambda/useSmartMenuDashboard";
 import { PlayerAnalyticsSection } from "../features/dashboard/sections/PlayerAnalyticsSection";
 
 export default function Dashboard() {
-  // Use Lambda hooks for dashboard data
-  const { metrics, loading, error } = useDashboardLambda();
+  // Use hybrid SmartMenu service for dashboard data (includes quarterly metrics)
+  const { metrics, loading, error, quarterlyMetrics } = useSmartMenuDashboard();
 
-  // Use the Lambda quarterly metrics hook
-  const {
-    quarterlyData,
-    totalOrders,
-    ordersDelta,
-    loading: quarterlyLoading,
-    error: quarterlyError,
-  } = useQuarterlyMetricsLambda();
+  // Calculate quarterly data from hybrid service
+  const quarterlyData = quarterlyMetrics.map((item) => ({
+    quarter: item.quarterLabel,
+    brands: item.activeSmartMenus.count,
+    locations: item.locations.count,
+    activeSmartMenus: item.activeSmartMenus.count,
+    orders: item.orders.count,
+    ordersQoQGrowth: item.orders.qoqGrowthPercent,
+  }));
+
+  // Calculate total orders and delta
+  const totalOrders = quarterlyData.reduce(
+    (sum, quarter) => sum + (quarter.orders || 0),
+    0
+  );
+  const currentQuarter = quarterlyData[0];
+  const previousQuarter = quarterlyData[1];
+  const ordersDelta = (() => {
+    if (!currentQuarter?.orders || !previousQuarter?.orders) {
+      return currentQuarter?.orders ? "+100%" : "0%";
+    }
+    const growth = currentQuarter.ordersQoQGrowth || 0;
+    return `${growth >= 0 ? "+" : ""}${growth.toFixed(1)}%`;
+  })();
 
   console.log("Dashboard: quarterlyData:", quarterlyData);
-  console.log("Dashboard: quarterlyLoading:", quarterlyLoading);
-  console.log("Dashboard: quarterlyError:", quarterlyError);
+  console.log("Dashboard: quarterlyLoading:", loading);
+  console.log("Dashboard: quarterlyError:", error);
 
   if (error) {
     return (
@@ -67,19 +80,19 @@ export default function Dashboard() {
           title="Total Orders"
           value={totalOrders.toLocaleString()}
           delta={ordersDelta}
-          loading={quarterlyLoading}
+          loading={loading}
         />
       </div>
 
       {/* Quarterly Metrics Table */}
       <QuarterlyMetricsTable
         data={quarterlyData}
-        loading={quarterlyLoading}
-        error={quarterlyError}
+        loading={loading}
+        error={error}
       />
 
       {/* Player Analytics Section */}
-      <PlayerAnalyticsSection loading={loading} />
+      <PlayerAnalyticsSection />
     </div>
   );
 }

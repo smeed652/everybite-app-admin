@@ -42,3 +42,24 @@ export const formatTTL = (hours: number): string => {
     return remainingHours > 0 ? `${days}d ${remainingHours}h` : `${days}d`;
   }
 };
+
+/**
+ * Format TTL in milliseconds to human-readable format
+ */
+export const formatTTLMs = (milliseconds: number): string => {
+  const minutes = Math.floor(milliseconds / (1000 * 60));
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) {
+    const remainingHours = hours % 24;
+    return remainingHours > 0 ? `${days}d ${remainingHours}h` : `${days}d`;
+  } else if (hours > 0) {
+    const remainingMinutes = minutes % 60;
+    return remainingMinutes > 0
+      ? `${hours}h ${remainingMinutes}m`
+      : `${hours}h`;
+  } else {
+    return `${minutes}m`;
+  }
+};

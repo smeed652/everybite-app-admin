@@ -1,0 +1,74 @@
+{
+  "dailyOrdersTrends": [
+    {
+      "day": "2025-07-19T00:00:00Z",
+      "dayLabel": "Sat, Jul 19",
+      "totalOrders": 223,
+      "activeWidgets": 26,
+      "uniqueUsers": 0
+    },
+    {
+      "day": "2025-07-18T00:00:00Z",
+      "dayLabel": "Fri, Jul 18",
+      "totalOrders": 644,
+      "activeWidgets": 34,
+      "uniqueUsers": 0
+    },
+    {
+      "day": "2025-07-17T00:00:00Z",
+      "dayLabel": "Thu, Jul 17",
+      "totalOrders": 574,
+      "activeWidgets": 31,
+      "uniqueUsers": 1
+    },
+    {
+      "day": "2025-07-16T00:00:00Z",
+      "dayLabel": "Wed, Jul 16",
+      "totalOrders": 573,
+      "activeWidgets": 30,
+      "uniqueUsers": 0
+    },
+    {
+      "day": "2025-07-15T00:00:00Z",
+      "dayLabel": "Tue, Jul 15",
+      "totalOrders": 583,
+      "activeWidgets": 32,
+      "uniqueUsers": 0
+    },
+    {
+      "day": "2025-07-14T00:00:00Z",
+      "dayLabel": "Mon, Jul 14",
+      "totalOrders": 510,
+      "activeWidgets": 32,
+      "uniqueUsers": 1
+    },
+    {
+      "day": "2025-07-13T00:00:00Z",
+      "dayLabel": "Sun, Jul 13",
+      "totalOrders": 648,
+      "activeWidgets": 31,
+      "uniqueUsers": 0
+    },
+    {
+      "day": "2025-07-12T00:00:00Z",
+      "dayLabel": "Sat, Jul 12",
+      "totalOrders": 563,
+      "activeWidgets": 30,
+      "uniqueUsers": 0
+    },
+    {
+      "day": "2025-07-11T00:00:00Z",
+      "dayLabel": "Fri, Jul 11",
+      "totalOrders": 690,
+      "activeWidgets": 31,
+      "uniqueUsers": 0
+    },
+    {
+      "day": "2025-07-10T00:00:00Z",
+      "dayLabel": "Thu, Jul 10",
+      "totalOrders": 650,
+      "activeWidgets": 33,
+      "uniqueUsers": 0
+    }
+  ]
+}

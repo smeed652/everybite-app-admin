@@ -16,6 +16,18 @@ export interface PlayerAnalyticsWidget {
   isByoEnabled: boolean;
 }
 
+// Combined widget interface with all fields
+export interface WidgetWithAnalytics {
+  id: string;
+  createdAt: string;
+  publishedAt?: string | null;
+  numberOfLocations?: number | null;
+  displayImages: boolean;
+  layout?: string | null;
+  isOrderButtonEnabled: boolean;
+  isByoEnabled: boolean;
+}
+
 // Lambda response interfaces
 export interface LambdaWidgetsResponse {
   db_widgetsList: {
@@ -29,6 +41,15 @@ export interface LambdaWidgetsResponse {
 export interface LambdaPlayerAnalyticsResponse {
   db_widgetsList: {
     items: PlayerAnalyticsWidget[];
+  };
+}
+
+export interface LambdaWidgetsWithAnalyticsResponse {
+  db_widgetsList: {
+    items: WidgetWithAnalytics[];
+    pagination: {
+      total: number;
+    };
   };
 }
 

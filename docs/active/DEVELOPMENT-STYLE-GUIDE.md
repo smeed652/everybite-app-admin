@@ -12,6 +12,68 @@ This document establishes our development approach, patterns, and quality standa
 2. **Test-Driven Quality** - Build tests after functionality is stable
 3. **Atomic Design** - Use systematic component architecture
 4. **Iterative Refinement** - Improve through cycles of feedback and iteration
+5. **Backend-First Data Processing** - Frontend should display data as received from Lambda/API calls; data transformations should happen at the backend level, with frontend transformations only in exceptional circumstances
+
+## Project Planning and Execution Workflow
+
+### Plan Creation and Approval Process
+
+**Step 1: Plan Creation**
+
+- Create a detailed plan with clear phases
+- Each phase should have specific, measurable deliverables
+- Include estimated time, risk level, and impact for each phase
+- Document any dependencies between phases
+
+**Step 2: Plan Review and Agreement**
+
+- Present the complete plan to stakeholders
+- Discuss and refine the plan based on feedback
+- Ensure all parties agree on the approach before starting work
+- Document the final agreed-upon plan
+
+**Step 3: Phase-by-Phase Execution**
+
+- Work through phases sequentially
+- **Do not proceed to the next phase until current phase is approved as complete**
+- Each phase completion requires explicit approval from stakeholders
+- Document progress and any deviations from the original plan
+
+**Step 4: Phase Completion Criteria**
+
+- All deliverables for the phase are complete
+- Functionality is working as expected
+- Any issues discovered are documented and added to TODO if not immediately addressed
+- Stakeholder approval is obtained before moving to next phase
+
+### Phase Approval Process
+
+**Before Starting Work:**
+
+1. Present complete plan with all phases
+2. Get agreement on approach and priorities
+3. Confirm understanding of deliverables and success criteria
+
+**During Execution:**
+
+1. Complete all work for current phase
+2. Test and verify functionality works as expected
+3. Document any issues or deviations
+4. Request approval to mark phase as complete
+
+**Phase Completion:**
+
+1. Demonstrate working functionality
+2. Show that all deliverables are met
+3. Get explicit approval from stakeholders
+4. Only then proceed to next phase
+
+**Benefits:**
+
+- Prevents scope creep and unexpected changes
+- Ensures quality at each step
+- Maintains clear communication and expectations
+- Allows for course correction if issues arise
 
 ## Development Workflow
 
@@ -109,6 +171,55 @@ This document establishes our development approach, patterns, and quality standa
 | Template       | ❌ Rarely         | ✅ Required | ✅ Required       | ✅ Required    |
 | Page           | ❌ Never          | ✅ Required | ✅ Required       | ✅ Required    |
 
+## Data Processing Principles
+
+### Backend-First Data Processing
+
+**Core Rule**: Frontend should display data exactly as received from Lambda/API calls. Data transformations, filtering, and calculations should happen at the backend level.
+
+**Why This Matters**:
+
+- **Consistency**: Ensures data is processed the same way across all clients
+- **Performance**: Reduces frontend computation and improves user experience
+- **Maintainability**: Single source of truth for data logic
+- **Accuracy**: Prevents frontend calculation errors and inconsistencies
+
+**Implementation Guidelines**:
+
+1. **Direct Display**: Use API/Lambda response data directly without frontend transformations
+2. **Backend Calculations**: All metrics, counts, and aggregations should be calculated server-side
+3. **No Frontend Filtering**: Avoid filtering data on the frontend unless absolutely necessary
+4. **Exception Cases**: Only transform data on frontend for:
+   - UI-specific formatting (dates, numbers, currency)
+   - Temporary display logic (loading states, error handling)
+   - User interaction responses (search, sorting, pagination)
+
+**Examples**:
+
+✅ **Correct**:
+
+```typescript
+// Lambda returns: { total: 171, active: 59, totalLocations: 3514 }
+const { total, active, totalLocations } = data;
+// Display directly: total, active, totalLocations
+```
+
+❌ **Incorrect**:
+
+```typescript
+// Lambda returns: { widgets: [...] }
+const widgets = data.widgets;
+const total = widgets.length; // Frontend calculation
+const active = widgets.filter((w) => w.publishedAt).length; // Frontend filtering
+```
+
+**When to Break This Rule**:
+
+- UI-specific formatting (date formatting, number formatting)
+- Temporary display logic (loading states, error states)
+- User interaction responses (client-side search, sorting)
+- Performance optimization for large datasets (with clear justification)
+
 ## Testing Strategy
 
 ### Unit Tests
@@ -198,6 +309,100 @@ src/
 - `useDataWarehouse_Lambda` - Data from EveryBite Data Warehouse via Lambda (GraphQL interface)
 - `useAPI_GraphQL` - Data from old API via GraphQL
 - `useAPI_REST` - Data from old API via REST (if needed)
+
+### Caching Strategy
+
+#### Service-Level Caching with Operation Granularity
+
+**Principle**: Organize caching by service while allowing granular TTL control per operation for optimal performance.
+
+**Cacheable Services:**
+
+- **DataWarehouse Lambda** - Analytics data, KPIs, metrics from EveryBite Data Warehouse
+- **API GraphQL** - User account information and legacy API data
+
+**Operation-Level TTLs within Services:**
+
+**DataWarehouse Lambda Operations:**
+
+- `SmartMenuSettingsHybrid` (12 hours) - Hybrid service combining main API + Lambda data with comprehensive analytics
+- `MetabaseUsers` (6 hours) - User list data, changes infrequently
+
+**API GraphQL Operations:**
+
+- `GetUser` (0 hours) - Never cached, real-time user data
+- `GetUsers` (12 hours) - User list, moderate refresh rate
+
+**Never Cached:**
+
+- **SmartMenus** - CRUD operations that require real-time data
+- **User management actions** - Create, update, delete operations
+
+**Cache Keys:**
+
+- `datawarehouse-lambda-cache-{operationName}` - Individual operation caches
+- `api-graphql-cache-{operationName}` - Individual operation caches
+
+**Benefits:**
+
+- Granular cache control per operation
+- Optimal TTLs based on data volatility
+- Independent cache expiration for different operations
+- Service-level organization for consistency
+- Better performance through targeted refreshes
+
+**Implementation:**
+
+- Use operation-level TTLs in cache configuration
+- Each operation has its own cache key and expiration
+- Cache expires per operation, not entire service
+- Manual refresh can target specific operations or entire service
+
+#### Apollo Cache Management Best Practices
+
+**Multiple Cache Layers:**
+
+1. **Apollo In-Memory Cache** - Primary cache for normalized data
+2. **Custom localStorage Cache** - Secondary cache for persistence
+3. **Browser HTTP Cache** - Tertiary cache for HTTP responses
+
+**Cache Management Functions:**
+
+```typescript
+// Clear all caches and refetch
+await cacheUtils.smartRefresh();
+
+// Clear specific service cache
+cacheUtils.clearServiceCache("datawarehouse-lambda");
+
+// Clear specific operation cache
+cacheUtils.clearOperationCache(
+  "datawarehouse-lambda",
+  "SmartMenuSettingsHybrid"
+);
+
+// Clear only localStorage cache
+cacheUtils.clearCache();
+
+// Get cache status
+const status = cacheUtils.getCacheStatus();
+```
+
+**Refresh Strategies:**
+
+- **Smart Refresh** - Clear cache and refetch active queries
+- **Service Refresh** - Clear all operations for a specific service and refetch
+- **Operation Refresh** - Clear specific operation cache and refetch
+- **Manual Refresh** - Clear cache only (requires navigation to trigger queries)
+
+**Best Practices:**
+
+- Always synchronize Apollo and custom cache layers
+- Use `smartRefresh()` for automatic cache clearing and refetching
+- Monitor cache status through `getCacheStatus()`
+- Clear expired cache only when possible
+- Provide user feedback during cache operations
+- Cache by service to maintain data consistency across related queries
 
 **File Naming:**
 

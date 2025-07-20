@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { lambdaClient } from "../../../../lib/datawarehouse-lambda-apollo";
 import { logger } from "../../../../lib/logger";
-import { LAMBDA_GET_QUARTERLY_METRICS } from "../../graphql/lambda/queries";
+import { WIDGETS_QUARTERLY_TRENDS } from "../../graphql/lambda/queries/trends";
 import type { QuarterlyMetricsResponse } from "../../graphql/types";
 
 // Interface expected by QuarterlyMetricsTable
@@ -16,7 +16,7 @@ interface QuarterlyData {
 
 export function useQuarterlyMetricsLambda() {
   const { data, loading, error } = useQuery<QuarterlyMetricsResponse>(
-    LAMBDA_GET_QUARTERLY_METRICS,
+    WIDGETS_QUARTERLY_TRENDS,
     {
       client: lambdaClient!,
       fetchPolicy: "network-only", // Force network request

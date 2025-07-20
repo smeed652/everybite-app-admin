@@ -11,11 +11,9 @@ export interface CacheConfig {
     persistence: boolean;
   };
   enableCaching: boolean;
-  // New: Individual TTLs for different pages
-  queryTTLs: {
-    dashboard: number; // TTL for dashboard page data (24 hours default)
-    metabaseUsers: number; // TTL for metabase users data (12 hours default)
-    smartMenus: number; // TTL for SmartMenus list data (12 hours default)
+  // Operation-level TTLs for different operations
+  operationTTLs: {
+    [operationName: string]: number;
   };
 }
 
@@ -31,10 +29,15 @@ const defaultConfig: CacheConfig = {
     persistence: true,
   },
   enableCaching: true,
-  queryTTLs: {
-    dashboard: 24 * 60 * 60 * 1000, // 24 hours
-    metabaseUsers: 12 * 60 * 60 * 1000, // 12 hours
-    smartMenus: 12 * 60 * 60 * 1000, // 12 hours
+  operationTTLs: {
+    // SmartMenus operations (never cached - real-time data required)
+    GetWidget: 0, // Never cached
+    GetWidgets: 0, // Never cached
+    GetSmartMenus: 0, // Never cached
+
+    // User operations
+    GetUser: 0, // Never cached - single user details (real-time)
+    // All other operations will use the default TTL (24 hours)
   },
 };
 
@@ -43,13 +46,25 @@ export function getCacheConfig(): CacheConfig {
     const raw = localStorage.getItem("cacheConfig");
     if (raw) {
       const parsed = JSON.parse(raw);
+
+      // Handle case where operationTTLs might be stored as a JSON string
+      let operationTTLs = parsed.operationTTLs;
+      if (typeof operationTTLs === "string") {
+        try {
+          operationTTLs = JSON.parse(operationTTLs);
+        } catch (e) {
+          console.warn("[CacheConfig] Error parsing operationTTLs string:", e);
+          operationTTLs = {};
+        }
+      }
+
       // Merge with defaults to ensure all properties exist
       return {
         ...defaultConfig,
         ...parsed,
-        queryTTLs: {
-          ...defaultConfig.queryTTLs,
-          ...parsed.queryTTLs,
+        operationTTLs: {
+          ...defaultConfig.operationTTLs,
+          ...operationTTLs,
         },
       };
     }
@@ -68,22 +83,21 @@ export function setCacheConfig(config: CacheConfig): void {
   }
 }
 
-// Helper function to get TTL for a specific query
-export function getQueryTTL(queryName: string): number {
+// Helper function to get TTL for a specific operation
+export function getQueryTTL(operationName: string): number {
   const config = getCacheConfig();
-  return (
-    config.queryTTLs[queryName as keyof typeof config.queryTTLs] || config.ttl
-  );
+  return config.operationTTLs[operationName] || config.ttl;
 }
 
-// Helper function to update TTL for a specific query
-export function updateQueryTTL(queryName: string, ttlHours: number): void {
+// Helper function to update TTL for a specific operation
+export function updateOperationTTL(
+  operationName: string,
+  ttlHours: number
+): void {
   const config = getCacheConfig();
-  config.queryTTLs[queryName as keyof typeof config.queryTTLs] =
-    ttlHours * 60 * 60 * 1000;
+  config.operationTTLs[operationName] = ttlHours * 60 * 60 * 1000;
   setCacheConfig(config);
 }
-
 // Cache configuration utilities
 export const cacheConfigUtils = {
   // Get formatted scheduled refresh time

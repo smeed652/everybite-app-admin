@@ -13,10 +13,10 @@ const GRAPHQL_URI =
   import.meta.env.VITE_GRAPHQL_URI || "https://api.everybite.com/graphql";
 
 console.log(
-  "[LegacyApollo] API Key:",
+  "[ApiGraphQL] API Key:",
   API_KEY ? `${API_KEY.substring(0, 8)}...` : "Not set"
 );
-console.log("[LegacyApollo] GraphQL URI:", GRAPHQL_URI);
+console.log("[ApiGraphQL] GraphQL URI:", GRAPHQL_URI);
 
 // Create HTTP link
 const httpLink = createHttpLink({
@@ -28,7 +28,7 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      "x-api-key": API_KEY,
+      Authorization: API_KEY,
     },
   };
 });
@@ -38,17 +38,17 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({ message, locations, path }) => {
       console.error(
-        `[LegacyApollo] GraphQL error: Message: ${message}, Location: ${locations}, Path: ${path}`
+        `[ApiGraphQL] GraphQL error: Message: ${message}, Location: ${locations}, Path: ${path}`
       );
     });
   }
   if (networkError) {
-    console.error(`[LegacyApollo] Network error: ${networkError}`);
+    console.error(`[ApiGraphQL] Network error: ${networkError}`);
   }
 });
 
 // Create Apollo client
-export const legacyClient = new ApolloClient({
+export const apiGraphQLClient = new ApolloClient({
   link: from([errorLink, authLink, httpLink]),
   cache: new InMemoryCache({
     typePolicies: {

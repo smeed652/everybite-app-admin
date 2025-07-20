@@ -1,31 +1,27 @@
-import { useQuery } from "@apollo/client";
 import { isAfter, subDays } from "date-fns";
-import { lambdaClient } from "../../../../lib/datawarehouse-lambda-apollo";
-import { LAMBDA_GET_DASHBOARD_WIDGETS } from "../../graphql/lambda/queries";
-import type {
-  DashboardMetrics,
-  LambdaWidgetsResponse,
-} from "../../graphql/types";
+import { useSmartMenuSettings } from "../../../../hooks/useSmartMenuSettings";
+import type { DashboardMetrics } from "../../graphql/types";
 
-export function useDashboardLambda() {
-  const { data, loading, error } = useQuery<LambdaWidgetsResponse>(
-    LAMBDA_GET_DASHBOARD_WIDGETS,
-    {
-      client: lambdaClient!,
-      fetchPolicy: "cache-and-network",
-    }
-  );
+/**
+ * New comprehensive SmartMenu dashboard hook using the SmartMenuSettings service
+ * This provides all dashboard data plus additional fields like classifications, ordering status, etc.
+ *
+ * This is a parallel implementation alongside the existing useDashboardLambda hook.
+ * The existing Dashboard infrastructure remains untouched until this is fully validated.
+ */
+export function useSmartMenuDashboard() {
+  const {
+    smartMenus: widgets,
+    quarterlyMetrics,
+    loading,
+    error,
+    metrics: smartMenuMetrics,
+  } = useSmartMenuSettings();
 
-  const widgets = data?.db_widgetsList?.items ?? [];
-  const total = widgets.length;
-  const active = widgets.filter((w) => Boolean(w.publishedAt)).length;
-
-  // Calculate total locations for active SmartMenus
-  const activeWidgets = widgets.filter((w) => Boolean(w.publishedAt));
-  const totalLocations = activeWidgets.reduce(
-    (sum, w) => sum + (w.numberOfLocations || 0),
-    0
-  );
+  // Calculate dashboard metrics from the comprehensive SmartMenu data
+  const total = smartMenuMetrics.totalSmartMenus;
+  const active = smartMenuMetrics.activeSmartMenus;
+  const totalLocations = smartMenuMetrics.totalLocations;
 
   // Compute 30-day trending deltas
   const now = new Date();
@@ -88,7 +84,8 @@ export function useDashboardLambda() {
   return {
     widgets,
     metrics,
+    quarterlyMetrics,
     loading,
-    error: error?.message || null,
+    error,
   } as const;
 }

@@ -1,36 +1,49 @@
-import * as apollo from "@apollo/client";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import Dashboard from "../Dashboard";
 
-// Mock Apollo useQuery to return fake data
-const widgetsMock = [
-  {
-    id: "1",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10).toISOString(),
-    publishedAt: null,
-    numberOfLocations: 5,
-  },
-  {
-    id: "2",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 40).toISOString(),
-    publishedAt: new Date().toISOString(),
-    numberOfLocations: 8,
-  },
-];
+// Mock the underlying SmartMenu settings hook
+vi.mock("../../hooks/useSmartMenuSettings", () => ({
+  useSmartMenuSettings: () => ({
+    smartMenus: [
+      {
+        id: "1",
+        createdAt: new Date(
+          Date.now() - 1000 * 60 * 60 * 24 * 10
+        ).toISOString(),
+        publishedAt: null,
+        numberOfLocations: 5,
+      },
+      {
+        id: "2",
+        createdAt: new Date(
+          Date.now() - 1000 * 60 * 60 * 24 * 40
+        ).toISOString(),
+        publishedAt: new Date().toISOString(),
+        numberOfLocations: 8,
+      },
+    ],
+    loading: false,
+    error: null,
+    metrics: {
+      totalSmartMenus: 2,
+      activeSmartMenus: 1,
+      totalLocations: 8,
+    },
+  }),
+}));
 
-vi.mock("@apollo/client", async () => {
-  const actual = await vi.importActual<typeof apollo>("@apollo/client");
-  return {
-    ...actual,
-    useQuery: () => ({
-      data: { widgets: widgetsMock },
-      loading: false,
-      error: null,
-    }),
-  };
-});
+// Mock the quarterly metrics Lambda hook
+vi.mock("../features/dashboard/hooks/lambda", () => ({
+  useQuarterlyMetricsLambda: () => ({
+    quarterlyData: [],
+    totalOrders: 150,
+    ordersDelta: "+20%",
+    loading: false,
+    error: null,
+  }),
+}));
 
 describe("Dashboard page", () => {
   it("renders metrics cards with correct counts", () => {

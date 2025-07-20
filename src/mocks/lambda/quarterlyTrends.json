@@ -1,0 +1,74 @@
+{
+  "quarterlyTrends": [
+    {
+      "quarter": "2025-07-01T00:00:00Z",
+      "year": 2025,
+      "quarterLabel": "Q3 2025",
+      "totalOrders": 10704,
+      "activeWidgets": 55,
+      "newWidgets": 0,
+      "newBrands": 0,
+      "newLocations": 0
+    },
+    {
+      "quarter": "2025-04-01T00:00:00Z",
+      "year": 2025,
+      "quarterLabel": "Q2 2025",
+      "totalOrders": 45929,
+      "activeWidgets": 64,
+      "newWidgets": 5,
+      "newBrands": 5,
+      "newLocations": 415
+    },
+    {
+      "quarter": "2025-01-01T00:00:00Z",
+      "year": 2025,
+      "quarterLabel": "Q1 2025",
+      "totalOrders": 10942,
+      "activeWidgets": 49,
+      "newWidgets": 11,
+      "newBrands": 11,
+      "newLocations": 1703
+    },
+    {
+      "quarter": "2024-10-01T00:00:00Z",
+      "year": 2024,
+      "quarterLabel": "Q4 2024",
+      "totalOrders": 4727,
+      "activeWidgets": 45,
+      "newWidgets": 11,
+      "newBrands": 11,
+      "newLocations": 786
+    },
+    {
+      "quarter": "2024-07-01T00:00:00Z",
+      "year": 2024,
+      "quarterLabel": "Q3 2024",
+      "totalOrders": 3313,
+      "activeWidgets": 39,
+      "newWidgets": 9,
+      "newBrands": 9,
+      "newLocations": 939
+    },
+    {
+      "quarter": "2024-04-01T00:00:00Z",
+      "year": 2024,
+      "quarterLabel": "Q2 2024",
+      "totalOrders": 1330,
+      "activeWidgets": 28,
+      "newWidgets": 22,
+      "newBrands": 22,
+      "newLocations": 652
+    },
+    {
+      "quarter": "2024-01-01T00:00:00Z",
+      "year": 2024,
+      "quarterLabel": "Q1 2024",
+      "totalOrders": 8,
+      "activeWidgets": 1,
+      "newWidgets": 1,
+      "newBrands": 1,
+      "newLocations": 22
+    }
+  ]
+}

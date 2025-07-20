@@ -1,0 +1,124 @@
+{
+  "monthlyGrowth": [
+    {
+      "month": "2025-07-01T00:00:00Z",
+      "year": 2025,
+      "monthNum": 7,
+      "monthLabel": "July 2025",
+      "totalOrders": 10704,
+      "activeWidgets": 55,
+      "newWidgets": 0,
+      "newBrands": 0
+    },
+    {
+      "month": "2025-06-01T00:00:00Z",
+      "year": 2025,
+      "monthNum": 6,
+      "monthLabel": "June 2025",
+      "totalOrders": 16916,
+      "activeWidgets": 58,
+      "newWidgets": 1,
+      "newBrands": 1
+    },
+    {
+      "month": "2025-05-01T00:00:00Z",
+      "year": 2025,
+      "monthNum": 5,
+      "monthLabel": "May 2025",
+      "totalOrders": 15181,
+      "activeWidgets": 56,
+      "newWidgets": 2,
+      "newBrands": 2
+    },
+    {
+      "month": "2025-04-01T00:00:00Z",
+      "year": 2025,
+      "monthNum": 4,
+      "monthLabel": "April 2025",
+      "totalOrders": 13832,
+      "activeWidgets": 51,
+      "newWidgets": 2,
+      "newBrands": 2
+    },
+    {
+      "month": "2025-03-01T00:00:00Z",
+      "year": 2025,
+      "monthNum": 3,
+      "monthLabel": "March 2025",
+      "totalOrders": 5634,
+      "activeWidgets": 46,
+      "newWidgets": 2,
+      "newBrands": 2
+    },
+    {
+      "month": "2025-02-01T00:00:00Z",
+      "year": 2025,
+      "monthNum": 2,
+      "monthLabel": "February 2025",
+      "totalOrders": 2985,
+      "activeWidgets": 38,
+      "newWidgets": 2,
+      "newBrands": 2
+    },
+    {
+      "month": "2025-01-01T00:00:00Z",
+      "year": 2025,
+      "monthNum": 1,
+      "monthLabel": "January 2025",
+      "totalOrders": 2323,
+      "activeWidgets": 40,
+      "newWidgets": 7,
+      "newBrands": 7
+    },
+    {
+      "month": "2024-12-01T00:00:00Z",
+      "year": 2024,
+      "monthNum": 12,
+      "monthLabel": "December 2024",
+      "totalOrders": 1547,
+      "activeWidgets": 40,
+      "newWidgets": 2,
+      "newBrands": 2
+    },
+    {
+      "month": "2024-11-01T00:00:00Z",
+      "year": 2024,
+      "monthNum": 11,
+      "monthLabel": "November 2024",
+      "totalOrders": 1586,
+      "activeWidgets": 40,
+      "newWidgets": 5,
+      "newBrands": 5
+    },
+    {
+      "month": "2024-10-01T00:00:00Z",
+      "year": 2024,
+      "monthNum": 10,
+      "monthLabel": "October 2024",
+      "totalOrders": 1594,
+      "activeWidgets": 35,
+      "newWidgets": 4,
+      "newBrands": 4
+    },
+    {
+      "month": "2024-09-01T00:00:00Z",
+      "year": 2024,
+      "monthNum": 9,
+      "monthLabel": "September 2024",
+      "totalOrders": 1125,
+      "activeWidgets": 34,
+      "newWidgets": 0,
+      "newBrands": 0
+    },
+    {
+      "month": "2024-08-01T00:00:00Z",
+      "year": 2024,
+      "monthNum": 8,
+      "monthLabel": "August 2024",
+      "totalOrders": 1231,
+      "activeWidgets": 30,
+      "newWidgets": 6,
+      "newBrands": 6
+    }
+  ]
+}

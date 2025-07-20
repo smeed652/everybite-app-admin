@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { Widget } from "../../../generated/graphql";
-import { lambdaClient } from "../../../lib/datawarehouse-lambda-apollo";
+import { apiGraphQLClient } from "../../../lib/api-graphql-apollo";
 import { WIDGET_BASIC_FIELDS } from "../graphql/fragments";
 
 export const GET_WIDGET = gql`
@@ -20,7 +20,7 @@ interface UseWidgetResult {
 
 export function useWidget(id: string): UseWidgetResult {
   const { data, loading, error } = useQuery(GET_WIDGET, {
-    client: lambdaClient!,
+    client: apiGraphQLClient!,
     variables: { id },
     fetchPolicy: "cache-and-network",
   });

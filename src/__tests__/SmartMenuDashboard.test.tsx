@@ -14,15 +14,20 @@ vi.mock("../features/dashboard/sections/PlayerAnalyticsSection", () => ({
 
 const GET_DASHBOARD_WIDGETS = gql`
   query GetDashboardWidgets {
-    widgets {
-      id
-      createdAt
-      publishedAt
-      numberOfLocations
-      displayImages
-      layout
-      isOrderButtonEnabled
-      isByoEnabled
+    db_widgetsList {
+      items {
+        id
+        createdAt
+        publishedAt
+        numberOfLocations
+        displayImages
+        layout
+        isOrderButtonEnabled
+        isByoEnabled
+      }
+      pagination {
+        total
+      }
     }
   }
 `;
@@ -77,7 +82,12 @@ const mocks = [
     },
     result: {
       data: {
-        widgets: mockWidgets,
+        db_widgetsList: {
+          items: mockWidgets,
+          pagination: {
+            total: mockWidgets.length,
+          },
+        },
       },
     },
   },
@@ -97,11 +107,21 @@ const renderDashboard = (
     request: { query: DocumentNode };
     result?: {
       data: {
-        widgets: Array<{
-          id: string;
-          createdAt: string;
-          publishedAt: string | null;
-        }>;
+        db_widgetsList: {
+          items: Array<{
+            id: string;
+            createdAt: string;
+            publishedAt: string | null;
+            numberOfLocations?: number;
+            displayImages?: boolean;
+            layout?: string;
+            isOrderButtonEnabled?: boolean;
+            isByoEnabled?: boolean;
+          }>;
+          pagination: {
+            total: number;
+          };
+        };
       };
     };
     error?: Error;
@@ -202,7 +222,12 @@ describe("Dashboard", () => {
         },
         result: {
           data: {
-            widgets: trendWidgets,
+            db_widgetsList: {
+              items: trendWidgets,
+              pagination: {
+                total: trendWidgets.length,
+              },
+            },
           },
         },
       },
@@ -248,7 +273,12 @@ describe("Dashboard", () => {
         },
         result: {
           data: {
-            widgets: zeroPrevWidgets,
+            db_widgetsList: {
+              items: zeroPrevWidgets,
+              pagination: {
+                total: zeroPrevWidgets.length,
+              },
+            },
           },
         },
       },
@@ -270,7 +300,12 @@ describe("Dashboard", () => {
         },
         result: {
           data: {
-            widgets: [],
+            db_widgetsList: {
+              items: [],
+              pagination: {
+                total: 0,
+              },
+            },
           },
         },
       },
@@ -397,7 +432,12 @@ describe("Dashboard", () => {
         },
         result: {
           data: {
-            widgets: negativeTrendWidgets,
+            db_widgetsList: {
+              items: negativeTrendWidgets,
+              pagination: {
+                total: negativeTrendWidgets.length,
+              },
+            },
           },
         },
       },

@@ -58,6 +58,70 @@ const analyticsSchema = `
     kpis: KPIData!
   }
 
+  type FeatureAdoption {
+    totalActive: Int!
+    withImages: Int!
+    withCardLayout: Int!
+    withOrdering: Int!
+    withByo: Int!
+  }
+
+  type QuarterlyTrends {
+    quarter: String!
+    year: Int!
+    quarterLabel: String!
+    totalOrders: Int!
+    activeWidgets: Int!
+    newWidgets: Int!
+    newBrands: Int!
+    newLocations: Int!
+  }
+
+  type MonthlyGrowth {
+    month: String!
+    year: Int!
+    monthNum: Int!
+    monthLabel: String!
+    totalOrders: Int!
+    activeWidgets: Int!
+    newWidgets: Int!
+    newBrands: Int!
+  }
+
+  type DailyOrdersTrends {
+    day: String!
+    dayLabel: String!
+    totalOrders: Int!
+    activeWidgets: Int!
+    uniqueUsers: Int!
+  }
+
+  type ActivationInsights {
+    activationStats: [ActivationStats!]!
+    recentActivations: [RecentActivations!]!
+  }
+
+  type ActivationStats {
+    status: String!
+    count: Int!
+    avgLocations: Float!
+  }
+
+  type RecentActivations {
+    week: String!
+    weekLabel: String!
+    activations: Int!
+  }
+
+  type RetentionAnalytics {
+    cohortMonth: String!
+    monthLabel: String!
+    cohortSize: Int!
+    firstTimeUsers: Int!
+    returningUsers: Int!
+    retentionRate: Float!
+  }
+
   type WidgetSummaryData {
     totalWidgets: Int!
     activeWidgets: Int!
@@ -230,6 +294,23 @@ const analyticsSchema = `
     orderUrl: String
     numberOfLocations: Int
     numberOfLocationsSource: String
+    # Chain classifications - temporarily disabled for performance
+    # chain_nra_classifications: [ChainNraClassification!]
+    # chain_menu_classifications: [ChainMenuClassification!]
+    # chain_cuisine_classifications: [ChainCuisineClassification!]
+  }
+
+  # Chain classification types
+  type ChainNraClassification {
+    nra_classification: String!
+  }
+
+  type ChainMenuClassification {
+    menu_type: String!
+  }
+
+  type ChainCuisineClassification {
+    cuisine_type: String!
   }
 
   type DbOrders {
@@ -587,6 +668,12 @@ const analyticsSchema = `
     # New grouped analytics queries
     dashboardMetrics: DashboardMetrics!
     detailedAnalytics(filters: AnalyticsFilters): DetailedAnalytics!
+    featureAdoption: FeatureAdoption!
+    quarterlyTrends: [QuarterlyTrends!]!
+    monthlyGrowth: [MonthlyGrowth!]!
+    dailyOrdersTrends: [DailyOrdersTrends!]!
+    activationInsights: ActivationInsights!
+    retentionAnalytics: [RetentionAnalytics!]!
     
     # Legacy individual queries (for backward compatibility)
     widgetAnalytics(filters: AnalyticsFilters): WidgetAnalytics!

@@ -1,0 +1,18 @@
+{
+  "dashboardMetrics": {
+    "widgetSummary": {
+      "totalWidgets": 171,
+      "activeWidgets": 59,
+      "totalLocations": 4517,
+      "totalOrders": 76953,
+      "averageOrdersPerWidget": 450.0175438596491
+    },
+    "quarterlyMetrics": [],
+    "kpis": {
+      "totalRevenue": 0,
+      "totalDinerVisits": 0,
+      "averageOrderValue": 0,
+      "conversionRate": 0
+    }
+  }
+}

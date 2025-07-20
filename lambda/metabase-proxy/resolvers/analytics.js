@@ -338,6 +338,434 @@ const analyticsResolvers = {
       }
     },
 
+    dashboardMetrics: async (_, __, { executeMetabaseQuery }) => {
+      try {
+        console.log("🔍 dashboardMetrics resolver called");
+
+        const analyticsQueries = require("../queries/analytics");
+        const query = analyticsQueries.dashboardMetrics;
+
+        console.log("📋 Executing dashboardMetrics query:", query.native.query);
+
+        const result = await executeMetabaseQuery(query);
+
+        console.log(
+          "✅ DashboardMetrics query result:",
+          JSON.stringify(result, null, 2)
+        );
+
+        // Parse the simple result structure
+        const row = result.data.rows[0];
+        const totalWidgets = parseInt(row[0]) || 0;
+        const activeWidgets = parseInt(row[1]) || 0;
+        const totalLocations = parseInt(row[2]) || 0;
+        const totalOrders = parseInt(row[3]) || 0;
+
+        const widgetSummary = {
+          totalWidgets,
+          activeWidgets,
+          totalLocations,
+          totalOrders,
+          averageOrdersPerWidget:
+            totalWidgets > 0 ? totalOrders / totalWidgets : 0,
+        };
+
+        console.log("🎯 Processed dashboardMetrics:", {
+          widgetSummary,
+        });
+
+        return {
+          widgetSummary,
+          quarterlyMetrics: [], // Use quarterlyTrends query for this data
+          kpis: {
+            totalRevenue: 0, // TODO: Add revenue calculation
+            totalDinerVisits: 0,
+            averageOrderValue: 0,
+            conversionRate: 0,
+          },
+        };
+      } catch (error) {
+        console.error("❌ Error in dashboardMetrics resolver:", error);
+        console.error("❌ Error stack:", error.stack);
+        throw new Error("Failed to fetch dashboard metrics");
+      }
+    },
+
+    featureAdoption: async (_, __, { executeMetabaseQuery }) => {
+      try {
+        console.log("🔍 featureAdoption resolver called");
+
+        const analyticsQueries = require("../queries/analytics");
+        const query = analyticsQueries.featureAdoption;
+
+        console.log("📋 Executing featureAdoption query:", query.native.query);
+
+        const result = await executeMetabaseQuery(query);
+
+        console.log(
+          "✅ FeatureAdoption query result:",
+          JSON.stringify(result, null, 2)
+        );
+
+        if (!result.data?.rows || !result.data.rows[0]) {
+          throw new Error("No data returned from featureAdoption query");
+        }
+
+        const row = result.data.rows[0];
+        const totalActive = parseInt(row[0]) || 0;
+        const withImages = parseInt(row[1]) || 0;
+        const withCardLayout = parseInt(row[2]) || 0;
+        const withOrdering = parseInt(row[3]) || 0;
+        const withByo = parseInt(row[4]) || 0;
+
+        console.log("🎯 Processed featureAdoption:", {
+          totalActive,
+          withImages,
+          withCardLayout,
+          withOrdering,
+          withByo,
+        });
+
+        return {
+          totalActive,
+          withImages,
+          withCardLayout,
+          withOrdering,
+          withByo,
+        };
+      } catch (error) {
+        console.error("❌ Error in featureAdoption resolver:", error);
+        console.error("❌ Error stack:", error.stack);
+        throw new Error("Failed to fetch feature adoption data");
+      }
+    },
+
+    quarterlyTrends: async (_, __, { executeMetabaseQuery }) => {
+      try {
+        console.log("🔍 quarterlyTrends resolver called");
+
+        const analyticsQueries = require("../queries/analytics");
+        const query = analyticsQueries.quarterlyTrends;
+
+        console.log("📋 Executing quarterlyTrends query:", query.native.query);
+
+        const result = await executeMetabaseQuery(query);
+
+        console.log(
+          "✅ QuarterlyTrends query result:",
+          JSON.stringify(result, null, 2)
+        );
+
+        if (!result.data?.rows) {
+          throw new Error("No data returned from quarterlyTrends query");
+        }
+
+        const trends = result.data.rows
+          .map((row) => {
+            const quarter = row[0];
+            const totalOrders = parseInt(row[1]) || 0;
+            const activeWidgets = parseInt(row[2]) || 0;
+            const newWidgets = parseInt(row[3]) || 0;
+            const newBrands = parseInt(row[4]) || 0;
+            const newLocations = parseInt(row[5]) || 0;
+
+            if (quarter) {
+              const quarterDate = new Date(quarter);
+              const year = quarterDate.getFullYear();
+              const quarterNum = Math.floor(quarterDate.getMonth() / 3) + 1;
+              const quarterLabel = `Q${quarterNum} ${year}`;
+
+              return {
+                quarter,
+                year,
+                quarterLabel,
+                totalOrders,
+                activeWidgets,
+                newWidgets,
+                newBrands,
+                newLocations,
+              };
+            }
+            return null;
+          })
+          .filter(Boolean);
+
+        console.log("🎯 Processed quarterlyTrends:", {
+          trendsCount: trends.length,
+        });
+
+        return trends;
+      } catch (error) {
+        console.error("❌ Error in quarterlyTrends resolver:", error);
+        console.error("❌ Error stack:", error.stack);
+        throw new Error("Failed to fetch quarterly trends data");
+      }
+    },
+
+    monthlyGrowth: async (_, __, { executeMetabaseQuery }) => {
+      try {
+        console.log("🔍 monthlyGrowth resolver called");
+
+        const analyticsQueries = require("../queries/analytics");
+        const query = analyticsQueries.monthlyGrowth;
+
+        console.log("📋 Executing monthlyGrowth query:", query.native.query);
+
+        const result = await executeMetabaseQuery(query);
+
+        console.log(
+          "✅ MonthlyGrowth query result:",
+          JSON.stringify(result, null, 2)
+        );
+
+        if (!result.data?.rows) {
+          throw new Error("No data returned from monthlyGrowth query");
+        }
+
+        const growth = result.data.rows
+          .map((row) => {
+            const month = row[0];
+            const totalOrders = parseInt(row[1]) || 0;
+            const activeWidgets = parseInt(row[2]) || 0;
+            const newWidgets = parseInt(row[3]) || 0;
+            const newBrands = parseInt(row[4]) || 0;
+
+            if (month) {
+              const monthDate = new Date(month);
+              const year = monthDate.getFullYear();
+              const monthNum = monthDate.getMonth() + 1;
+              const monthLabel = monthDate.toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+              });
+
+              return {
+                month,
+                year,
+                monthNum,
+                monthLabel,
+                totalOrders,
+                activeWidgets,
+                newWidgets,
+                newBrands,
+              };
+            }
+            return null;
+          })
+          .filter(Boolean);
+
+        console.log("🎯 Processed monthlyGrowth:", {
+          growthCount: growth.length,
+        });
+
+        return growth;
+      } catch (error) {
+        console.error("❌ Error in monthlyGrowth resolver:", error);
+        console.error("❌ Error stack:", error.stack);
+        throw new Error("Failed to fetch monthly growth data");
+      }
+    },
+
+    dailyOrdersTrends: async (_, __, { executeMetabaseQuery }) => {
+      try {
+        console.log("🔍 dailyOrdersTrends resolver called");
+
+        const analyticsQueries = require("../queries/analytics");
+        const query = analyticsQueries.dailyOrdersTrends;
+
+        console.log(
+          "📋 Executing dailyOrdersTrends query:",
+          query.native.query
+        );
+
+        const result = await executeMetabaseQuery(query);
+
+        console.log(
+          "✅ DailyOrdersTrends query result:",
+          JSON.stringify(result, null, 2)
+        );
+
+        if (!result.data?.rows) {
+          throw new Error("No data returned from dailyOrdersTrends query");
+        }
+
+        const trends = result.data.rows
+          .map((row) => {
+            const day = row[0];
+            const totalOrders = parseInt(row[1]) || 0;
+            const activeWidgets = parseInt(row[2]) || 0;
+            const uniqueUsers = parseInt(row[3]) || 0;
+
+            if (day) {
+              const dayDate = new Date(day);
+              const dayLabel = dayDate.toLocaleDateString("en-US", {
+                weekday: "short",
+                month: "short",
+                day: "numeric",
+              });
+
+              return {
+                day,
+                dayLabel,
+                totalOrders,
+                activeWidgets,
+                uniqueUsers,
+              };
+            }
+            return null;
+          })
+          .filter(Boolean);
+
+        console.log("🎯 Processed dailyOrdersTrends:", {
+          trendsCount: trends.length,
+        });
+
+        return trends;
+      } catch (error) {
+        console.error("❌ Error in dailyOrdersTrends resolver:", error);
+        console.error("❌ Error stack:", error.stack);
+        throw new Error("Failed to fetch daily orders trends data");
+      }
+    },
+
+    activationInsights: async (_, __, { executeMetabaseQuery }) => {
+      try {
+        console.log("🔍 activationInsights resolver called");
+
+        const analyticsQueries = require("../queries/analytics");
+        const query = analyticsQueries.activationInsights;
+
+        console.log(
+          "📋 Executing activationInsights query:",
+          query.native.query
+        );
+
+        const result = await executeMetabaseQuery(query);
+
+        console.log(
+          "✅ ActivationInsights query result:",
+          JSON.stringify(result, null, 2)
+        );
+
+        if (!result.data?.rows) {
+          throw new Error("No data returned from activationInsights query");
+        }
+
+        const activationStats = [];
+        const recentActivations = [];
+
+        result.data.rows.forEach((row) => {
+          const dataType = row[0];
+
+          if (dataType === "activation_stats") {
+            const status = row[1];
+            const count = parseInt(row[2]) || 0;
+            const avgLocations = parseFloat(row[3]) || 0;
+
+            activationStats.push({
+              status,
+              count,
+              avgLocations,
+            });
+          } else if (dataType === "recent_activations") {
+            const week = row[1];
+            const activations = parseInt(row[2]) || 0;
+
+            if (week) {
+              const weekDate = new Date(week);
+              const weekLabel = weekDate.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              });
+
+              recentActivations.push({
+                week,
+                weekLabel,
+                activations,
+              });
+            }
+          }
+        });
+
+        console.log("🎯 Processed activationInsights:", {
+          activationStatsCount: activationStats.length,
+          recentActivationsCount: recentActivations.length,
+        });
+
+        return {
+          activationStats,
+          recentActivations,
+        };
+      } catch (error) {
+        console.error("❌ Error in activationInsights resolver:", error);
+        console.error("❌ Error stack:", error.stack);
+        throw new Error("Failed to fetch activation insights data");
+      }
+    },
+
+    retentionAnalytics: async (_, __, { executeMetabaseQuery }) => {
+      try {
+        console.log("🔍 retentionAnalytics resolver called");
+
+        const analyticsQueries = require("../queries/analytics");
+        const query = analyticsQueries.retentionAnalytics;
+
+        console.log(
+          "📋 Executing retentionAnalytics query:",
+          query.native.query
+        );
+
+        const result = await executeMetabaseQuery(query);
+
+        console.log(
+          "✅ RetentionAnalytics query result:",
+          JSON.stringify(result, null, 2)
+        );
+
+        if (!result.data?.rows) {
+          throw new Error("No data returned from retentionAnalytics query");
+        }
+
+        const retention = result.data.rows
+          .map((row) => {
+            const cohortMonth = row[0];
+            const cohortSize = parseInt(row[1]) || 0;
+            const firstTimeUsers = parseInt(row[2]) || 0;
+            const returningUsers = parseInt(row[3]) || 0;
+            const retentionRate = parseFloat(row[4]) || 0;
+
+            if (cohortMonth) {
+              const monthDate = new Date(cohortMonth);
+              const monthLabel = monthDate.toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+              });
+
+              return {
+                cohortMonth,
+                monthLabel,
+                cohortSize,
+                firstTimeUsers,
+                returningUsers,
+                retentionRate,
+              };
+            }
+            return null;
+          })
+          .filter(Boolean);
+
+        console.log("🎯 Processed retentionAnalytics:", {
+          retentionCount: retention.length,
+        });
+
+        return retention;
+      } catch (error) {
+        console.error("❌ Error in retentionAnalytics resolver:", error);
+        console.error("❌ Error stack:", error.stack);
+        throw new Error("Failed to fetch retention analytics data");
+      }
+    },
+
     totalMetrics: async (
       _,
       { startDate, endDate },

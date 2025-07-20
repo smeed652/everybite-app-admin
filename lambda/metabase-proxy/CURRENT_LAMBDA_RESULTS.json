@@ -1,0 +1,319 @@
+{
+  "timestamp": "2025-07-19T18:15:00Z",
+  "lambdaUrl": "https://ldfubm7l7k2hj4ln3pxtqylcwe0isjau.lambda-url.us-west-1.on.aws",
+  "version": "22",
+  "environment": "dev",
+  "results": {
+    "dashboardMetrics": {
+      "widgetSummary": {
+        "totalWidgets": 171,
+        "activeWidgets": 59,
+        "totalLocations": 4517,
+        "totalOrders": 76953,
+        "averageOrdersPerWidget": 450.0175438596491
+      },
+      "quarterlyMetrics": [],
+      "kpis": {
+        "totalRevenue": 0,
+        "totalDinerVisits": 0,
+        "averageOrderValue": 0,
+        "conversionRate": 0
+      }
+    },
+    "featureAdoption": {
+      "totalActive": 59,
+      "withImages": 32,
+      "withCardLayout": 0,
+      "withOrdering": 35,
+      "withByo": 36
+    },
+    "quarterlyTrends": [
+      {
+        "quarter": "2025-07-01T00:00:00Z",
+        "year": 2025,
+        "quarterLabel": "Q3 2025",
+        "totalOrders": 10704,
+        "activeWidgets": 55,
+        "newWidgets": 0,
+        "newBrands": 0,
+        "newLocations": 0
+      },
+      {
+        "quarter": "2025-04-01T00:00:00Z",
+        "year": 2025,
+        "quarterLabel": "Q2 2025",
+        "totalOrders": 45929,
+        "activeWidgets": 64,
+        "newWidgets": 5,
+        "newBrands": 5,
+        "newLocations": 415
+      },
+      {
+        "quarter": "2025-01-01T00:00:00Z",
+        "year": 2025,
+        "quarterLabel": "Q1 2025",
+        "totalOrders": 10942,
+        "activeWidgets": 49,
+        "newWidgets": 11,
+        "newBrands": 11,
+        "newLocations": 1703
+      },
+      {
+        "quarter": "2024-10-01T00:00:00Z",
+        "year": 2024,
+        "quarterLabel": "Q4 2024",
+        "totalOrders": 4727,
+        "activeWidgets": 45,
+        "newWidgets": 11,
+        "newBrands": 11,
+        "newLocations": 786
+      },
+      {
+        "quarter": "2024-07-01T00:00:00Z",
+        "year": 2024,
+        "quarterLabel": "Q3 2024",
+        "totalOrders": 3313,
+        "activeWidgets": 39,
+        "newWidgets": 9,
+        "newBrands": 9,
+        "newLocations": 939
+      },
+      {
+        "quarter": "2024-04-01T00:00:00Z",
+        "year": 2024,
+        "quarterLabel": "Q2 2024",
+        "totalOrders": 1330,
+        "activeWidgets": 28,
+        "newWidgets": 22,
+        "newBrands": 22,
+        "newLocations": 652
+      },
+      {
+        "quarter": "2024-01-01T00:00:00Z",
+        "year": 2024,
+        "quarterLabel": "Q1 2024",
+        "totalOrders": 8,
+        "activeWidgets": 1,
+        "newWidgets": 1,
+        "newBrands": 1,
+        "newLocations": 22
+      }
+    ],
+    "monthlyGrowth": [
+      {
+        "month": "2025-07-01T00:00:00Z",
+        "year": 2025,
+        "monthNum": 7,
+        "monthLabel": "July 2025",
+        "totalOrders": 10704,
+        "activeWidgets": 55,
+        "newWidgets": 0,
+        "newBrands": 0
+      },
+      {
+        "month": "2025-06-01T00:00:00Z",
+        "year": 2025,
+        "monthNum": 6,
+        "monthLabel": "June 2025",
+        "totalOrders": 16916,
+        "activeWidgets": 58,
+        "newWidgets": 1,
+        "newBrands": 1
+      },
+      {
+        "month": "2025-05-01T00:00:00Z",
+        "year": 2025,
+        "monthNum": 5,
+        "monthLabel": "May 2025",
+        "totalOrders": 15181,
+        "activeWidgets": 56,
+        "newWidgets": 2,
+        "newBrands": 2
+      },
+      {
+        "month": "2025-04-01T00:00:00Z",
+        "year": 2025,
+        "monthNum": 4,
+        "monthLabel": "April 2025",
+        "totalOrders": 13832,
+        "activeWidgets": 51,
+        "newWidgets": 2,
+        "newBrands": 2
+      },
+      {
+        "month": "2025-03-01T00:00:00Z",
+        "year": 2025,
+        "monthNum": 3,
+        "monthLabel": "March 2025",
+        "totalOrders": 5634,
+        "activeWidgets": 46,
+        "newWidgets": 2,
+        "newBrands": 2
+      },
+      {
+        "month": "2025-02-01T00:00:00Z",
+        "year": 2025,
+        "monthNum": 2,
+        "monthLabel": "February 2025",
+        "totalOrders": 2985,
+        "activeWidgets": 38,
+        "newWidgets": 2,
+        "newBrands": 2
+      },
+      {
+        "month": "2025-01-01T00:00:00Z",
+        "year": 2025,
+        "monthNum": 1,
+        "monthLabel": "January 2025",
+        "totalOrders": 2323,
+        "activeWidgets": 40,
+        "newWidgets": 7,
+        "newBrands": 7
+      },
+      {
+        "month": "2024-12-01T00:00:00Z",
+        "year": 2024,
+        "monthNum": 12,
+        "monthLabel": "December 2024",
+        "totalOrders": 1547,
+        "activeWidgets": 40,
+        "newWidgets": 2,
+        "newBrands": 2
+      },
+      {
+        "month": "2024-11-01T00:00:00Z",
+        "year": 2024,
+        "monthNum": 11,
+        "monthLabel": "November 2024",
+        "totalOrders": 1586,
+        "activeWidgets": 40,
+        "newWidgets": 5,
+        "newBrands": 5
+      },
+      {
+        "month": "2024-10-01T00:00:00Z",
+        "year": 2024,
+        "monthNum": 10,
+        "monthLabel": "October 2024",
+        "totalOrders": 1594,
+        "activeWidgets": 35,
+        "newWidgets": 4,
+        "newBrands": 4
+      },
+      {
+        "month": "2024-09-01T00:00:00Z",
+        "year": 2024,
+        "monthNum": 9,
+        "monthLabel": "September 2024",
+        "totalOrders": 1125,
+        "activeWidgets": 34,
+        "newWidgets": 0,
+        "newBrands": 0
+      },
+      {
+        "month": "2024-08-01T00:00:00Z",
+        "year": 2024,
+        "monthNum": 8,
+        "monthLabel": "August 2024",
+        "totalOrders": 1231,
+        "activeWidgets": 30,
+        "newWidgets": 6,
+        "newBrands": 6
+      }
+    ],
+    "dailyOrdersTrends": [
+      {
+        "day": "2025-07-19T00:00:00Z",
+        "dayLabel": "Sat, Jul 19",
+        "totalOrders": 223,
+        "activeWidgets": 26,
+        "uniqueUsers": 0
+      },
+      {
+        "day": "2025-07-18T00:00:00Z",
+        "dayLabel": "Fri, Jul 18",
+        "totalOrders": 644,
+        "activeWidgets": 34,
+        "uniqueUsers": 0
+      },
+      {
+        "day": "2025-07-17T00:00:00Z",
+        "dayLabel": "Thu, Jul 17",
+        "totalOrders": 574,
+        "activeWidgets": 31,
+        "uniqueUsers": 1
+      },
+      {
+        "day": "2025-07-16T00:00:00Z",
+        "dayLabel": "Wed, Jul 16",
+        "totalOrders": 573,
+        "activeWidgets": 30,
+        "uniqueUsers": 0
+      },
+      {
+        "day": "2025-07-15T00:00:00Z",
+        "dayLabel": "Tue, Jul 15",
+        "totalOrders": 583,
+        "activeWidgets": 32,
+        "uniqueUsers": 0
+      },
+      {
+        "day": "2025-07-14T00:00:00Z",
+        "dayLabel": "Mon, Jul 14",
+        "totalOrders": 510,
+        "activeWidgets": 32,
+        "uniqueUsers": 1
+      },
+      {
+        "day": "2025-07-13T00:00:00Z",
+        "dayLabel": "Sun, Jul 13",
+        "totalOrders": 648,
+        "activeWidgets": 31,
+        "uniqueUsers": 0
+      },
+      {
+        "day": "2025-07-12T00:00:00Z",
+        "dayLabel": "Sat, Jul 12",
+        "totalOrders": 563,
+        "activeWidgets": 30,
+        "uniqueUsers": 0
+      },
+      {
+        "day": "2025-07-11T00:00:00Z",
+        "dayLabel": "Fri, Jul 11",
+        "totalOrders": 690,
+        "activeWidgets": 31,
+        "uniqueUsers": 0
+      },
+      {
+        "day": "2025-07-10T00:00:00Z",
+        "dayLabel": "Thu, Jul 10",
+        "totalOrders": 650,
+        "activeWidgets": 33,
+        "uniqueUsers": 0
+      }
+    ],
+    "activationInsights": {
+      "activationStats": [],
+      "recentActivations": []
+    },
+    "retentionAnalytics": []
+  },
+  "summary": {
+    "totalQueries": 7,
+    "workingQueries": 7,
+    "totalWidgets": 171,
+    "activeWidgets": 59,
+    "totalOrders": 76953,
+    "featureAdoption": {
+      "images": "54%",
+      "ordering": "59%",
+      "byo": "61%"
+    },
+    "growthTrends": {
+      "quarterlyGrowth": "From 8 orders in Q1 2024 to 10,704 orders in Q3 2025",
+      "monthlyGrowth": "From 1,231 orders in August 2024 to 10,704 orders in July 2025",
+      "dailyAverage": "~600 orders per day in recent weeks"
+    }
+  }
+}
