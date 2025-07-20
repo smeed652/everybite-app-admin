@@ -67,44 +67,44 @@ echo $BUILD_NUMBER
 ### 1. Feature Releases (Minor Versions)
 
 **When**: New features, significant improvements, or milestone achievements
-**Branch**: `develop` → `staging` → `production`
+**Branch**: `main` → `staging` → `production`
 **Tag Format**: `v1.2.0+45`
 
 **Process**:
 
-1. Develop features on `develop` branch
-2. Deploy to staging: `npm run deploy:staging:safe`
-3. Test and validate in staging environment
-4. Deploy to production: `npm run deploy:production:safe`
-5. Create release tag after successful production deployment
+1. Develop features on `main` branch
+2. When ready for release, create tag on main: `npm run release:tag v1.2.0 "Feature release"`
+3. Deploy to staging: `npm run deploy:staging:safe`
+4. Test and validate in staging environment
+5. Deploy to production: `npm run deploy:production:safe`
 
 ### 2. Hotfix Releases (Patch Versions)
 
 **When**: Critical bug fixes that need immediate production deployment
-**Branch**: `production` → hotfix branch → `staging` → `production`
+**Branch**: `main` → hotfix branch → `staging` → `production`
 **Tag Format**: `v1.2.1+46`
 
 **Process**:
 
-1. Create hotfix branch from `production`
+1. Create hotfix branch from `main`
 2. Fix the issue and test
-3. Deploy to staging for validation
-4. Deploy to production
-5. Create release tag
+3. Create tag on main: `npm run release:tag v1.2.1 "Hotfix: description" --hotfix`
+4. Deploy to staging for validation
+5. Deploy to production
 
 ### 3. Major Releases (Major Versions)
 
 **When**: Breaking changes, major refactoring, or significant architectural changes
-**Branch**: `develop` → `staging` → `production`
+**Branch**: `main` → `staging` → `production`
 **Tag Format**: `v2.0.0+47`
 
 **Process**:
 
 1. Plan and document breaking changes
-2. Develop on `develop` branch
-3. Extensive testing in staging
-4. Deploy to production
-5. Create release tag
+2. Develop on `main` branch
+3. Create tag on main: `npm run release:tag v2.0.0 "Major release: description"`
+4. Extensive testing in staging
+5. Deploy to production
 
 ## Tagging Workflow
 
@@ -134,9 +134,9 @@ If you prefer manual tagging:
 # 1. Get current build number
 BUILD_NUMBER=$(git rev-list --count HEAD)
 
-# 2. Ensure you're on the correct branch (usually production for releases)
-git checkout production
-git pull origin production
+# 2. Ensure you're on the correct branch (main for releases)
+git checkout main
+git pull origin main
 
 # 3. Create an annotated tag with build number
 git tag -a "v1.2.0+$BUILD_NUMBER" -m "Release v1.2.0+$BUILD_NUMBER: Enhanced SmartMenu functionality
@@ -147,8 +147,8 @@ git tag -a "v1.2.0+$BUILD_NUMBER" -m "Release v1.2.0+$BUILD_NUMBER: Enhanced Sma
 - Updated navigation icons
 
 Build: $BUILD_NUMBER
-Environment: production
-Deployment: AWS Amplify
+Environment: main
+Deployment: AWS Amplify (when ready)
 Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
 
 # 4. Push the tag
@@ -163,7 +163,7 @@ Our tagging strategy integrates with existing scripts:
 
 1. **Deployment Scripts**: Tags are created after successful deployment
 2. **Validation Scripts**: Ensure code quality before tagging
-3. **Branch Protection**: Maintains our `develop` → `staging` → `production` flow
+3. **Branch Protection**: Maintains our `main` → `staging` → `production` flow
 4. **Build Tracking**: Build numbers correlate with deployment history
 
 ### Enhanced Workflow Commands
@@ -222,7 +222,7 @@ Release v1.2.0+45: Enhanced SmartMenu functionality
 ## Build Information
 - Build Number: 45
 - Commit Count: 45
-- Branch: production
+- Branch: main
 - Commit: abc1234
 
 ## Breaking Changes
@@ -231,8 +231,8 @@ Release v1.2.0+45: Enhanced SmartMenu functionality
 ## Migration Notes
 - No migration required
 
-Environment: production
-Deployment: AWS Amplify
+Environment: main
+Deployment: AWS Amplify (when ready)
 Timestamp: 2024-01-15 14:30:00 UTC
 ```
 
@@ -253,7 +253,7 @@ Hotfix v1.2.1+46: Fix SmartMenu save issue
 ## Build Information
 - Build Number: 46
 - Commit Count: 46
-- Branch: production
+- Branch: main
 - Commit: def5678
 
 ## Testing
@@ -261,8 +261,8 @@ Hotfix v1.2.1+46: Fix SmartMenu save issue
 - Tested in staging environment
 - Confirmed no regression in existing features
 
-Environment: production
-Deployment: AWS Amplify
+Environment: main
+Deployment: AWS Amplify (when ready)
 Timestamp: 2024-01-15 16:45:00 UTC
 ```
 

@@ -93,15 +93,15 @@ fi
 
 # Determine target branch based on version type
 if [[ $VERSION =~ -alpha\.|beta\.|rc\. ]]; then
-    # Pre-release tags can be created from develop or staging
-    TARGET_BRANCH="develop"
-    print_status "Pre-release tag detected, using develop branch"
+    # Pre-release tags can be created from develop or main
+    TARGET_BRANCH="main"
+    print_status "Pre-release tag detected, using main branch"
 elif [ "$IS_HOTFIX" = "--hotfix" ]; then
-    TARGET_BRANCH="production"
-    print_status "Hotfix tag detected, using production branch"
+    TARGET_BRANCH="main"
+    print_status "Hotfix tag detected, using main branch"
 else
-    TARGET_BRANCH="production"
-    print_status "Release tag detected, using production branch"
+    TARGET_BRANCH="main"
+    print_status "Release tag detected, using main branch"
 fi
 
 # Ensure we're on the correct branch
@@ -150,8 +150,8 @@ $MESSAGE
 - Commit Count: $BUILD_NUMBER
 - Branch: $TARGET_BRANCH
 - Commit: $COMMIT_HASH
-- Environment: production
-- Deployment: AWS Amplify
+- Environment: main
+- Deployment: AWS Amplify (when ready)
 - Timestamp: $TIMESTAMP
 
 ## Recent Changes

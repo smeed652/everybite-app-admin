@@ -297,10 +297,10 @@ async function executeQuery(queryName: string, query: string) {
       errors: response.data.errors,
       queryName,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message,
+      error: (error as Error).message,
       queryName,
     };
   }
@@ -329,8 +329,10 @@ describe("Lambda GraphQL Smoke Tests", () => {
           }
         );
         fail("Should have required API key");
-      } catch (error: any) {
-        expect(error.response?.status).toBe(401);
+      } catch (error: unknown) {
+        expect(
+          (error as { response?: { status: number } }).response?.status
+        ).toBe(401);
       }
     });
   });
@@ -452,7 +454,7 @@ describe("Lambda GraphQL Smoke Tests", () => {
       expect(result.success).toBe(true);
       const trends = result.data.quarterlyTrends;
 
-      trends.forEach((trend: any) => {
+      trends.forEach((trend: { quarterLabel: string; year: number }) => {
         expect(trend.quarterLabel).toMatch(/^Q[1-4] \d{4}$/);
         expect(trend.year).toBeGreaterThan(2020);
         expect(trend.year).toBeLessThan(2030);
@@ -489,7 +491,7 @@ describe("Lambda GraphQL Smoke Tests", () => {
       expect(result.success).toBe(true);
       const growth = result.data.monthlyGrowth;
 
-      growth.forEach((month: any) => {
+      growth.forEach((month: { monthNum: number; year: number }) => {
         expect(month.monthNum).toBeGreaterThanOrEqual(1);
         expect(month.monthNum).toBeLessThanOrEqual(12);
         expect(month.year).toBeGreaterThan(2020);
@@ -530,12 +532,19 @@ describe("Lambda GraphQL Smoke Tests", () => {
       expect(result.success).toBe(true);
       const trends = result.data.dailyOrdersTrends;
 
-      trends.forEach((trend: any) => {
-        expect(trend.dayLabel).toMatch(/^[A-Za-z]{3}, [A-Za-z]{3} \d{1,2}$/);
-        expect(trend.totalOrders).toBeGreaterThanOrEqual(0);
-        expect(trend.activeWidgets).toBeGreaterThanOrEqual(0);
-        expect(trend.uniqueUsers).toBeGreaterThanOrEqual(0);
-      });
+      trends.forEach(
+        (trend: {
+          dayLabel: string;
+          totalOrders: number;
+          activeWidgets: number;
+          uniqueUsers: number;
+        }) => {
+          expect(trend.dayLabel).toMatch(/^[A-Za-z]{3}, [A-Za-z]{3} \d{1,2}$/);
+          expect(trend.totalOrders).toBeGreaterThanOrEqual(0);
+          expect(trend.activeWidgets).toBeGreaterThanOrEqual(0);
+          expect(trend.uniqueUsers).toBeGreaterThanOrEqual(0);
+        }
+      );
     });
   });
 
