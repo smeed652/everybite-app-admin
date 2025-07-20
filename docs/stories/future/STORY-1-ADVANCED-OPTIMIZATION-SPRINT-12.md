@@ -5,6 +5,7 @@
 - **Project**: EveryBite Admin Application
 - **Sprint**: Sprint 11 - Advanced Optimization & Enhancement
 - **Story**: 1
+- **Story Points**: 26
 - **Status**: Future
 - **Start Date**: TBD
 - **Target End Date**: TBD

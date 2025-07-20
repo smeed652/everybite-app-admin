@@ -5,6 +5,7 @@
 - **Project**: EveryBite Admin Application
 - **Sprint**: Sprint 11 - Test Suite Restoration & Quality Assurance
 - **Story**: 1
+- **Story Points**: 21
 - **Status**: In Progress
 - **Start Date**: 2025-07-20
 - **Target End Date**: 2025-08-17
