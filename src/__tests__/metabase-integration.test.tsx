@@ -7,7 +7,7 @@ import App from "../App";
 
 // Mock the MetabaseUsersTable component
 vi.mock("../components/MetabaseUsersTable", () => ({
-  MetabaseUsersTable: () => (
+  default: () => (
     <div data-testid="metabase-users-table">Metabase Users Table</div>
   ),
 }));
