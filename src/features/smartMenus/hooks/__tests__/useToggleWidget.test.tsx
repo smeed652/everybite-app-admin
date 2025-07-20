@@ -19,6 +19,7 @@ describe("useToggleWidget", () => {
     name: "Test Widget",
     isActive: false,
     updatedAt: "2023-01-01T00:00:00Z",
+    __typename: "Widget",
   };
 
   const activateWidgetMock = {
@@ -64,7 +65,7 @@ describe("useToggleWidget", () => {
   it("activates a widget successfully", async () => {
     const { result } = renderHook(() => useToggleWidget(), {
       wrapper: ({ children }) => (
-        <MockedProvider mocks={[activateWidgetMock]} addTypename={false}>
+        <MockedProvider mocks={[activateWidgetMock]} addTypename={true}>
           {children}
         </MockedProvider>
       ),
@@ -82,7 +83,7 @@ describe("useToggleWidget", () => {
   it("deactivates a widget successfully", async () => {
     const { result } = renderHook(() => useToggleWidget(), {
       wrapper: ({ children }) => (
-        <MockedProvider mocks={[deactivateWidgetMock]} addTypename={false}>
+        <MockedProvider mocks={[deactivateWidgetMock]} addTypename={true}>
           {children}
         </MockedProvider>
       ),
@@ -100,7 +101,7 @@ describe("useToggleWidget", () => {
   it("toggles widget to active using toggleWidget", async () => {
     const { result } = renderHook(() => useToggleWidget(), {
       wrapper: ({ children }) => (
-        <MockedProvider mocks={[activateWidgetMock]} addTypename={false}>
+        <MockedProvider mocks={[activateWidgetMock]} addTypename={true}>
           {children}
         </MockedProvider>
       ),
@@ -118,7 +119,7 @@ describe("useToggleWidget", () => {
   it("toggles widget to inactive using toggleWidget", async () => {
     const { result } = renderHook(() => useToggleWidget(), {
       wrapper: ({ children }) => (
-        <MockedProvider mocks={[deactivateWidgetMock]} addTypename={false}>
+        <MockedProvider mocks={[deactivateWidgetMock]} addTypename={true}>
           {children}
         </MockedProvider>
       ),
@@ -136,7 +137,7 @@ describe("useToggleWidget", () => {
   it("handles activation errors gracefully", async () => {
     const { result } = renderHook(() => useToggleWidget(), {
       wrapper: ({ children }) => (
-        <MockedProvider mocks={[errorMock]} addTypename={false}>
+        <MockedProvider mocks={[errorMock]} addTypename={true}>
           {children}
         </MockedProvider>
       ),
@@ -150,7 +151,7 @@ describe("useToggleWidget", () => {
   it("provides optimistic response for activation", async () => {
     const { result } = renderHook(() => useToggleWidget(), {
       wrapper: ({ children }) => (
-        <MockedProvider mocks={[activateWidgetMock]} addTypename={false}>
+        <MockedProvider mocks={[activateWidgetMock]} addTypename={true}>
           {children}
         </MockedProvider>
       ),
@@ -165,7 +166,7 @@ describe("useToggleWidget", () => {
   it("provides optimistic response for deactivation", async () => {
     const { result } = renderHook(() => useToggleWidget(), {
       wrapper: ({ children }) => (
-        <MockedProvider mocks={[deactivateWidgetMock]} addTypename={false}>
+        <MockedProvider mocks={[deactivateWidgetMock]} addTypename={true}>
           {children}
         </MockedProvider>
       ),
@@ -180,7 +181,7 @@ describe("useToggleWidget", () => {
   it("returns all expected functions", () => {
     const { result } = renderHook(() => useToggleWidget(), {
       wrapper: ({ children }) => (
-        <MockedProvider mocks={[]} addTypename={false}>
+        <MockedProvider mocks={[]} addTypename={true}>
           {children}
         </MockedProvider>
       ),

@@ -24,6 +24,20 @@ vi.mock("../../hooks/useSmartMenuSettings", () => ({
         numberOfLocations: 8,
       },
     ],
+    quarterlyMetrics: [
+      {
+        quarterLabel: "Q4 2024",
+        activeSmartMenus: { count: 1, qoqGrowthPercent: 0 },
+        locations: { count: 8, qoqGrowthPercent: 0 },
+        orders: { count: 150, qoqGrowthPercent: 20 },
+      },
+      {
+        quarterLabel: "Q3 2024",
+        activeSmartMenus: { count: 1, qoqGrowthPercent: 0 },
+        locations: { count: 8, qoqGrowthPercent: 0 },
+        orders: { count: 125, qoqGrowthPercent: 0 },
+      },
+    ],
     loading: false,
     error: null,
     metrics: {
@@ -31,17 +45,6 @@ vi.mock("../../hooks/useSmartMenuSettings", () => ({
       activeSmartMenus: 1,
       totalLocations: 8,
     },
-  }),
-}));
-
-// Mock the quarterly metrics Lambda hook
-vi.mock("../features/dashboard/hooks/lambda", () => ({
-  useQuarterlyMetricsLambda: () => ({
-    quarterlyData: [],
-    totalOrders: 150,
-    ordersDelta: "+20%",
-    loading: false,
-    error: null,
   }),
 }));
 

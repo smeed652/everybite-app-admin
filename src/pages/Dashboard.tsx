@@ -9,14 +9,15 @@ export default function Dashboard() {
   const { metrics, loading, error, quarterlyMetrics } = useSmartMenuDashboard();
 
   // Calculate quarterly data from hybrid service
-  const quarterlyData = quarterlyMetrics.map((item) => ({
-    quarter: item.quarterLabel,
-    brands: item.activeSmartMenus.count,
-    locations: item.locations.count,
-    activeSmartMenus: item.activeSmartMenus.count,
-    orders: item.orders.count,
-    ordersQoQGrowth: item.orders.qoqGrowthPercent,
-  }));
+  const quarterlyData =
+    quarterlyMetrics?.map((item) => ({
+      quarter: item.quarterLabel,
+      brands: item.activeSmartMenus.count,
+      locations: item.locations.count,
+      activeSmartMenus: item.activeSmartMenus.count,
+      orders: item.orders.count,
+      ordersQoQGrowth: item.orders.qoqGrowthPercent,
+    })) || [];
 
   // Calculate total orders and delta
   const totalOrders = quarterlyData.reduce(

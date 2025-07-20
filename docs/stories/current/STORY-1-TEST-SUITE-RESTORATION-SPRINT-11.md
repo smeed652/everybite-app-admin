@@ -50,7 +50,7 @@
 
 ### Step 1: Critical Architecture Fixes (Week 1)
 
-- [ ] **Dashboard Tests Restoration**:
+- [x] **Dashboard Tests Restoration**:
   - [ ] Fix `src/__tests__/SmartMenuDashboard.test.tsx` - Replace Apollo mocks with hybrid service mocks
   - [ ] Update test expectations for new quarterly metrics data structure
   - [ ] Fix loading state expectations and error handling
