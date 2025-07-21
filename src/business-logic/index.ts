@@ -17,6 +17,9 @@ export * from "./calculations";
 // Utils
 export * from "./utils";
 
+// Dashboard business logic
+export * from "./dashboard";
+
 // Quarterly metrics (specific exports)
 export {
   QuarterlyMetricInput,
