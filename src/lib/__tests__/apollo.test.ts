@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { describe, expect, it, vi } from "vitest";
 
-// Set environment variables before any imports
-(import.meta as any).env = {
-  VITE_GRAPHQL_URI: "https://example.com/graphql",
-  VITE_API_KEY: "TESTKEY",
-};
-
 // Declare spies that will be initialised inside the factory of vi.mock so we
 // can assert on them after the module under test is imported.
 let createHttpLinkMock: ReturnType<typeof vi.fn>;
@@ -39,6 +33,14 @@ vi.mock("@apollo/client/link/context", () => {
 
 describe("Apollo client factory", () => {
   it("creates client with correct http link and auth header", async () => {
+    // Set environment variables before importing
+    const originalEnv = process.env;
+    process.env = {
+      ...originalEnv,
+      VITE_GRAPHQL_URI: "https://example.com/graphql",
+      VITE_API_KEY: "TESTKEY",
+    };
+
     // Act: dynamic import after mocks in place
     const { createApiGraphQLClient } = await import("../api-graphql-apollo");
 
@@ -62,5 +64,8 @@ describe("Apollo client factory", () => {
     expect(ApolloClientCtor).toHaveBeenCalled();
     expect(InMemoryCacheMock).toHaveBeenCalled();
     expect(client).toBeTruthy();
+
+    // Restore original env
+    process.env = originalEnv;
   });
 });
