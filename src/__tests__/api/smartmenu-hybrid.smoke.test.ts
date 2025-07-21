@@ -1,71 +1,66 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { SmartMenuSettingsHybridService } from "../../services/smartmenus/SmartMenuSettingsHybridService";
 
-// TEMPORARILY DISABLED - This test was interfering with the real application
-// causing quarterly metrics to not load in the dashboard
-describe.skip("SmartMenu Settings Hybrid Service - Fast Local Test", () => {
-  let service: SmartMenuSettingsHybridService;
-  let mockApiClient: any;
-  let mockLambdaClient: any;
+// Mock the modules before importing the service
+const mockApiClient = {
+  query: vi.fn().mockResolvedValue({
+    data: {
+      widgets: [
+        {
+          id: "test-widget-1",
+          name: "Test Widget 1",
+          isActive: true,
+          publishedAt: new Date().toISOString(),
+          numberOfLocations: 5,
+          displayImages: true,
+          isOrderButtonEnabled: true,
+          isByoEnabled: false,
+          layout: "CARD",
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+      ],
+    },
+  }),
+};
+
+const mockLambdaClient = {
+  query: vi.fn().mockResolvedValue({
+    data: {
+      quarterlyMetrics: [
+        {
+          quarterLabel: "Q4 2024",
+          activeSmartMenus: { count: 1, qoqGrowthPercent: 0 },
+          locations: { count: 5, qoqGrowthPercent: 0 },
+          orders: { count: 150, qoqGrowthPercent: 20 },
+        },
+      ],
+    },
+  }),
+};
+
+vi.mock("../../lib/api-graphql-apollo", () => ({
+  apiGraphQLClient: mockApiClient,
+}));
+
+vi.mock("../../lib/datawarehouse-lambda-apollo", () => ({
+  metabaseApolloClient: mockLambdaClient,
+  lambdaClient: mockLambdaClient,
+}));
+
+describe("SmartMenu Settings Hybrid Service - Fast Local Test", () => {
+  let service: any;
 
   beforeAll(async () => {
-    // Create isolated mocks for this test only
-    mockApiClient = {
-      query: vi.fn().mockResolvedValue({
-        data: {
-          widgets: [
-            {
-              id: "test-widget-1",
-              name: "Test Widget 1",
-              isActive: true,
-              publishedAt: new Date().toISOString(),
-              numberOfLocations: 5,
-              displayImages: true,
-              isOrderButtonEnabled: true,
-              isByoEnabled: false,
-              layout: "CARD",
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            },
-          ],
-        },
-      }),
-    };
-
-    mockLambdaClient = {
-      query: vi.fn().mockResolvedValue({
-        data: {
-          quarterlyMetrics: [
-            {
-              quarterLabel: "Q4 2024",
-              activeSmartMenus: { count: 1, qoqGrowthPercent: 0 },
-              locations: { count: 5, qoqGrowthPercent: 0 },
-              orders: { count: 150, qoqGrowthPercent: 20 },
-            },
-          ],
-        },
-      }),
-    };
-
-    // Mock the modules only for this test
-    vi.doMock("../../lib/api-graphql-apollo", () => ({
-      apiGraphQLClient: mockApiClient,
-    }));
-
-    vi.doMock("../../lib/datawarehouse-lambda-apollo", () => ({
-      metabaseApolloClient: mockLambdaClient,
-      lambdaClient: mockLambdaClient,
-    }));
-
+    // Import the service after mocking
+    const { SmartMenuSettingsHybridService } = await import(
+      "../../services/smartmenus/SmartMenuSettingsHybridService"
+    );
     service = new SmartMenuSettingsHybridService();
   });
 
   afterAll(() => {
     // Clean up cache after tests
     service.clearCache();
-    // Restore original modules
-    vi.doUnmock("../../lib/api-graphql-apollo");
-    vi.doUnmock("../../lib/datawarehouse-lambda-apollo");
   });
 
   it("should initialize service successfully", () => {
@@ -93,7 +88,7 @@ describe.skip("SmartMenu Settings Hybrid Service - Fast Local Test", () => {
       smartMenuCount: result.smartMenus.length,
       totalTime: result.performanceMetrics.totalTime,
     });
-  });
+  }, 10000);
 
   it("should provide cache statistics", () => {
     const stats = service.getCacheStats();

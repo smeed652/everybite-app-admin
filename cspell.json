@@ -34,7 +34,8 @@
     "VITE",
     "vitest",
     "Vitest",
-    "Vwywm"
+    "Vwywm",
+    "WCAG"
   ],
   "ignorePaths": [
     "node_modules/**",
