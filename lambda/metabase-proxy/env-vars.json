@@ -7,8 +7,8 @@
     "COGNITO_APP_CLIENT_ID": "746d7c6ituu4n572hef100m5s7",
     "API_KEY": "3SB3ZawcNr3AT11vxKruJ",
     "LAMBDA_VERSION": "pending",
-    "GIT_COMMIT": "057e982",
-    "DEPLOY_TIMESTAMP": "20250720-090606",
+    "GIT_COMMIT": "8d72ffd",
+    "DEPLOY_TIMESTAMP": "20250721-161608",
     "ENVIRONMENT": "dev"
   }
 }

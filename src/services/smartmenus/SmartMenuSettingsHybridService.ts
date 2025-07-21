@@ -63,9 +63,19 @@ export interface SmartMenuSettingsHybrid {
 }
 
 export interface QuarterlyMetricsHybrid {
-  quarter: number;
+  quarter: string;
   year: number;
   quarterLabel: string;
+  brands: {
+    count: number;
+    qoqGrowth: number;
+    qoqGrowthPercent: number;
+  };
+  locations: {
+    count: number;
+    qoqGrowth: number;
+    qoqGrowthPercent: number;
+  };
   orders: {
     count: number;
     qoqGrowth: number;
@@ -76,8 +86,8 @@ export interface QuarterlyMetricsHybrid {
     qoqGrowth: number;
     qoqGrowthPercent: number;
   };
-  locations: {
-    count: number;
+  totalRevenue: {
+    amount: number;
     qoqGrowth: number;
     qoqGrowthPercent: number;
   };

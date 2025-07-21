@@ -1,4 +1,9 @@
 import { AlertTriangle } from "lucide-react";
+import {
+  calculateOrdersDelta,
+  calculateTotalOrders,
+  transformQuarterlyData,
+} from "../business-logic/quarterly-metrics/transformers";
 import { MetricsCard } from "../components/MetricsCard";
 import { QuarterlyMetricsTable } from "../components/QuarterlyMetricsTable";
 import { useSmartMenuDashboard } from "../features/dashboard/hooks/lambda/useSmartMenuDashboard";
@@ -8,35 +13,17 @@ export default function Dashboard() {
   // Use hybrid SmartMenu service for dashboard data (includes quarterly metrics)
   const { metrics, loading, error, quarterlyMetrics } = useSmartMenuDashboard();
 
-  // Calculate quarterly data from hybrid service
-  const quarterlyData =
-    quarterlyMetrics?.map((item) => ({
-      quarter: item.quarterLabel,
-      brands: item.activeSmartMenus.count,
-      locations: item.locations.count,
-      activeSmartMenus: item.activeSmartMenus.count,
-      orders: item.orders.count,
-      ordersQoQGrowth: item.orders.qoqGrowthPercent,
-    })) || [];
+  // Use business logic function for data transformation
+  const quarterlyData = transformQuarterlyData(quarterlyMetrics);
 
-  // Calculate total orders and delta
-  const totalOrders = quarterlyData.reduce(
-    (sum, quarter) => sum + (quarter.orders || 0),
-    0
-  );
-  const currentQuarter = quarterlyData[0];
-  const previousQuarter = quarterlyData[1];
-  const ordersDelta = (() => {
-    if (!currentQuarter?.orders || !previousQuarter?.orders) {
-      return currentQuarter?.orders ? "+100%" : "0%";
-    }
-    const growth = currentQuarter.ordersQoQGrowth || 0;
-    return `${growth >= 0 ? "+" : ""}${growth.toFixed(1)}%`;
-  })();
+  // Use business logic functions for calculations
+  const totalOrders = calculateTotalOrders(quarterlyData);
+  const ordersDelta = calculateOrdersDelta(quarterlyData);
 
   console.log("Dashboard: quarterlyData:", quarterlyData);
   console.log("Dashboard: quarterlyLoading:", loading);
   console.log("Dashboard: quarterlyError:", error);
+  console.log("Dashboard: raw quarterlyMetrics:", quarterlyMetrics);
 
   if (error) {
     return (

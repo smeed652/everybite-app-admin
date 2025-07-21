@@ -783,7 +783,7 @@ const analyticsResolvers = {
         console.log("📋 Original totalMetrics query:", query.native.query);
 
         // Replace template variables with actual dates
-        let modifiedQuery = query.native.query
+        const modifiedQuery = query.native.query
           .replace("{{startDate}}", startDate)
           .replace("{{endDate}}", endDate);
 

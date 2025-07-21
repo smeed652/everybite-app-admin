@@ -66,4 +66,132 @@ describe("Dashboard page", () => {
       screen.getByText(/^Total Locations$/i).nextSibling?.textContent
     ).toBe("8");
   });
+
+  // This test would have caught the data structure mismatch issue
+  it("handles quarterly metrics with missing brands field gracefully", () => {
+    // Mock the hook with data that matches the actual Lambda response structure
+    vi.mocked(
+      require("../../hooks/useSmartMenuSettings").useSmartMenuSettings
+    ).mockReturnValue({
+      smartMenus: [
+        {
+          id: "1",
+          createdAt: new Date().toISOString(),
+          publishedAt: new Date().toISOString(),
+          numberOfLocations: 5,
+        },
+      ],
+      quarterlyMetrics: [
+        {
+          quarter: "2025-07-01T00:00:00Z",
+          year: 2025,
+          quarterLabel: "Q3 2025",
+          brands: {
+            count: 0,
+            qoqGrowth: -5,
+            qoqGrowthPercent: -100,
+          },
+          locations: {
+            count: 0,
+            qoqGrowth: -415,
+            qoqGrowthPercent: -100,
+          },
+          orders: {
+            count: 12150,
+            qoqGrowth: -33779,
+            qoqGrowthPercent: -73.54,
+          },
+          activeSmartMenus: {
+            count: 0,
+            qoqGrowth: -5,
+            qoqGrowthPercent: -100,
+          },
+          totalRevenue: {
+            amount: 0,
+            qoqGrowth: 0,
+            qoqGrowthPercent: 0,
+          },
+        },
+      ],
+      loading: false,
+      error: null,
+      metrics: {
+        totalSmartMenus: 1,
+        activeSmartMenus: 1,
+        totalLocations: 5,
+      },
+    });
+
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
+
+    // Should render without crashing
+    expect(screen.getByText(/^Dashboard$/i)).toBeInTheDocument();
+
+    // Should display quarterly data
+    expect(screen.getByText("Q3 2025")).toBeInTheDocument();
+  });
+
+  // This test would have caught the case where quarterly metrics are empty
+  it("displays 'No quarterly data available' when quarterly metrics are empty", () => {
+    vi.mocked(
+      require("../../hooks/useSmartMenuSettings").useSmartMenuSettings
+    ).mockReturnValue({
+      smartMenus: [],
+      quarterlyMetrics: [], // Empty quarterly metrics
+      loading: false,
+      error: null,
+      metrics: {
+        totalSmartMenus: 0,
+        activeSmartMenus: 0,
+        totalLocations: 0,
+      },
+    });
+
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("No quarterly data available")).toBeInTheDocument();
+  });
+
+  // This test would have caught the case where quarterly metrics have partial data
+  it("handles quarterly metrics with partial data structure", () => {
+    vi.mocked(
+      require("../../hooks/useSmartMenuSettings").useSmartMenuSettings
+    ).mockReturnValue({
+      smartMenus: [],
+      quarterlyMetrics: [
+        {
+          quarterLabel: "Q3 2025",
+          // Missing brands field - this is what was causing the crash
+          locations: { count: 5, qoqGrowthPercent: 10 },
+          orders: { count: 100, qoqGrowthPercent: 20 },
+          activeSmartMenus: { count: 2, qoqGrowthPercent: 5 },
+        },
+      ],
+      loading: false,
+      error: null,
+      metrics: {
+        totalSmartMenus: 0,
+        activeSmartMenus: 0,
+        totalLocations: 0,
+      },
+    });
+
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>
+    );
+
+    // Should render without crashing and use fallback values
+    expect(screen.getByText(/^Dashboard$/i)).toBeInTheDocument();
+    expect(screen.getByText("Q3 2025")).toBeInTheDocument();
+  });
 });
