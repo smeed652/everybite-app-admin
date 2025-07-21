@@ -98,6 +98,30 @@ This file tracks all work that was deferred from completed stories. These items 
   - **Effort**: ~3-4 days
   - **Dependencies**: Review completion
 
+---
+
+## 🚀 Advanced Features & Optimization
+
+### **Priority: Low** - Future enhancements
+
+#### Cache Advanced Features
+
+- [ ] **PHASE-6-CACHE-ADVANCED.md** - Advanced cache management features
+  - **Source**: Sprint 9 - Cache Management & UI Enhancement
+  - **Reason**: Deferred to focus on core business logic architecture
+  - **Effort**: ~5-7 days
+  - **Dependencies**: Business logic architecture completion
+  - **Files**: `docs/stories/future/PHASE-6-CACHE-ADVANCED.md`
+
+#### Advanced Optimization
+
+- [ ] **STORY-1-ADVANCED-OPTIMIZATION-SPRINT-12.md** - Advanced optimization features
+  - **Source**: Sprint 12 - Business Logic Architecture & Testing Strategy
+  - **Reason**: Deferred to focus on core business logic foundation
+  - **Effort**: ~7-10 days
+  - **Dependencies**: Business logic foundation completion
+  - **Files**: `docs/stories/future/STORY-1-ADVANCED-OPTIMIZATION-SPRINT-12.md`
+
 - [ ] **Document patterns** for optimal test file size and structure
   - **Source**: Story 1 - Test Suite Restoration
   - **Reason**: Establish best practices for future test development
