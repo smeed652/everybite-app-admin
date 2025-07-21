@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { Widget } from "../../../generated/graphql";
 import { apiGraphQLClient } from "../../../lib/api-graphql-apollo";
 import { WIDGET_FIELDS } from "../graphql/fragments";
@@ -20,8 +20,10 @@ interface UseWidgetResult {
 }
 
 export function useWidget(id: string): UseWidgetResult {
+  const contextClient = useApolloClient?.() ?? undefined;
+  const client = contextClient || apiGraphQLClient;
   const { data, loading, error, refetch } = useQuery(GET_WIDGET, {
-    client: apiGraphQLClient!,
+    client,
     variables: { id },
     fetchPolicy: "network-only",
   });

@@ -1,74 +1,18 @@
-import {
-  ApolloClient,
-  ApolloLink,
-  InMemoryCache,
-  createHttpLink,
-  gql,
-} from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
-import fetch from "cross-fetch";
+import { gql } from "@apollo/client";
 import { beforeAll, describe, expect, it } from "vitest";
+import { createApiGraphQLClient, getEnvVar } from "../lib/api-graphql-apollo";
 
-// Set global fetch for Node
-if (
-  typeof globalThis !== "undefined" &&
-  typeof globalThis.fetch === "undefined"
-) {
-  (globalThis as typeof globalThis & { fetch: typeof fetch }).fetch = fetch;
-}
-
-// Load environment variables - handle both Vite and Node environments
-const getEnvVar = (key: string, defaultValue: string = ""): string => {
-  // Try Vite's import.meta.env first
-  if (typeof import.meta !== "undefined" && import.meta.env) {
-    return import.meta.env[key] || defaultValue;
-  }
-  // Fallback to process.env for Node environment
-  if (typeof process !== "undefined" && process.env) {
-    return process.env[key] || defaultValue;
-  }
-  return defaultValue;
-};
-
-// Create a real Apollo client for integration testing
+// Use the shared utility to create the client
 const apiKey = getEnvVar("VITE_API_KEY", "");
 const graphqlUri = getEnvVar(
   "VITE_GRAPHQL_URI",
   "https://api.everybite.com/graphql"
 );
+const client = createApiGraphQLClient(apiKey, graphqlUri);
 
 console.log("🔧 Test Environment:", {
   apiKey: apiKey ? `${apiKey.substring(0, 8)}...` : "NOT SET",
   graphqlUri,
-  hasImportMeta: typeof import.meta !== "undefined",
-  hasProcess: typeof process !== "undefined",
-});
-
-const httpLink = createHttpLink({
-  uri: graphqlUri,
-  fetch,
-});
-
-// For this project the API expects a static API key; user tokens are not required for GraphQL
-// Keep authLink minimal in case future headers need dynamic injection
-const authLink = setContext((_, { headers }) => {
-  console.log("🔐 Setting auth context:", {
-    apiKey: apiKey ? `${apiKey.substring(0, 8)}...` : "NOT SET",
-    headers: headers,
-  });
-
-  return {
-    headers: {
-      ...headers,
-      // ensure apiKey present even if httpLink headers overridden elsewhere
-      Authorization: apiKey,
-    },
-  };
-});
-
-const client = new ApolloClient({
-  link: ApolloLink.from([authLink, httpLink]),
-  cache: new InMemoryCache(),
 });
 
 // Test queries with different field sets

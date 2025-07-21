@@ -1,5 +1,5 @@
-import { gql } from "@apollo/client";
-import { lambdaClient } from "../../../lib/datawarehouse-lambda-apollo";
+import { gql, useApolloClient } from "@apollo/client";
+import { apiGraphQLClient } from "../../../lib/api-graphql-apollo";
 import { WIDGET_FIELDS } from "../graphql/fragments";
 
 export const ACTIVATE_WIDGET = gql`
@@ -20,8 +20,10 @@ export const DEACTIVATE_WIDGET = gql`
   ${WIDGET_FIELDS}
 `;
 
-export function useToggleWidget() {
-  const client = lambdaClient!;
+export function useWidgetActiveState() {
+  // Use the Apollo client from context if available, otherwise fall back to shared client
+  const contextClient = useApolloClient?.();
+  const client = contextClient || apiGraphQLClient;
 
   const activateWidget = async (id: string) => {
     return client.mutate({

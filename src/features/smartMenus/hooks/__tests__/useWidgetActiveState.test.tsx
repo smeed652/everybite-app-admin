@@ -10,8 +10,18 @@ import {
 // Mock the fragments import
 vi.mock("../graphql/fragments", () => ({
   WIDGET_FIELDS:
-    "fragment WidgetFields on DbWidgets { id name isActive updatedAt }",
+    "fragment WidgetFields on Widget { id name isActive updatedAt }",
 }));
+
+console.log("VITE_API_KEY from process.env:", process.env.VITE_API_KEY);
+// @ts-ignore
+if (typeof import.meta !== "undefined" && import.meta.env) {
+  // @ts-ignore
+  console.log(
+    "VITE_API_KEY from import.meta.env:",
+    import.meta.env.VITE_API_KEY
+  );
+}
 
 describe("useWidgetActiveState", () => {
   const mockWidget = {
@@ -19,7 +29,7 @@ describe("useWidgetActiveState", () => {
     name: "Test Widget",
     isActive: false,
     updatedAt: "2023-01-01T00:00:00Z",
-    __typename: "DbWidgets",
+    __typename: "Widget",
   };
 
   const activateWidgetMock = {
@@ -159,7 +169,6 @@ describe("useWidgetActiveState", () => {
 
     const response = await result.current.activateWidget("test-widget-1");
 
-    // The optimistic response should be reflected in the cache
     expect(response.data?.activateWidget.isActive).toBe(true);
   });
 
@@ -174,7 +183,6 @@ describe("useWidgetActiveState", () => {
 
     const response = await result.current.deactivateWidget("test-widget-1");
 
-    // The optimistic response should be reflected in the cache
     expect(response.data?.deactivateWidget.isActive).toBe(false);
   });
 

@@ -1,72 +1,84 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { MockedProvider } from "@apollo/client/testing";
 import { renderHook } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
+import {
+  ACTIVATE_WIDGET,
+  DEACTIVATE_WIDGET,
+  useToggleWidgetSync,
+} from "../useToggleWidgetSync";
 
-// Create a mock client
-const mockClient = {
-  mutate: vi.fn().mockResolvedValue({
+const activateMock = {
+  request: {
+    query: ACTIVATE_WIDGET,
+    variables: { id: "abc" },
+  },
+  result: {
     data: {
-      activateWidgetSync: {
+      activateWidget: {
         id: "abc",
-        isSyncEnabled: true,
-        __typename: "Widget",
-      },
-      deactivateWidgetSync: {
-        id: "xyz",
-        isSyncEnabled: false,
+        isActive: true,
+        updatedAt: "2023-01-01T00:00:00Z",
         __typename: "Widget",
       },
     },
-  }),
+  },
 };
 
-// Mock the module
-vi.mock("../../../lib/datawarehouse-lambda-apollo", () => ({
-  lambdaClient: mockClient,
-}));
-
-import { useToggleWidgetSync } from "../useToggleWidgetSync";
-
-describe("useToggleWidgetSync hook", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it("calls mutate with correct variables and optimistic response for activation", async () => {
-    const { result } = renderHook(() => useToggleWidgetSync());
-
-    await result.current.toggleWidgetSync("abc", true);
-
-    expect(mockClient.mutate).toHaveBeenCalledTimes(1);
-    const call = mockClient.mutate.mock.calls[0][0];
-    expect(call.variables).toEqual({ id: "abc" });
-    expect(call.optimisticResponse).toMatchObject({
-      activateWidgetSync: {
-        id: "abc",
-        isSyncEnabled: true,
+const deactivateMock = {
+  request: {
+    query: DEACTIVATE_WIDGET,
+    variables: { id: "xyz" },
+  },
+  result: {
+    data: {
+      deactivateWidget: {
+        id: "xyz",
+        isActive: false,
+        updatedAt: "2023-01-01T00:00:00Z",
         __typename: "Widget",
       },
+    },
+  },
+};
+
+describe("useToggleWidgetSync hook", () => {
+  it("calls mutate with correct variables and optimistic response for activation", async () => {
+    const { result } = renderHook(() => useToggleWidgetSync(), {
+      wrapper: ({ children }) => (
+        <MockedProvider mocks={[activateMock]} addTypename>
+          {children}
+        </MockedProvider>
+      ),
     });
+
+    const response = await result.current.toggleWidgetSync("abc", true);
+    expect(response.data.activateWidget.id).toBe("abc");
+    expect(response.data.activateWidget.isActive).toBe(true);
   });
 
   it("uses deactivate mutation when enable is false", async () => {
-    const { result } = renderHook(() => useToggleWidgetSync());
-
-    await result.current.toggleWidgetSync("xyz", false);
-
-    const call = mockClient.mutate.mock.calls[0][0];
-    expect(call.optimisticResponse).toMatchObject({
-      deactivateWidgetSync: {
-        id: "xyz",
-        isSyncEnabled: false,
-        __typename: "Widget",
-      },
+    const { result } = renderHook(() => useToggleWidgetSync(), {
+      wrapper: ({ children }) => (
+        <MockedProvider mocks={[deactivateMock]} addTypename>
+          {children}
+        </MockedProvider>
+      ),
     });
+
+    const response = await result.current.toggleWidgetSync("xyz", false);
+    expect(response.data.deactivateWidget.id).toBe("xyz");
+    expect(response.data.deactivateWidget.isActive).toBe(false);
   });
 
   it("returns the expected function", () => {
-    const { result } = renderHook(() => useToggleWidgetSync());
-
+    const { result } = renderHook(() => useToggleWidgetSync(), {
+      wrapper: ({ children }) => (
+        <MockedProvider mocks={[]} addTypename>
+          {children}
+        </MockedProvider>
+      ),
+    });
     expect(result.current).toHaveProperty("toggleWidgetSync");
     expect(typeof result.current.toggleWidgetSync).toBe("function");
   });

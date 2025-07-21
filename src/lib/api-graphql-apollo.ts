@@ -1,73 +1,54 @@
 import {
   ApolloClient,
+  ApolloLink,
   InMemoryCache,
   createHttpLink,
-  from,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { onError } from "@apollo/client/link/error";
+import fetch from "cross-fetch";
 
-// Configuration
-const API_KEY = import.meta.env.VITE_API_KEY;
-const GRAPHQL_URI =
-  import.meta.env.VITE_GRAPHQL_URI || "https://api.everybite.com/graphql";
+// Utility to get env vars from both Vite and Node
+export function getEnvVar(key: string, defaultValue = ""): string {
+  if (typeof import.meta !== "undefined" && import.meta.env) {
+    return import.meta.env[key] || defaultValue;
+  }
+  if (typeof process !== "undefined" && process.env) {
+    return process.env[key] || defaultValue;
+  }
+  return defaultValue;
+}
 
-console.log(
-  "[ApiGraphQL] API Key:",
-  API_KEY ? `${API_KEY.substring(0, 8)}...` : "Not set"
-);
-console.log("[ApiGraphQL] GraphQL URI:", GRAPHQL_URI);
+export function createApiGraphQLClient(
+  apiKeyOverride?: string,
+  uriOverride?: string
+) {
+  const apiKey = apiKeyOverride ?? getEnvVar("VITE_API_KEY", "");
+  const graphqlUri =
+    uriOverride ??
+    getEnvVar("VITE_GRAPHQL_URI", "https://api.everybite.com/graphql");
 
-// Create HTTP link
-const httpLink = createHttpLink({
-  uri: GRAPHQL_URI,
-});
+  const httpLink = createHttpLink({
+    uri: graphqlUri,
+    fetch,
+  });
 
-// Auth link to add API key
-const authLink = setContext((_, { headers }) => {
-  return {
-    headers: {
+  const authLink = setContext((_, { headers }) => {
+    const finalHeaders = {
       ...headers,
-      Authorization: API_KEY,
-    },
-  };
-});
+      Authorization: apiKey,
+    };
+    // Debug: print headers for each request
+    if (process.env.NODE_ENV === "test") {
+      console.log("[Apollo AuthLink] Request headers:", finalHeaders);
+    }
+    return { headers: finalHeaders };
+  });
 
-// Error handling link
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    graphQLErrors.forEach(({ message, locations, path }) => {
-      console.error(
-        `[ApiGraphQL] GraphQL error: Message: ${message}, Location: ${locations}, Path: ${path}`
-      );
-    });
-  }
-  if (networkError) {
-    console.error(`[ApiGraphQL] Network error: ${networkError}`);
-  }
-});
+  return new ApolloClient({
+    link: ApolloLink.from([authLink, httpLink]),
+    cache: new InMemoryCache(),
+  });
+}
 
-// Create Apollo client
-export const apiGraphQLClient = new ApolloClient({
-  link: from([errorLink, authLink, httpLink]),
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          widgets: { merge: false },
-          widget: { merge: false },
-        },
-      },
-    },
-  }),
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: "cache-first",
-      errorPolicy: "all",
-    },
-    query: {
-      fetchPolicy: "cache-first",
-      errorPolicy: "all",
-    },
-  },
-});
+// Default export for app usage
+export const apiGraphQLClient = createApiGraphQLClient();

@@ -76,6 +76,8 @@
       "SmartMenu",
       "SmartMenus",
     ],
+    "editor.colorDecorators": false,
+    "editor.experimentalWhitespaceRendering": "off",
   },
   "extensions": {
     "recommendations": [

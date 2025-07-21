@@ -244,6 +244,14 @@
   - **Wrong Save Button**: Use "Save" button next to API field, not global settings save
 - **Note**: Vibe Coder requires proper permissions and API key configuration to function correctly.
 
+### Refactor SmartMenu widget hook file names for clarity and consistency
+
+- **Definition**: Review and refactor SmartMenu widget hook file names for clarity and consistency (e.g., useWidgetActivation, useWidgetActivationSync, useUpdateWidgetFields, useWidgets, useWidgetFormActions, etc.). Update all imports and documentation accordingly.
+- **Estimated Time**: 1-2 hours
+- **Risk**: Low
+- **Impact**: Medium
+- **Note**: Improves maintainability and onboarding by making hook purposes explicit and consistent.
+
 - **Definition**: Review, clean up, and reorganize the docs directory to improve structure and remove outdated documents. The current docs directory has grown significantly and needs better organization.
 - **Estimated Time**: 2-3 hours
 - **Risk**: Low

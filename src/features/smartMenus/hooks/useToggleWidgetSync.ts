@@ -1,39 +1,53 @@
-import { gql } from "@apollo/client";
-import { lambdaClient } from "../../../lib/datawarehouse-lambda-apollo";
+import { gql, useApolloClient } from "@apollo/client";
+import { apiGraphQLClient } from "../../../lib/api-graphql-apollo";
+import { WIDGET_FIELDS } from "../graphql/fragments";
 
-const ACTIVATE_WIDGET_SYNC = gql`
-  mutation ActivateWidgetSync($id: ID!) {
-    activateWidgetSync(id: $id) {
-      id
-      isSyncEnabled
+export const ACTIVATE_WIDGET = gql`
+  mutation ActivateWidget($id: ID!) {
+    activateWidget(id: $id) {
+      ...WidgetFields
     }
   }
+  ${WIDGET_FIELDS}
 `;
 
-const DEACTIVATE_WIDGET_SYNC = gql`
-  mutation DeactivateWidgetSync($id: ID!) {
-    deactivateWidgetSync(id: $id) {
-      id
-      isSyncEnabled
+export const DEACTIVATE_WIDGET = gql`
+  mutation DeactivateWidget($id: ID!) {
+    deactivateWidget(id: $id) {
+      ...WidgetFields
     }
   }
+  ${WIDGET_FIELDS}
 `;
 
 export function useToggleWidgetSync() {
-  const client = lambdaClient!;
+  // Use the Apollo client from context if available, otherwise fall back to shared client
+  const contextClient = useApolloClient?.();
+  const client = contextClient || apiGraphQLClient;
 
   const toggleWidgetSync = async (id: string, enable: boolean) => {
-    const MUTATION = enable ? ACTIVATE_WIDGET_SYNC : DEACTIVATE_WIDGET_SYNC;
+    const mutation = enable ? ACTIVATE_WIDGET : DEACTIVATE_WIDGET;
+    const optimisticResponse = enable
+      ? {
+          activateWidget: {
+            __typename: "Widget",
+            id,
+            isActive: true,
+            updatedAt: new Date().toISOString(),
+          },
+        }
+      : {
+          deactivateWidget: {
+            __typename: "Widget",
+            id,
+            isActive: false,
+            updatedAt: new Date().toISOString(),
+          },
+        };
     return client.mutate({
-      mutation: MUTATION,
+      mutation,
       variables: { id },
-      optimisticResponse: {
-        [enable ? "activateWidgetSync" : "deactivateWidgetSync"]: {
-          __typename: "Widget",
-          id,
-          isSyncEnabled: enable,
-        },
-      },
+      optimisticResponse,
     });
   };
 
