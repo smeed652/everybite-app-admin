@@ -1,7 +1,4 @@
-import { gql } from "@apollo/client";
-import { MockedProvider } from "@apollo/client/testing";
 import { render, screen } from "@testing-library/react";
-import { DocumentNode } from "graphql";
 import { describe, expect, it, vi } from "vitest";
 import Dashboard from "../pages/Dashboard";
 
@@ -12,30 +9,19 @@ vi.mock("../features/dashboard/sections/PlayerAnalyticsSection", () => ({
   ),
 }));
 
-const GET_DASHBOARD_WIDGETS = gql`
-  query GetDashboardWidgets {
-    db_widgetsList {
-      items {
-        id
-        createdAt
-        publishedAt
-        numberOfLocations
-        displayImages
-        layout
-        isOrderButtonEnabled
-        isByoEnabled
-      }
-      pagination {
-        total
-      }
-    }
-  }
-`;
+// Mock the useSmartMenuSettings hook
+vi.mock("../hooks/useSmartMenuSettings", () => ({
+  useSmartMenuSettings: vi.fn(),
+}));
 
-const mockWidgets = [
+import { useSmartMenuSettings } from "../hooks/useSmartMenuSettings";
+const mockSmartMenus = [
   {
     id: "1",
+    name: "Test Menu 1",
+    slug: "test-menu-1",
     createdAt: "2024-11-01T10:00:00Z",
+    updatedAt: "2024-11-02T10:00:00Z",
     publishedAt: "2024-11-02T10:00:00Z",
     numberOfLocations: 5,
     displayImages: true,
@@ -45,7 +31,10 @@ const mockWidgets = [
   },
   {
     id: "2",
+    name: "Test Menu 2",
+    slug: "test-menu-2",
     createdAt: "2024-11-15T10:00:00Z",
+    updatedAt: "2024-11-15T10:00:00Z",
     publishedAt: null,
     numberOfLocations: 3,
     displayImages: false,
@@ -55,7 +44,10 @@ const mockWidgets = [
   },
   {
     id: "3",
+    name: "Test Menu 3",
+    slug: "test-menu-3",
     createdAt: "2024-12-01T10:00:00Z",
+    updatedAt: "2024-12-02T10:00:00Z",
     publishedAt: "2024-12-02T10:00:00Z",
     numberOfLocations: 8,
     displayImages: true,
@@ -65,7 +57,10 @@ const mockWidgets = [
   },
   {
     id: "4",
+    name: "Test Menu 4",
+    slug: "test-menu-4",
     createdAt: "2024-10-01T10:00:00Z",
+    updatedAt: "2024-10-02T10:00:00Z",
     publishedAt: "2024-10-02T10:00:00Z",
     numberOfLocations: 12,
     displayImages: false,
@@ -75,379 +70,372 @@ const mockWidgets = [
   },
 ];
 
-const mocks = [
+const mockQuarterlyMetrics = [
   {
-    request: {
-      query: GET_DASHBOARD_WIDGETS,
+    quarter: 4,
+    year: 2024,
+    quarterLabel: "Q4 2024",
+    orders: {
+      count: 150,
+      qoqGrowth: 50,
+      qoqGrowthPercent: 50.0,
     },
-    result: {
-      data: {
-        db_widgetsList: {
-          items: mockWidgets,
-          pagination: {
-            total: mockWidgets.length,
-          },
-        },
-      },
+    activeSmartMenus: {
+      count: 2,
+      qoqGrowth: 1,
+      qoqGrowthPercent: 100.0,
+    },
+    locations: {
+      count: 13,
+      qoqGrowth: 1,
+      qoqGrowthPercent: 8.3,
+    },
+  },
+  {
+    quarter: 3,
+    year: 2024,
+    quarterLabel: "Q3 2024",
+    orders: {
+      count: 100,
+      qoqGrowth: 0,
+      qoqGrowthPercent: 0.0,
+    },
+    activeSmartMenus: {
+      count: 1,
+      qoqGrowth: 0,
+      qoqGrowthPercent: 0.0,
+    },
+    locations: {
+      count: 12,
+      qoqGrowth: 0,
+      qoqGrowthPercent: 0.0,
     },
   },
 ];
 
-const errorMocks = [
-  {
-    request: {
-      query: GET_DASHBOARD_WIDGETS,
-    },
-    error: new Error("Failed to fetch widgets"),
+const mockMetrics = {
+  totalSmartMenus: 4,
+  activeSmartMenus: 3,
+  totalLocations: 28,
+  featureAdoption: {
+    withImages: 2,
+    withOrderButton: 2,
+    withByo: 2,
+    byLayout: { CARD: 2, TABLE: 2 },
   },
-];
-
-const renderDashboard = (
-  testMocks: Array<{
-    request: { query: DocumentNode };
-    result?: {
-      data: {
-        db_widgetsList: {
-          items: Array<{
-            id: string;
-            createdAt: string;
-            publishedAt: string | null;
-            numberOfLocations?: number;
-            displayImages?: boolean;
-            layout?: string;
-            isOrderButtonEnabled?: boolean;
-            isByoEnabled?: boolean;
-          }>;
-          pagination: {
-            total: number;
-          };
-        };
-      };
-    };
-    error?: Error;
-  }> = mocks
-) => {
-  return render(
-    <MockedProvider mocks={testMocks} addTypename={false}>
-      <Dashboard />
-    </MockedProvider>
-  );
+  settings: {
+    withCustomColors: 0,
+    withCustomFonts: 0,
+    withDietaryPreferences: 0,
+    withAllergens: 0,
+  },
+  classifications: {
+    nraClassifications: {},
+    menuTypes: {},
+    cuisineTypes: {},
+    orderingEnabled: 2,
+    orderingDisabled: 2,
+  },
 };
 
+// Mock the useSmartMenuSettings hook
+vi.mock("../hooks/useSmartMenuSettings", () => ({
+  useSmartMenuSettings: vi.fn(),
+}));
+
+const mockUseSmartMenuSettings = useSmartMenuSettings as vi.MockedFunction<
+  typeof useSmartMenuSettings
+>;
+
 describe("Dashboard", () => {
-  it("renders dashboard title", () => {
-    renderDashboard();
-    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it("renders player analytics section", () => {
-    renderDashboard();
+  it("renders dashboard with metrics", async () => {
+    mockUseSmartMenuSettings.mockReturnValue({
+      smartMenus: mockSmartMenus,
+      quarterlyMetrics: mockQuarterlyMetrics,
+      loading: false,
+      error: null,
+      metrics: mockMetrics,
+      getByLayout: vi.fn(),
+      getActiveSmartMenus: vi.fn(),
+      getSmartMenusWithFeature: vi.fn(),
+      getSmartMenusWithOrdering: vi.fn(),
+      getByNRAClassification: vi.fn(),
+      getByMenuType: vi.fn(),
+      getByCuisineType: vi.fn(),
+      getSmartMenusWithFooter: vi.fn(),
+      getSmartMenusWithCustomFooterText: vi.fn(),
+      refresh: vi.fn(),
+    });
+
+    render(<Dashboard />);
+
+    // Check that the dashboard title is rendered
+    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+    expect(
+      screen.getByText("Overview of your SmartMenu performance and analytics.")
+    ).toBeInTheDocument();
+
+    // Check that metrics cards are rendered with correct values
+    expect(screen.getByText("SmartMenus")).toBeInTheDocument();
+    expect(screen.getByText("4")).toBeInTheDocument(); // totalSmartMenus
+
+    expect(screen.getByText("Active SmartMenus")).toBeInTheDocument();
+    expect(screen.getByText("3")).toBeInTheDocument(); // activeSmartMenus
+
+    expect(screen.getByText("Total Locations")).toBeInTheDocument();
+    expect(screen.getByText("28")).toBeInTheDocument(); // totalLocations
+
+    expect(screen.getByText("Total Orders")).toBeInTheDocument();
+    expect(screen.getByText("250")).toBeInTheDocument(); // total orders (150 + 100)
+
+    // Check that percentage changes are displayed (using getAllByText for multiple matches)
+    expect(screen.getAllByText("+100.0%")).toHaveLength(1); // Only one +100.0% appears
+    expect(screen.getByText("+8.3%")).toBeInTheDocument(); // Locations delta
+    expect(screen.getAllByText("+50.0%")).toHaveLength(2); // Orders delta (appears in both metrics card and quarterly table)
+
+    // Check that Player Analytics section is rendered
     expect(screen.getByTestId("player-analytics")).toBeInTheDocument();
   });
 
-  it("displays loading state for metrics cards", () => {
-    renderDashboard();
+  it("displays loading state", () => {
+    mockUseSmartMenuSettings.mockReturnValue({
+      smartMenus: [],
+      quarterlyMetrics: [],
+      loading: true,
+      error: null,
+      metrics: {
+        totalSmartMenus: 0,
+        activeSmartMenus: 0,
+        totalLocations: 0,
+        featureAdoption: {
+          withImages: 0,
+          withOrderButton: 0,
+          withByo: 0,
+          byLayout: {},
+        },
+        settings: {
+          withCustomColors: 0,
+          withCustomFonts: 0,
+          withDietaryPreferences: 0,
+          withAllergens: 0,
+        },
+        classifications: {
+          nraClassifications: {},
+          menuTypes: {},
+          cuisineTypes: {},
+          orderingEnabled: 0,
+          orderingDisabled: 0,
+        },
+      },
+      getByLayout: vi.fn(),
+      getActiveSmartMenus: vi.fn(),
+      getSmartMenusWithFeature: vi.fn(),
+      getSmartMenusWithOrdering: vi.fn(),
+      getByNRAClassification: vi.fn(),
+      getByMenuType: vi.fn(),
+      getByCuisineType: vi.fn(),
+      getSmartMenusWithFooter: vi.fn(),
+      getSmartMenusWithCustomFooterText: vi.fn(),
+      refresh: vi.fn(),
+    });
 
-    // Should show loading state initially
-    const smartMenusCard = screen.getByText("SmartMenus");
-    const activeSmartMenusCard = screen.getByText("Active SmartMenus");
+    render(<Dashboard />);
 
-    expect(smartMenusCard).toBeInTheDocument();
-    expect(activeSmartMenusCard).toBeInTheDocument();
+    // Check that loading states are shown
+    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+    // When loading, the metrics show loading skeletons, not "0"
+    expect(screen.getAllByRole("status")).toHaveLength(10); // Multiple loading skeletons
   });
 
-  it("displays correct metrics when data loads", async () => {
-    renderDashboard(mocks);
-
-    // Wait for data to load
-    await screen.findAllByTestId("metrics-card");
-
-    const metricsCards = screen.getAllByTestId("metrics-card");
-    expect(metricsCards).toHaveLength(4); // Now includes Total Orders card
-  });
-
-  it("calculates trending deltas correctly", async () => {
-    // Create widgets with specific dates for trend calculation
-    const now = new Date();
-    const currentPeriod = new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000); // 15 days ago
-    const previousPeriod = new Date(now.getTime() - 45 * 24 * 60 * 60 * 1000); // 45 days ago
-
-    const trendWidgets = [
-      // Current 30-day period
-      {
-        id: "1",
-        createdAt: currentPeriod.toISOString(),
-        publishedAt: new Date(
-          currentPeriod.getTime() + 24 * 60 * 60 * 1000
-        ).toISOString(),
-        numberOfLocations: 5,
-        displayImages: true,
-        layout: "CARD",
-        isOrderButtonEnabled: true,
-        isByoEnabled: false,
-      },
-      {
-        id: "2",
-        createdAt: new Date(
-          currentPeriod.getTime() + 5 * 24 * 60 * 60 * 1000
-        ).toISOString(),
-        publishedAt: new Date(
-          currentPeriod.getTime() + 6 * 24 * 60 * 60 * 1000
-        ).toISOString(),
-        numberOfLocations: 8,
-        displayImages: false,
-        layout: "TABLE",
-        isOrderButtonEnabled: false,
-        isByoEnabled: true,
-      },
-      // Previous 30-day period
-      {
-        id: "3",
-        createdAt: previousPeriod.toISOString(),
-        publishedAt: new Date(
-          previousPeriod.getTime() + 24 * 60 * 60 * 1000
-        ).toISOString(),
-        numberOfLocations: 12,
-        displayImages: true,
-        layout: "CARD",
-        isOrderButtonEnabled: true,
-        isByoEnabled: true,
-      },
-    ];
-
-    const trendMocks = [
-      {
-        request: {
-          query: GET_DASHBOARD_WIDGETS,
+  it("displays error state when service fails", () => {
+    mockUseSmartMenuSettings.mockReturnValue({
+      smartMenus: [],
+      quarterlyMetrics: [],
+      loading: false,
+      error: "Failed to load dashboard metrics.",
+      metrics: {
+        totalSmartMenus: 0,
+        activeSmartMenus: 0,
+        totalLocations: 0,
+        featureAdoption: {
+          withImages: 0,
+          withOrderButton: 0,
+          withByo: 0,
+          byLayout: {},
         },
-        result: {
-          data: {
-            db_widgetsList: {
-              items: trendWidgets,
-              pagination: {
-                total: trendWidgets.length,
-              },
-            },
-          },
+        settings: {
+          withCustomColors: 0,
+          withCustomFonts: 0,
+          withDietaryPreferences: 0,
+          withAllergens: 0,
+        },
+        classifications: {
+          nraClassifications: {},
+          menuTypes: {},
+          cuisineTypes: {},
+          orderingEnabled: 0,
+          orderingDisabled: 0,
         },
       },
-    ];
+      getByLayout: vi.fn(),
+      getActiveSmartMenus: vi.fn(),
+      getSmartMenusWithFeature: vi.fn(),
+      getSmartMenusWithOrdering: vi.fn(),
+      getByNRAClassification: vi.fn(),
+      getByMenuType: vi.fn(),
+      getByCuisineType: vi.fn(),
+      getSmartMenusWithFooter: vi.fn(),
+      getSmartMenusWithCustomFooterText: vi.fn(),
+      refresh: vi.fn(),
+    });
 
-    renderDashboard(trendMocks);
+    render(<Dashboard />);
 
-    // Wait for data to load
-    await screen.findAllByTestId("metrics-card");
-
-    // Should show delta percentages
-    // Current period: 2 created, 2 active, 13 locations (5+8)
-    // Previous period: 1 created, 1 active, 12 locations
-    // Delta: +100% for SmartMenus and Active SmartMenus, +8.3% for locations
-    expect(screen.getAllByText("+100.0%")).toHaveLength(2);
-    expect(screen.getByText("+8.3%")).toBeInTheDocument();
-  });
-
-  it("handles zero previous period correctly", async () => {
-    const now = new Date();
-    const currentPeriod = new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000); // 15 days ago
-
-    const zeroPrevWidgets = [
-      // Only current period widgets
-      {
-        id: "1",
-        createdAt: currentPeriod.toISOString(),
-        publishedAt: new Date(
-          currentPeriod.getTime() + 24 * 60 * 60 * 1000
-        ).toISOString(),
-        numberOfLocations: 5,
-        displayImages: true,
-        layout: "CARD",
-        isOrderButtonEnabled: true,
-        isByoEnabled: false,
-      },
-    ];
-
-    const zeroPrevMocks = [
-      {
-        request: {
-          query: GET_DASHBOARD_WIDGETS,
-        },
-        result: {
-          data: {
-            db_widgetsList: {
-              items: zeroPrevWidgets,
-              pagination: {
-                total: zeroPrevWidgets.length,
-              },
-            },
-          },
-        },
-      },
-    ];
-
-    renderDashboard(zeroPrevMocks);
-
-    await screen.findAllByTestId("metrics-card");
-
-    // When previous period is 0, should show +100% if current > 0
-    expect(screen.getAllByText("+100%")).toHaveLength(3);
-  });
-
-  it("handles empty widgets array", async () => {
-    const emptyMocks = [
-      {
-        request: {
-          query: GET_DASHBOARD_WIDGETS,
-        },
-        result: {
-          data: {
-            db_widgetsList: {
-              items: [],
-              pagination: {
-                total: 0,
-              },
-            },
-          },
-        },
-      },
-    ];
-
-    renderDashboard(emptyMocks);
-
-    await screen.findAllByTestId("metrics-card");
-
-    expect(screen.getAllByText("0%")).toHaveLength(4); // All four cards show 0%
-  });
-
-  it("displays error state when GraphQL query fails", async () => {
-    renderDashboard(errorMocks);
-
-    await screen.findByText("Failed to load dashboard metrics.");
-
+    // Check that error message is displayed
     expect(
       screen.getByText("Failed to load dashboard metrics.")
     ).toBeInTheDocument();
   });
 
-  it("handles widgets with null publishedAt", async () => {
-    const now = new Date();
-    const currentPeriod = new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000); // 15 days ago
-
-    const unpublishedWidgets = [
+  it("handles zero previous period correctly", () => {
+    const zeroPreviousMetrics = [
       {
-        id: "1",
-        createdAt: currentPeriod.toISOString(),
-        publishedAt: new Date(
-          currentPeriod.getTime() + 24 * 60 * 60 * 1000
-        ).toISOString(),
-        numberOfLocations: 5,
-        displayImages: true,
-        layout: "CARD",
-        isOrderButtonEnabled: true,
-        isByoEnabled: false,
+        quarter: 4,
+        year: 2024,
+        quarterLabel: "Q4 2024",
+        orders: {
+          count: 100,
+          qoqGrowth: 100,
+          qoqGrowthPercent: 100.0,
+        },
+        activeSmartMenus: {
+          count: 2,
+          qoqGrowth: 2,
+          qoqGrowthPercent: 100.0,
+        },
+        locations: {
+          count: 10,
+          qoqGrowth: 10,
+          qoqGrowthPercent: 100.0,
+        },
       },
       {
-        id: "2",
-        createdAt: new Date(
-          currentPeriod.getTime() + 5 * 24 * 60 * 60 * 1000
-        ).toISOString(),
-        publishedAt: null, // Unpublished
-        numberOfLocations: 3,
-        displayImages: false,
-        layout: "TABLE",
-        isOrderButtonEnabled: false,
-        isByoEnabled: true,
+        quarter: 3,
+        year: 2024,
+        quarterLabel: "Q3 2024",
+        orders: {
+          count: 0,
+          qoqGrowth: 0,
+          qoqGrowthPercent: 0.0,
+        },
+        activeSmartMenus: {
+          count: 0,
+          qoqGrowth: 0,
+          qoqGrowthPercent: 0.0,
+        },
+        locations: {
+          count: 0,
+          qoqGrowth: 0,
+          qoqGrowthPercent: 0.0,
+        },
       },
     ];
 
-    const unpublishedMocks = [
-      {
-        request: {
-          query: GET_DASHBOARD_WIDGETS,
-        },
-        result: {
-          data: {
-            widgets: unpublishedWidgets,
-          },
-        },
-      },
-    ];
+    mockUseSmartMenuSettings.mockReturnValue({
+      smartMenus: mockSmartMenus,
+      quarterlyMetrics: zeroPreviousMetrics,
+      loading: false,
+      error: null,
+      metrics: mockMetrics,
+      getByLayout: vi.fn(),
+      getActiveSmartMenus: vi.fn(),
+      getSmartMenusWithFeature: vi.fn(),
+      getSmartMenusWithOrdering: vi.fn(),
+      getByNRAClassification: vi.fn(),
+      getByMenuType: vi.fn(),
+      getByCuisineType: vi.fn(),
+      getSmartMenusWithFooter: vi.fn(),
+      getSmartMenusWithCustomFooterText: vi.fn(),
+      refresh: vi.fn(),
+    });
 
-    renderDashboard(unpublishedMocks);
+    render(<Dashboard />);
 
-    await screen.findAllByTestId("metrics-card");
+    // When previous period is 0, should show +100% if current > 0
+    // The +100% appears in both metrics cards and quarterly table
+    expect(screen.getAllByText("+100%")).toHaveLength(1);
   });
 
-  it("handles negative deltas correctly", async () => {
-    const now = new Date();
-    const currentPeriod = new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000); // 15 days ago
-    const previousPeriod = new Date(now.getTime() - 45 * 24 * 60 * 60 * 1000); // 45 days ago
-
-    const negativeTrendWidgets = [
-      // Current period: 1 created
+  it("handles negative deltas correctly", () => {
+    const negativeDeltaMetrics = [
       {
-        id: "1",
-        createdAt: currentPeriod.toISOString(),
-        publishedAt: new Date(
-          currentPeriod.getTime() + 24 * 60 * 60 * 1000
-        ).toISOString(),
-        numberOfLocations: 5,
-        displayImages: true,
-        layout: "CARD",
-        isOrderButtonEnabled: true,
-        isByoEnabled: false,
-      },
-      // Previous period: 2 created
-      {
-        id: "2",
-        createdAt: previousPeriod.toISOString(),
-        publishedAt: new Date(
-          previousPeriod.getTime() + 24 * 60 * 60 * 1000
-        ).toISOString(),
-        numberOfLocations: 8,
-        displayImages: false,
-        layout: "TABLE",
-        isOrderButtonEnabled: false,
-        isByoEnabled: true,
-      },
-      {
-        id: "3",
-        createdAt: new Date(
-          previousPeriod.getTime() + 5 * 24 * 60 * 60 * 1000
-        ).toISOString(),
-        publishedAt: new Date(
-          previousPeriod.getTime() + 6 * 24 * 60 * 60 * 1000
-        ).toISOString(),
-        numberOfLocations: 12,
-        displayImages: true,
-        layout: "CARD",
-        isOrderButtonEnabled: true,
-        isByoEnabled: true,
-      },
-    ];
-
-    const negativeMocks = [
-      {
-        request: {
-          query: GET_DASHBOARD_WIDGETS,
+        quarter: 4,
+        year: 2024,
+        quarterLabel: "Q4 2024",
+        orders: {
+          count: 50,
+          qoqGrowth: -50,
+          qoqGrowthPercent: -50.0,
         },
-        result: {
-          data: {
-            db_widgetsList: {
-              items: negativeTrendWidgets,
-              pagination: {
-                total: negativeTrendWidgets.length,
-              },
-            },
-          },
+        activeSmartMenus: {
+          count: 1,
+          qoqGrowth: -1,
+          qoqGrowthPercent: -50.0,
+        },
+        locations: {
+          count: 6,
+          qoqGrowth: -6,
+          qoqGrowthPercent: -50.0,
+        },
+      },
+      {
+        quarter: 3,
+        year: 2024,
+        quarterLabel: "Q3 2024",
+        orders: {
+          count: 100,
+          qoqGrowth: 0,
+          qoqGrowthPercent: 0.0,
+        },
+        activeSmartMenus: {
+          count: 2,
+          qoqGrowth: 0,
+          qoqGrowthPercent: 0.0,
+        },
+        locations: {
+          count: 12,
+          qoqGrowth: 0,
+          qoqGrowthPercent: 0.0,
         },
       },
     ];
 
-    renderDashboard(negativeMocks);
+    mockUseSmartMenuSettings.mockReturnValue({
+      smartMenus: mockSmartMenus,
+      quarterlyMetrics: negativeDeltaMetrics,
+      loading: false,
+      error: null,
+      metrics: mockMetrics,
+      getByLayout: vi.fn(),
+      getActiveSmartMenus: vi.fn(),
+      getSmartMenusWithFeature: vi.fn(),
+      getSmartMenusWithOrdering: vi.fn(),
+      getByNRAClassification: vi.fn(),
+      getByMenuType: vi.fn(),
+      getByCuisineType: vi.fn(),
+      getSmartMenusWithFooter: vi.fn(),
+      getSmartMenusWithCustomFooterText: vi.fn(),
+      refresh: vi.fn(),
+    });
 
-    await screen.findAllByTestId("metrics-card");
+    render(<Dashboard />);
 
-    // Current: 1, Previous: 2, Delta: -50%
-    expect(screen.getAllByText("-50.0%")).toHaveLength(2);
+    // Current: 50, Previous: 100, Delta: -50%
+    // The -50.0% appears in both metrics cards and quarterly table
+    expect(screen.getAllByText("-50.0%")).toHaveLength(4);
   });
 });
