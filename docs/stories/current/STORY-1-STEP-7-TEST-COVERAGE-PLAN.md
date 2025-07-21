@@ -42,6 +42,13 @@ Achieve 100% test coverage for all custom hooks, service layer files, utilities,
 - ✅ **useSmartMenuSettings.ts**: Created focused test file covering data loading, metrics calculation, and key service methods. Tests core functionality without being overly complex.
 - ✅ **useMetabaseUsers.ts**: Empty file - no testing needed.
 
+**Utilities Completed:**
+
+- ✅ **cacheStatusUtils.ts**: Created comprehensive test file covering cache status management, time calculations, and status updates. Tests all utility functions with proper time mocking.
+- ✅ **cacheUtils.ts**: Created comprehensive test file covering cache operations, scheduled refresh calculations, and bulk operations. Tests all utility functions with proper error handling.
+- ✅ **cacheOperationStrategies.ts**: Created comprehensive test file covering individual cache operations, error handling, and operation strategies. Tests all strategy functions with proper mocking.
+- ✅ **cacheFormatters.ts**: Created comprehensive test file covering time formatting, cache status formatting, and display utilities. Tests all formatter functions with proper time mocking.
+
 **Services Completed:**
 
 - ✅ **SmartMenuSettingsHybridService.ts**: Created comprehensive test file covering data fetching, caching, optimistic updates, and service interactions. Tests all major functionality with proper error handling.
@@ -55,8 +62,9 @@ Achieve 100% test coverage for all custom hooks, service layer files, utilities,
 
 - ✅ **Phase 1 Complete**: All hooks have comprehensive test coverage
 - ✅ **Phase 2 Complete**: All services have comprehensive test coverage
+- ✅ **Phase 3 Complete**: All utilities and caching logic have comprehensive test coverage
 - 🎯 **Focus Shift**: Prioritizing core system functionality over UI components
-- Move to Phase 3: Utilities & Caching Logic
+- Move to Phase 4: Context & Config
 - Continue systematic approach through core system phases
 - **DEFERRED:** UI/Component tests until design refactor is complete
 
@@ -71,12 +79,12 @@ Achieve 100% test coverage for all custom hooks, service layer files, utilities,
 - [x] api/lambda/MetabaseUsersService.ts _(test file created with focused coverage)_
 - [x] smartmenus/SmartMenuSettingsService.ts _(test file created with focused coverage)_
 
-### Phase 3: Utilities & Caching Logic - **CORE SYSTEM**
+### Phase 3: Utilities & Caching Logic - **CORE SYSTEM** ✅ COMPLETE
 
-- [ ] src/utils/cacheStatusUtils.ts
-- [ ] src/utils/cacheUtils.ts
-- [ ] src/utils/cacheOperationStrategies.ts
-- [ ] src/components/cache/utils/cacheFormatters.ts
+- [x] src/utils/cacheStatusUtils.ts _(test file created with comprehensive coverage)_
+- [x] src/utils/cacheUtils.ts _(test file created with comprehensive coverage)_
+- [x] src/utils/cacheOperationStrategies.ts _(test file created with comprehensive coverage)_
+- [x] src/components/cache/utils/cacheFormatters.ts _(test file created with comprehensive coverage)_
 
 ### Phase 4: Context (`src/context/`) - **CORE SYSTEM**
 
@@ -141,12 +149,12 @@ Achieve 100% test coverage for all custom hooks, service layer files, utilities,
 ### Overall Progress - Core System Focus
 
 - **Services complete:** 4/4 (100%)
-- **Utilities complete:** 0/4
+- **Utilities complete:** 4/4 (100%)
 - **Context complete:** 0/1
 - **Config complete:** 0/1
 - **Types complete:** 0/1
 - **Features complete:** 0/1
-- **Total core system complete:** 15/22 (68.2%)
+- **Total core system complete:** 19/22 (86.4%)
 
 ### Deferred Progress (UI/Design Related)
 
@@ -180,15 +188,15 @@ Achieve 100% test coverage for all custom hooks, service layer files, utilities,
 
 ### Current Work
 
-- 🔄 **Hooks Testing**: Systematically creating test files for remaining 8 hooks
+- ✅ **Phase 3 Complete**: All utilities and caching logic have comprehensive test coverage
 - 🔄 **Quality Assurance**: Ensuring each test file provides comprehensive coverage
 
 ### Next Steps
 
-1. Complete remaining 8 hooks test files
-2. Review and validate all hooks coverage
-3. Move to Phase 2 (Services)
-4. Continue systematic approach through all phases
+1. Move to Phase 4: Context & Config testing
+2. Continue systematic approach through remaining core system phases
+3. Review and validate all test coverage
+4. Prepare for UI/Component testing after design refactor
 
 ### TODO - Test File Refactoring
 
