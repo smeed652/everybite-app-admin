@@ -93,10 +93,16 @@ export function calculateOrdersDelta(
     return "0%";
   }
 
+  // If there's no previous quarter, use the ordersQoQGrowth value if available
   if (!previousQuarter?.orders) {
+    if (currentQuarter.ordersQoQGrowth !== undefined) {
+      const growth = currentQuarter.ordersQoQGrowth;
+      return `${growth >= 0 ? "+" : ""}${growth.toFixed(1)}%`;
+    }
     return currentQuarter.orders > 0 ? "+100%" : "0%";
   }
 
+  // Use the ordersQoQGrowth value from the transformed data
   const growth = currentQuarter.ordersQoQGrowth || 0;
   return `${growth >= 0 ? "+" : ""}${growth.toFixed(1)}%`;
 }
