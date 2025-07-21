@@ -32,7 +32,39 @@ const mockClient = {
 vi.mock("@apollo/client", () => ({
   useApolloClient: vi.fn(() => mockClient),
   gql: vi.fn((query) => ({ loc: { source: { body: query } } })),
+  createHttpLink: vi.fn(),
 }));
+
+// Mock the apiGraphQLClient
+vi.mock("../../../../lib/api-graphql-apollo", () => {
+  const mockMutate = vi.fn().mockResolvedValue({
+    data: {
+      updateWidget: {
+        id: "1",
+        name: "Updated Widget",
+        __typename: "Widget",
+      },
+    },
+  });
+  const mockReadFragment = vi.fn().mockReturnValue({
+    id: "1",
+    name: "Test Widget",
+    __typename: "Widget",
+  });
+  const mockCache = {
+    identify: vi.fn().mockReturnValue("Widget:1"),
+  };
+
+  const mockClient = {
+    mutate: mockMutate,
+    readFragment: mockReadFragment,
+    cache: mockCache,
+  };
+
+  return {
+    apiGraphQLClient: mockClient,
+  };
+});
 
 // Mock logger
 vi.mock("../../../../lib/logger", () => ({
