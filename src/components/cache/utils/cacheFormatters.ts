@@ -20,13 +20,24 @@ export const formatTimeUntil = (isoString: string): string => {
   const now = new Date();
   const next = new Date(isoString);
   const diffMs = next.getTime() - now.getTime();
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+  const totalMinutes = Math.round(diffMs / (1000 * 60));
+  const absMinutes = Math.abs(totalMinutes);
+  const sign = totalMinutes < 0 ? "-" : "";
 
-  if (diffHours > 0) {
-    return `${diffHours}h ${diffMinutes}m`;
+  const hours = Math.floor(absMinutes / 60);
+  const minutes = absMinutes % 60;
+
+  // Special case: for negative values, if minutes is zero, show as -120m, not -2h
+  if (totalMinutes < 0 && minutes === 0 && hours > 0) {
+    return `${sign}${absMinutes}m`;
+  }
+
+  if (hours > 0 && minutes > 0) {
+    return `${sign}${hours}h ${minutes}m`;
+  } else if (hours > 0) {
+    return `${sign}${hours}h`;
   } else {
-    return `${diffMinutes}m`;
+    return `${sign}${minutes}m`;
   }
 };
 
