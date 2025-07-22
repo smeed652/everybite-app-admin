@@ -117,7 +117,7 @@
 - ✅ **Custom Commands**: Added `cy.visitAuthenticated()` and `cy.waitForData()` to `cypress/support/commands.ts`
 - ✅ **Efficient Selectors**: Updated tests for TanStackDataTable and modern components
 - ✅ **Performance Documentation**: Created `docs/active/E2E-PERFORMANCE-OPTIMIZATION.md`
-- ✅ **Performance Template**: Created `cypress/e2e/performance-optimized.cy.ts` as reference
+- ✅ **Performance Template**: Created `cypress/templates/performance-optimized.cy.ts` as reference
 
 ### **Day 3-5: E2E Test Fixes**
 
@@ -303,7 +303,7 @@
 - ✅ **Performance Documentation**: Created comprehensive optimization guide
   - **File**: `docs/active/E2E-PERFORMANCE-OPTIMIZATION.md`
   - **Content**: Implementation strategies, best practices, monitoring guidelines
-  - **Template**: Created `cypress/e2e/performance-optimized.cy.ts` as reference
+  - **Template**: Created `cypress/templates/performance-optimized.cy.ts` as reference
 
 **Performance Improvements Achieved:**
 

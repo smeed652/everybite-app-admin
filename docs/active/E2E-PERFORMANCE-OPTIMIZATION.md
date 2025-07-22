@@ -126,7 +126,7 @@ cy.waitForData('[data-testid="table"]', 3000);
 - [x] **Cypress Configuration**: Added performance optimizations
 - [x] **Custom Commands**: Added `visitAuthenticated()` and `waitForData()`
 - [x] **Timeout Optimization**: Reduced timeouts in test files
-- [x] **Performance Template**: Created `performance-optimized.cy.ts`
+- [x] **Performance Template**: Created `cypress/templates/performance-optimized.cy.ts`
 
 ### 🔄 Remaining Optimizations
 
