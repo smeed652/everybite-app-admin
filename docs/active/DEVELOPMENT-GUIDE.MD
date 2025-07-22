@@ -31,10 +31,19 @@ This document outlines recommended development practices, directory structure, a
   - Use `index.ts` (or `index.js`) barrel files for cleaner imports from directories with multiple modules.
   - Set up path aliases (e.g., `@/*` for `src/*`) for cleaner import statements.
 - **Asynchronous Operations**: Use `async/await` for clarity. Handle loading and error states gracefully in the UI.
-- **Testing Practices**: - **General:** Write unit tests for utility functions, complex hooks, and individual components. Aim for good coverage of common and critical reusable components. All test files should use the `.tsx` extension. - **Unit Tests:** Co-located with the source file they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same directory). - **Integration Tests:**
-  _ Feature-specific integration tests reside in a `__tests__` subfolder within the relevant feature directory (e.g., `client/src/components/features/SmartMenu/Basics/__tests__/SmartMenuBasicsFlow.integration.test.tsx`). Use the suffix `_.integration.test.tsx`.
-        *   Broader, cross-feature integration tests are located in `client/src/tests/integration/`.
-    -   **End-to-End (E2E) / Smoke Tests:** Located in `client/src/tests/e2e/`, using the suffix `\*.e2e.test.tsx`. - **Debugging:** When a unit test is failing, try to run it in isolation until it is fixed to speed up debugging. - **Refactoring:** Run tests after every refactoring to ensure functionality is preserved.
+- **Testing Practices**:
+  - **General:** Write unit tests for utility functions, complex hooks, and individual components. Aim for good coverage of common and critical reusable components. All test files should use the `.tsx` extension.
+  - **Unit Tests:** Co-located with the source file they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same directory).
+  - **Integration Tests:**
+    - Feature-specific integration tests reside in a `__tests__` subfolder within the relevant feature directory (e.g., `client/src/components/features/SmartMenu/Basics/__tests__/SmartMenuBasicsFlow.integration.test.tsx`). Use the suffix `_.integration.test.tsx`.
+    - Broader, cross-feature integration tests are located in `client/src/tests/integration/`.
+  - **End-to-End (E2E) / Smoke Tests:** Located in `cypress/e2e/`, using the suffix `*.cy.ts`.
+  - **Parallel E2E Testing:** Always use parallel execution for E2E tests to improve performance:
+    - Use `npm run test:e2e:parallel` for standard parallel execution (4 threads)
+    - Use `npm run test:e2e:parallel:fast` for faster execution (6 threads)
+    - Sequential execution (`npm run test:e2e`) should only be used for debugging individual tests
+  - **Debugging:** When a unit test is failing, try to run it in isolation until it is fixed to speed up debugging.
+  - **Refactoring:** Run tests after every refactoring to ensure functionality is preserved.
 - **Holistic Bug Fixing**: When addressing issues, evaluate if related problems or underlying causes can be fixed concurrently to improve overall code health.
 - **Git Management:** You will be doing the commits so I want you to make sure stage all the files and include a detail commit message. You should let me know when you are ready to commit and push so I have chance to save the code before the commit.
 
