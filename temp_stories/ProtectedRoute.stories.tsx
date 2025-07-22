@@ -7,7 +7,9 @@ const meta: Meta<typeof ProtectedRoute> = {
   component: ProtectedRoute,
   decorators: [
     (Story) => (
-      <BrowserRouter>
+      <BrowserRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
         <Story />
       </BrowserRouter>
     ),

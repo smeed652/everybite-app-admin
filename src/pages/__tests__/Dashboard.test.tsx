@@ -89,7 +89,9 @@ describe("Dashboard page", () => {
 
   it("renders metrics cards with correct counts", () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
         <Dashboard />
       </MemoryRouter>
     );
@@ -159,7 +161,9 @@ describe("Dashboard page", () => {
     });
 
     render(
-      <MemoryRouter>
+      <MemoryRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
         <Dashboard />
       </MemoryRouter>
     );
@@ -186,7 +190,9 @@ describe("Dashboard page", () => {
     });
 
     render(
-      <MemoryRouter>
+      <MemoryRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
         <Dashboard />
       </MemoryRouter>
     );
@@ -217,7 +223,9 @@ describe("Dashboard page", () => {
     });
 
     render(
-      <MemoryRouter>
+      <MemoryRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
         <Dashboard />
       </MemoryRouter>
     );

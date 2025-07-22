@@ -102,7 +102,12 @@ export const customRender = (
     return (
       <MockedProvider mocks={mocks} addTypename={addTypename}>
         <ThemeProvider>
-          <MemoryRouter initialEntries={[initialPath]}>{children}</MemoryRouter>
+          <MemoryRouter
+            initialEntries={[initialPath]}
+            future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+          >
+            {children}
+          </MemoryRouter>
         </ThemeProvider>
       </MockedProvider>
     );
