@@ -20,6 +20,9 @@ export * from "./utils";
 // Dashboard business logic
 export * from "./dashboard";
 
+// GraphQL client selection business logic
+export * from "./graphql/client-selection";
+
 // Quarterly metrics (specific exports)
 export {
   QuarterlyMetricInput,
