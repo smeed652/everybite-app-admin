@@ -4,18 +4,14 @@
 // Validates that the table renders data, icons, search, row-selection and actions menu.
 
 describe("SmartMenus admin list", () => {
-  const email = Cypress.env("USERNAME");
-  const password = Cypress.env("PASSWORD");
+  before(() => {
+    // Login once for all tests in this describe block
+    cy.loginByForm();
+  });
 
   beforeEach(() => {
-    // Login
-    cy.visit("/login");
-    cy.get('input[type="email"], input[name="email"]').type(email);
-    cy.get('input[type="password"], input[name="password"]').type(password, {
-      log: false,
-    });
-    cy.get('button[type="submit"], button:contains("Sign in")').click();
-    cy.contains("Dashboard").should("exist");
+    // Navigate to SmartMenus page
+    cy.visit("/smartmenus");
 
     // Stub GraphQL queries for SmartMenus list and detail
     const widget = {
@@ -65,15 +61,15 @@ describe("SmartMenus admin list", () => {
   });
 
   it("filters rows via search (name or slug)", () => {
-    // Grab text of first row and use first 3 letters as search term
+    // Use more efficient selector and shorter timeout
     cy.get("table tbody tr")
       .first()
       .invoke("text")
       .then((rowText) => {
         const searchTerm = rowText.trim().slice(0, 3).toLowerCase() || "lun";
-        cy.get('input[placeholder^="Search"]').clear().type(searchTerm);
-        // After debounce, table should still show at least one row
-        cy.get("table tbody tr", { timeout: 4000 }).should(
+        cy.get('[data-testid="search-input"]').clear().type(searchTerm);
+        // Reduced timeout for faster feedback
+        cy.get("table tbody tr", { timeout: 2000 }).should(
           "have.length.at.least",
           1
         );
