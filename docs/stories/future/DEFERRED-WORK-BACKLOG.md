@@ -104,6 +104,26 @@ This file tracks all work that was deferred from completed stories. These items 
 
 ### **Priority: Low** - Future enhancements
 
+#### GraphQL Business Logic Layer Integration
+
+- [ ] **Integrate business logic layer into SmartMenu operations** - Optional enhancement
+  - **Source**: Sprint 12 - Business Logic Architecture & Testing Strategy
+  - **Reason**: Current SmartMenu code is working correctly, but business logic layer could provide additional validation and documentation
+  - **Effort**: ~2-3 days
+  - **Dependencies**: Business logic foundation completion
+  - **Files**: `src/features/smartMenus/hooks/` directory
+  - **Approach**:
+    - Keep current SmartMenu code as-is (it's working correctly)
+    - Add business logic layer as validation and documentation tool
+    - Use for new SmartMenu operations going forward
+    - Add optional validation to existing operations
+  - **Benefits**:
+    - Centralized operation mapping
+    - Better error diagnosis
+    - Runtime validation
+    - Clear documentation of operation-to-client mapping
+    - Future-proofing for new operations
+
 #### Cache Advanced Features
 
 - [ ] **PHASE-6-CACHE-ADVANCED.md** - Advanced cache management features
@@ -179,26 +199,27 @@ This file tracks all work that was deferred from completed stories. These items 
 
 ## 📈 Progress Tracking
 
-### **Total Deferred Items**: 15
+### **Total Deferred Items**: 16
 
 - **UI/Design Related**: 10 items
 - **Infrastructure & Technical Debt**: 3 items
-- **Future Enhancements**: 2 items
+- **Future Enhancements**: 3 items
 
 ### **By Priority**
 
 - **High**: 0 items
 - **Medium**: 10 items
-- **Low**: 5 items
+- **Low**: 6 items
 
 ### **By Category**
 
 - **Testing**: 12 items
 - **Documentation**: 2 items
 - **Performance**: 1 item
+- **Architecture**: 1 item
 
 ---
 
 _Last Updated: 2025-01-15_
-_Total Items: 15_
+_Total Items: 16_
 _Next Review: End of next sprint_
