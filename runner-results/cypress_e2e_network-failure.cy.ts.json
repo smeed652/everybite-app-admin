@@ -1,0 +1,10 @@
+{
+  "suites": 1,
+  "tests": 1,
+  "passes": 1,
+  "pending": 0,
+  "failures": 0,
+  "start": "2025-07-22T04:01:51.998Z",
+  "duration": 6037,
+  "file": "cypress/e2e/network-failure.cy.ts"
+}

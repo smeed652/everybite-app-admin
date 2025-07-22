@@ -1,0 +1,10 @@
+{
+  "suites": 1,
+  "tests": 1,
+  "passes": 1,
+  "pending": 0,
+  "failures": 0,
+  "start": "2025-07-22T04:01:41.991Z",
+  "duration": 9308,
+  "file": "cypress/e2e/logout.cy.ts"
+}

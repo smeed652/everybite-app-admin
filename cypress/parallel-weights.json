@@ -1,0 +1,13 @@
+{
+  "cypress/e2e/404.cy.ts": 1,
+  "cypress/e2e/dashboard.cy.ts": 2,
+  "cypress/e2e/logout.cy.ts": 1,
+  "cypress/e2e/network-failure.cy.ts": 1,
+  "cypress/e2e/rbac_api.cy.ts": 2,
+  "cypress/e2e/rbac_ui.cy.ts": 2,
+  "cypress/e2e/smartmenus.cy.ts": 3,
+  "cypress/e2e/smoke.cy.ts": 1,
+  "cypress/e2e/smoke_nonadmin_403.cy.ts": 1,
+  "cypress/e2e/smoke_smartmenu.cy.ts": 2,
+  "cypress/e2e/token-expiry.cy.ts": 2
+}

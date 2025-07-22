@@ -1,0 +1,10 @@
+{
+  "suites": 1,
+  "tests": 2,
+  "passes": 2,
+  "pending": 0,
+  "failures": 0,
+  "start": "2025-07-22T04:01:54.964Z",
+  "duration": 5260,
+  "file": "cypress/e2e/rbac_ui.cy.ts"
+}
