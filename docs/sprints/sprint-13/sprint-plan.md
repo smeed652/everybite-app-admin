@@ -184,7 +184,7 @@ All integration and E2E tests are passing, CI/CD pipeline is fully green, and su
 
 ## 📋 Sprint Documentation
 
-- **Sprint Plan**: `docs/sprints/2025-01-15_sprint-13.md` (this document)
+- **Sprint Plan**: `docs/sprints/sprint-13/sprint-plan.md` (this document)
 - **Current Stories**: `docs/stories/current/`
 - **Completed Stories**: `docs/stories/completed/`
-- **Out of Scope Tasks**: `docs/sprints/OUT-OF-SCOPE-TASKS-SPRINT-13.md`
+- **Out of Scope Tasks**: `docs/sprints/sprint-13/out-of-scope.md`

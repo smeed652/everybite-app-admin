@@ -168,8 +168,8 @@ Business logic architecture is implemented with clear separation of concerns, pu
 
 ## 📋 Sprint Documentation
 
-- **Sprint Plan**: `docs/sprints/2025-01-15_sprint-12.md` (this document)
-- **Sprint Retrospective**: `docs/sprints/SPRINT-12-RETROSPECTIVE.md`
+- **Sprint Plan**: `docs/sprints/sprint-12/sprint-plan.md` (this document)
+- **Sprint Retrospective**: `docs/sprints/sprint-12/retrospective.md`
 - **Completed Stories**: `docs/stories/completed/`
 - **Business Logic Testing Strategy**: `docs/active/BUSINESS-LOGIC-TESTING-STRATEGY.md`
-- **Out of Scope Tasks**: `docs/sprints/OUT-OF-SCOPE-TASKS-SPRINT-12.md`
+- **Out of Scope Tasks**: `docs/sprints/sprint-12/out-of-scope.md`
