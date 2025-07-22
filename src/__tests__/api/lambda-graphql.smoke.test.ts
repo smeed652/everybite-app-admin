@@ -14,6 +14,7 @@ const LAMBDA_URL =
   process.env.LAMBDA_URL ||
   "https://ldfubm7l7k2hj4ln3pxtqylcwe0isjau.lambda-url.us-west-1.on.aws";
 const API_KEY =
+  import.meta.env.VITE_LAMBDA_API_KEY ||
   import.meta.env.VITE_API_KEY ||
   process.env.API_KEY ||
   "3SB3ZawcNr3AT11vxKruJ";
@@ -71,7 +72,9 @@ describe("Lambda GraphQL Smoke Tests (Fast Local + Connectivity)", () => {
       } catch (error: any) {
         // If we get a 401, it means the API key is wrong
         if (error.response?.status === 401) {
-          throw new Error("API key authentication failed - check VITE_API_KEY");
+          throw new Error(
+            "API key authentication failed - check VITE_LAMBDA_API_KEY"
+          );
         }
         // If we get a 500, it means the Lambda has issues but connectivity works
         if (error.response?.status === 500) {
