@@ -156,7 +156,7 @@ export function testHookBusinessLogicContracts<THook>(
 ) {
   describe(`${hookName} - Business Logic Contracts`, () => {
     contracts.forEach(
-      ({ input, expectedState, expectedActions, description }) => {
+      ({ input: _input, expectedState, expectedActions, description }) => {
         const testName =
           description || `should maintain business logic contract`;
 
@@ -199,7 +199,7 @@ export function testHookDataTransformationContracts<THook>(
 ) {
   describe(`${hookName} - Data Transformation Contracts`, () => {
     transformations.forEach(
-      ({ input, expectedTransformation, description }) => {
+      ({ input: _input, expectedTransformation, description }) => {
         const testName = description || `should transform data correctly`;
 
         it(testName, () => {

@@ -127,7 +127,7 @@ describe("Lambda GraphQL Smoke Tests (Fast Local + Connectivity)", () => {
 
     test("should handle cache operations", () => {
       // Test cache operations without making API calls
-      const initialStats = service.getCacheStats();
+      const _initialStats = service.getCacheStats();
       service.clearCache();
       const afterClearStats = service.getCacheStats();
 

@@ -56,7 +56,7 @@ describe("GraphQL Client Configuration", () => {
       // This test would catch the "Cannot query field 'widget' on type 'Query'" error
       // by attempting to validate the schema against known SmartMenu operations
 
-      const smartMenuOperations = [
+      const _smartMenuOperations = [
         "GetSmartMenus",
         "GetWidget",
         "UpdateWidget",
@@ -74,7 +74,7 @@ describe("GraphQL Client Configuration", () => {
 
     it("should validate that Lambda client can handle analytics operations", async () => {
       // This test would validate that Lambda client is configured for analytics
-      const analyticsOperations = [
+      const _analyticsOperations = [
         "QuarterlyMetrics",
         "DailyOrdersTrends",
         "ActivationInsights",

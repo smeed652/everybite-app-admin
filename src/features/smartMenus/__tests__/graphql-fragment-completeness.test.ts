@@ -59,7 +59,7 @@ describe("SmartMenus GraphQL Fragment Completeness", () => {
   it("should be a valid GraphQL fragment", () => {
     // This test will throw if the fragment is malformed
     expect(() => {
-      gql`
+      const _ = gql`
         ${WIDGET_BASIC_FIELDS}
       `;
     }).not.toThrow();

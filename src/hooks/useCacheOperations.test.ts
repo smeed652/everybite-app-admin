@@ -251,7 +251,7 @@ describe("useCacheOperations", () => {
 
   describe("auto-update interval", () => {
     it("should set up interval to update status every minute", () => {
-      const { result } = renderHook(() => useCacheOperations());
+      const { result: _result } = renderHook(() => useCacheOperations());
 
       // Initial call
       expect(mockUpdateCacheStatus).toHaveBeenCalledTimes(1);
@@ -294,9 +294,9 @@ describe("useCacheOperations", () => {
 
   describe("error handling", () => {
     it("should log errors to console", async () => {
-      const consoleSpy = vi
-        .spyOn(console, "error")
-        .mockImplementation(() => {});
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {
+        // Mock implementation
+      });
       const error = new Error("Test error");
       mockClearAllCaches.mockRejectedValue(error);
 
@@ -330,7 +330,7 @@ describe("useCacheOperations", () => {
     it("should update state after successful operations", async () => {
       const { result } = renderHook(() => useCacheOperations());
 
-      const initialStatus = result.current.operationCacheStatus;
+      const _initialStatus = result.current.operationCacheStatus;
 
       // Perform an operation that triggers state update
       await result.current.handleRefreshAll();

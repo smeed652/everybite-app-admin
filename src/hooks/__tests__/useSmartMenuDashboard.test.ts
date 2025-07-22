@@ -12,7 +12,7 @@ describe("useSmartMenuDashboard - Business Logic", () => {
   const mockUseSmartMenuSettings = vi.mocked(useSmartMenuSettings);
 
   // Helper function to create complete mock return value
-  const createMockReturnValue = (
+  const _createMockReturnValue = (
     overrides: Partial<ReturnType<typeof useSmartMenuSettings>> = {}
   ) => ({
     smartMenus: [],

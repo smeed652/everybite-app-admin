@@ -116,7 +116,7 @@ export function calculateDashboardMetrics(
   };
 
   if (config.calculateTrends) {
-    const timePeriod = createTimePeriod(config.defaultTimePeriod);
+    const _timePeriod = createTimePeriod(config.defaultTimePeriod);
     const currentPeriod = createTimePeriod(config.defaultTimePeriod);
     const previousPeriod = {
       start: subDays(currentPeriod.start, config.defaultTimePeriod),
@@ -359,7 +359,7 @@ export function calculateDashboardPerformance(
   }
 
   // Calculate growth rate
-  const timePeriod = createTimePeriod(config.defaultTimePeriod);
+  const _timePeriod = createTimePeriod(config.defaultTimePeriod);
   const currentPeriod = createTimePeriod(config.defaultTimePeriod);
   const previousPeriod = {
     start: subDays(currentPeriod.start, config.defaultTimePeriod),

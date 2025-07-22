@@ -32,7 +32,7 @@ describe("Application Client Configuration", () => {
       const globalClient = lambdaClient!; // Current broken configuration
 
       // Simulate a SmartMenu operation
-      const smartMenuOperation = "GetWidget";
+      const _smartMenuOperation = "GetWidget";
 
       // Test that the global client can handle SmartMenu operations
       // This would fail because lambdaClient doesn't have SmartMenu schema

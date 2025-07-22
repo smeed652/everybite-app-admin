@@ -47,8 +47,15 @@ vi.mock("zen-observable-ts", () => ({
 
 // Mock datawarehouse-lambda-apollo to prevent real Apollo Client creation
 vi.mock("../../lib/datawarehouse-lambda-apollo", () => ({
+  lambdaClient: {
+    query: vi.fn(),
+    mutate: vi.fn(),
+    clearStore: vi.fn(),
+    resetStore: vi.fn(),
+  },
   metabaseClient: null,
   reinitializeMetabaseClient: vi.fn(),
+  reinitializeLambdaClient: vi.fn(),
   cacheUtils: {
     clearCache: vi.fn(),
     getCacheStatus: vi.fn(() => ({ enabled: false })),

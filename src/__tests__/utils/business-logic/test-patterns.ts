@@ -235,7 +235,7 @@ export function validatePureFunction<TInput, TOutput>(
 
       // All results should be identical
       const firstResult = results[0];
-      results.forEach((result, index) => {
+      results.forEach((result, _index) => {
         expect(result).toEqual(firstResult);
       });
     });
