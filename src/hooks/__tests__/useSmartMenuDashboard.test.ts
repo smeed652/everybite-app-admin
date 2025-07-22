@@ -1,6 +1,7 @@
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { useSmartMenuDashboard } from "../../features/dashboard/hooks/lambda/useSmartMenuDashboard";
+import { useSmartMenuSettings } from "../../hooks/useSmartMenuSettings";
 
 // Mock the underlying hook
 vi.mock("../../hooks/useSmartMenuSettings", () => ({
@@ -8,9 +9,52 @@ vi.mock("../../hooks/useSmartMenuSettings", () => ({
 }));
 
 describe("useSmartMenuDashboard - Business Logic", () => {
-  const mockUseSmartMenuSettings = vi.mocked(
-    require("../../hooks/useSmartMenuSettings").useSmartMenuSettings
-  );
+  const mockUseSmartMenuSettings = vi.mocked(useSmartMenuSettings);
+
+  // Helper function to create complete mock return value
+  const createMockReturnValue = (
+    overrides: Partial<ReturnType<typeof useSmartMenuSettings>> = {}
+  ) => ({
+    smartMenus: [],
+    quarterlyMetrics: [],
+    loading: false,
+    error: null,
+    metrics: {
+      totalSmartMenus: 0,
+      activeSmartMenus: 0,
+      totalLocations: 0,
+      featureAdoption: {
+        withImages: 0,
+        withOrderButton: 0,
+        withByo: 0,
+        byLayout: {},
+      },
+      settings: {
+        withCustomColors: 0,
+        withCustomFonts: 0,
+        withDietaryPreferences: 0,
+        withAllergens: 0,
+      },
+      classifications: {
+        nraClassifications: {},
+        menuTypes: {},
+        cuisineTypes: {},
+        orderingEnabled: 0,
+        orderingDisabled: 0,
+      },
+    },
+    getByLayout: vi.fn(),
+    getActiveSmartMenus: vi.fn(),
+    getSmartMenusWithFeature: vi.fn(),
+    getSmartMenusWithOrdering: vi.fn(),
+    getByNRAClassification: vi.fn(),
+    getByMenuType: vi.fn(),
+    getByCuisineType: vi.fn(),
+    getSmartMenusWithFooter: vi.fn(),
+    getSmartMenusWithCustomFooterText: vi.fn(),
+    refresh: vi.fn(),
+    ...overrides,
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -25,7 +69,6 @@ describe("useSmartMenuDashboard - Business Logic", () => {
             quarter: "2025-07-01T00:00:00Z",
             year: 2025,
             quarterLabel: "Q3 2025",
-            brands: { count: 5, qoqGrowth: 2, qoqGrowthPercent: 66.7 },
             locations: { count: 100, qoqGrowth: 20, qoqGrowthPercent: 25 },
             orders: { count: 1000, qoqGrowth: 200, qoqGrowthPercent: 25 },
             activeSmartMenus: {
@@ -46,7 +89,36 @@ describe("useSmartMenuDashboard - Business Logic", () => {
           totalSmartMenus: 0,
           activeSmartMenus: 0,
           totalLocations: 0,
+          featureAdoption: {
+            withImages: 0,
+            withOrderButton: 0,
+            withByo: 0,
+            byLayout: {},
+          },
+          settings: {
+            withCustomColors: 0,
+            withCustomFonts: 0,
+            withDietaryPreferences: 0,
+            withAllergens: 0,
+          },
+          classifications: {
+            nraClassifications: {},
+            menuTypes: {},
+            cuisineTypes: {},
+            orderingEnabled: 0,
+            orderingDisabled: 0,
+          },
         },
+        getByLayout: vi.fn(),
+        getActiveSmartMenus: vi.fn(),
+        getSmartMenusWithFeature: vi.fn(),
+        getSmartMenusWithOrdering: vi.fn(),
+        getByNRAClassification: vi.fn(),
+        getByMenuType: vi.fn(),
+        getByCuisineType: vi.fn(),
+        getSmartMenusWithFooter: vi.fn(),
+        getSmartMenusWithCustomFooterText: vi.fn(),
+        refresh: vi.fn(),
       });
 
       const { result } = renderHook(() => useSmartMenuDashboard());
@@ -56,7 +128,6 @@ describe("useSmartMenuDashboard - Business Logic", () => {
         quarter: "2025-07-01T00:00:00Z",
         year: 2025,
         quarterLabel: "Q3 2025",
-        brands: { count: 5, qoqGrowth: 2, qoqGrowthPercent: 66.7 },
         locations: { count: 100, qoqGrowth: 20, qoqGrowthPercent: 25 },
         orders: { count: 1000, qoqGrowth: 200, qoqGrowthPercent: 25 },
         activeSmartMenus: { count: 5, qoqGrowth: 2, qoqGrowthPercent: 66.7 },

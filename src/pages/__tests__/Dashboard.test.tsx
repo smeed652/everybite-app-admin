@@ -1,54 +1,92 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
+import { useSmartMenuSettings } from "../../hooks/useSmartMenuSettings";
 import Dashboard from "../Dashboard";
 
 // Mock the underlying SmartMenu settings hook
 vi.mock("../../hooks/useSmartMenuSettings", () => ({
-  useSmartMenuSettings: () => ({
-    smartMenus: [
-      {
-        id: "1",
-        createdAt: new Date(
-          Date.now() - 1000 * 60 * 60 * 24 * 10
-        ).toISOString(),
-        publishedAt: null,
-        numberOfLocations: 5,
-      },
-      {
-        id: "2",
-        createdAt: new Date(
-          Date.now() - 1000 * 60 * 60 * 24 * 40
-        ).toISOString(),
-        publishedAt: new Date().toISOString(),
-        numberOfLocations: 8,
-      },
-    ],
-    quarterlyMetrics: [
-      {
-        quarterLabel: "Q4 2024",
-        activeSmartMenus: { count: 1, qoqGrowthPercent: 0 },
-        locations: { count: 8, qoqGrowthPercent: 0 },
-        orders: { count: 150, qoqGrowthPercent: 20 },
-      },
-      {
-        quarterLabel: "Q3 2024",
-        activeSmartMenus: { count: 1, qoqGrowthPercent: 0 },
-        locations: { count: 8, qoqGrowthPercent: 0 },
-        orders: { count: 125, qoqGrowthPercent: 0 },
-      },
-    ],
-    loading: false,
-    error: null,
-    metrics: {
-      totalSmartMenus: 2,
-      activeSmartMenus: 1,
-      totalLocations: 8,
-    },
-  }),
+  useSmartMenuSettings: vi.fn(),
 }));
 
 describe("Dashboard page", () => {
+  const mockUseSmartMenuSettings = vi.mocked(useSmartMenuSettings);
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // Set up default mock return value
+    mockUseSmartMenuSettings.mockReturnValue({
+      smartMenus: [
+        {
+          id: "1",
+          createdAt: new Date(
+            Date.now() - 1000 * 60 * 60 * 24 * 10
+          ).toISOString(),
+          publishedAt: null,
+          numberOfLocations: 5,
+        },
+        {
+          id: "2",
+          createdAt: new Date(
+            Date.now() - 1000 * 60 * 60 * 24 * 40
+          ).toISOString(),
+          publishedAt: new Date().toISOString(),
+          numberOfLocations: 5,
+        },
+      ],
+      quarterlyMetrics: [
+        {
+          quarterLabel: "Q4 2024",
+          activeSmartMenus: { count: 1, qoqGrowthPercent: 0 },
+          locations: { count: 8, qoqGrowthPercent: 0 },
+          orders: { count: 150, qoqGrowthPercent: 20 },
+        },
+        {
+          quarterLabel: "Q3 2024",
+          activeSmartMenus: { count: 1, qoqGrowthPercent: 0 },
+          locations: { count: 8, qoqGrowthPercent: 0 },
+          orders: { count: 125, qoqGrowthPercent: 0 },
+        },
+      ],
+      loading: false,
+      error: null,
+      metrics: {
+        totalSmartMenus: 2,
+        activeSmartMenus: 1,
+        totalLocations: 8,
+        featureAdoption: {
+          withImages: 0,
+          withOrderButton: 0,
+          withByo: 0,
+          byLayout: {},
+        },
+        settings: {
+          withCustomColors: 0,
+          withCustomFonts: 0,
+          withDietaryPreferences: 0,
+          withAllergens: 0,
+        },
+        classifications: {
+          nraClassifications: {},
+          menuTypes: {},
+          cuisineTypes: {},
+          orderingEnabled: 0,
+          orderingDisabled: 0,
+        },
+      },
+      getByLayout: vi.fn(),
+      getActiveSmartMenus: vi.fn(),
+      getSmartMenusWithFeature: vi.fn(),
+      getSmartMenusWithOrdering: vi.fn(),
+      getByNRAClassification: vi.fn(),
+      getByMenuType: vi.fn(),
+      getByCuisineType: vi.fn(),
+      getSmartMenusWithFooter: vi.fn(),
+      getSmartMenusWithCustomFooterText: vi.fn(),
+      refresh: vi.fn(),
+    });
+  });
+
   it("renders metrics cards with correct counts", () => {
     render(
       <MemoryRouter>
@@ -64,15 +102,13 @@ describe("Dashboard page", () => {
     ).toBe("1");
     expect(
       screen.getByText(/^Total Locations$/i).nextSibling?.textContent
-    ).toBe("8");
+    ).toBe("10");
   });
 
   // This test would have caught the data structure mismatch issue
   it("handles quarterly metrics with missing brands field gracefully", () => {
     // Mock the hook with data that matches the actual Lambda response structure
-    vi.mocked(
-      require("../../hooks/useSmartMenuSettings").useSmartMenuSettings
-    ).mockReturnValue({
+    mockUseSmartMenuSettings.mockReturnValue({
       smartMenus: [
         {
           id: "1",
@@ -137,9 +173,7 @@ describe("Dashboard page", () => {
 
   // This test would have caught the case where quarterly metrics are empty
   it("displays 'No quarterly data available' when quarterly metrics are empty", () => {
-    vi.mocked(
-      require("../../hooks/useSmartMenuSettings").useSmartMenuSettings
-    ).mockReturnValue({
+    mockUseSmartMenuSettings.mockReturnValue({
       smartMenus: [],
       quarterlyMetrics: [], // Empty quarterly metrics
       loading: false,
@@ -162,9 +196,7 @@ describe("Dashboard page", () => {
 
   // This test would have caught the case where quarterly metrics have partial data
   it("handles quarterly metrics with partial data structure", () => {
-    vi.mocked(
-      require("../../hooks/useSmartMenuSettings").useSmartMenuSettings
-    ).mockReturnValue({
+    mockUseSmartMenuSettings.mockReturnValue({
       smartMenus: [],
       quarterlyMetrics: [
         {

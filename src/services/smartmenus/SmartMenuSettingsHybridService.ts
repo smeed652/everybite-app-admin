@@ -66,7 +66,7 @@ export interface QuarterlyMetricsHybrid {
   quarter: string;
   year: number;
   quarterLabel: string;
-  brands: {
+  brands?: {
     count: number;
     qoqGrowth: number;
     qoqGrowthPercent: number;

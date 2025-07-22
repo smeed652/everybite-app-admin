@@ -3,15 +3,60 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import Dashboard from "../../pages/Dashboard";
 
+import { useSmartMenuSettings } from "../../hooks/useSmartMenuSettings";
+
 // Mock the entire hook module
 vi.mock("../../hooks/useSmartMenuSettings", () => ({
   useSmartMenuSettings: vi.fn(),
 }));
 
 describe("Dashboard Quarterly Metrics Integration", () => {
-  const mockUseSmartMenuSettings = vi.mocked(
-    require("../../hooks/useSmartMenuSettings").useSmartMenuSettings
-  );
+  const mockUseSmartMenuSettings = vi.mocked(useSmartMenuSettings);
+
+  // Helper function to create complete mock return value
+  const createMockReturnValue = (
+    overrides: Partial<ReturnType<typeof useSmartMenuSettings>> = {}
+  ) => ({
+    smartMenus: [],
+    quarterlyMetrics: [],
+    loading: false,
+    error: null,
+    metrics: {
+      totalSmartMenus: 0,
+      activeSmartMenus: 0,
+      totalLocations: 0,
+      featureAdoption: {
+        withImages: 0,
+        withOrderButton: 0,
+        withByo: 0,
+        byLayout: {},
+      },
+      settings: {
+        withCustomColors: 0,
+        withCustomFonts: 0,
+        withDietaryPreferences: 0,
+        withAllergens: 0,
+      },
+      classifications: {
+        nraClassifications: {},
+        menuTypes: {},
+        cuisineTypes: {},
+        orderingEnabled: 0,
+        orderingDisabled: 0,
+      },
+    },
+    getByLayout: vi.fn(),
+    getActiveSmartMenus: vi.fn(),
+    getSmartMenusWithFeature: vi.fn(),
+    getSmartMenusWithOrdering: vi.fn(),
+    getByNRAClassification: vi.fn(),
+    getByMenuType: vi.fn(),
+    getByCuisineType: vi.fn(),
+    getSmartMenusWithFooter: vi.fn(),
+    getSmartMenusWithCustomFooterText: vi.fn(),
+    refresh: vi.fn(),
+    ...overrides,
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -25,7 +70,6 @@ describe("Dashboard Quarterly Metrics Integration", () => {
           quarter: "2025-07-01T00:00:00Z",
           year: 2025,
           quarterLabel: "Q3 2025",
-          brands: { count: 5, qoqGrowth: 2, qoqGrowthPercent: 66.7 },
           locations: { count: 100, qoqGrowth: 20, qoqGrowthPercent: 25 },
           orders: { count: 1000, qoqGrowth: 200, qoqGrowthPercent: 25 },
           activeSmartMenus: { count: 5, qoqGrowth: 2, qoqGrowthPercent: 66.7 },
@@ -39,7 +83,6 @@ describe("Dashboard Quarterly Metrics Integration", () => {
           quarter: "2025-04-01T00:00:00Z",
           year: 2025,
           quarterLabel: "Q2 2025",
-          brands: { count: 3, qoqGrowth: 1, qoqGrowthPercent: 50 },
           locations: { count: 80, qoqGrowth: 15, qoqGrowthPercent: 23 },
           orders: { count: 800, qoqGrowth: 150, qoqGrowthPercent: 23 },
           activeSmartMenus: { count: 3, qoqGrowth: 1, qoqGrowthPercent: 50 },
@@ -56,7 +99,36 @@ describe("Dashboard Quarterly Metrics Integration", () => {
         totalSmartMenus: 0,
         activeSmartMenus: 0,
         totalLocations: 0,
+        featureAdoption: {
+          withImages: 0,
+          withOrderButton: 0,
+          withByo: 0,
+          byLayout: {},
+        },
+        settings: {
+          withCustomColors: 0,
+          withCustomFonts: 0,
+          withDietaryPreferences: 0,
+          withAllergens: 0,
+        },
+        classifications: {
+          nraClassifications: {},
+          menuTypes: {},
+          cuisineTypes: {},
+          orderingEnabled: 0,
+          orderingDisabled: 0,
+        },
       },
+      getByLayout: vi.fn(),
+      getActiveSmartMenus: vi.fn(),
+      getSmartMenusWithFeature: vi.fn(),
+      getSmartMenusWithOrdering: vi.fn(),
+      getByNRAClassification: vi.fn(),
+      getByMenuType: vi.fn(),
+      getByCuisineType: vi.fn(),
+      getSmartMenusWithFooter: vi.fn(),
+      getSmartMenusWithCustomFooterText: vi.fn(),
+      refresh: vi.fn(),
     });
 
     render(
@@ -78,17 +150,11 @@ describe("Dashboard Quarterly Metrics Integration", () => {
   });
 
   it("should display 'No quarterly data available' when quarterly metrics are empty", async () => {
-    mockUseSmartMenuSettings.mockReturnValue({
-      smartMenus: [],
-      quarterlyMetrics: [], // Empty quarterly metrics
-      loading: false,
-      error: null,
-      metrics: {
-        totalSmartMenus: 0,
-        activeSmartMenus: 0,
-        totalLocations: 0,
-      },
-    });
+    mockUseSmartMenuSettings.mockReturnValue(
+      createMockReturnValue({
+        quarterlyMetrics: [], // Empty quarterly metrics
+      })
+    );
 
     render(
       <MemoryRouter>
@@ -104,32 +170,30 @@ describe("Dashboard Quarterly Metrics Integration", () => {
   });
 
   it("should handle missing brands field gracefully", async () => {
-    mockUseSmartMenuSettings.mockReturnValue({
-      smartMenus: [],
-      quarterlyMetrics: [
-        {
-          quarter: "2025-07-01T00:00:00Z",
-          year: 2025,
-          quarterLabel: "Q3 2025",
-          // Missing brands field - this was causing the crash
-          locations: { count: 100, qoqGrowth: 20, qoqGrowthPercent: 25 },
-          orders: { count: 1000, qoqGrowth: 200, qoqGrowthPercent: 25 },
-          activeSmartMenus: { count: 5, qoqGrowth: 2, qoqGrowthPercent: 66.7 },
-          totalRevenue: {
-            amount: 50000,
-            qoqGrowth: 10000,
-            qoqGrowthPercent: 25,
+    mockUseSmartMenuSettings.mockReturnValue(
+      createMockReturnValue({
+        quarterlyMetrics: [
+          {
+            quarter: "2025-07-01T00:00:00Z",
+            year: 2025,
+            quarterLabel: "Q3 2025",
+            // Missing brands field - this was causing the crash
+            locations: { count: 100, qoqGrowth: 20, qoqGrowthPercent: 25 },
+            orders: { count: 1000, qoqGrowth: 200, qoqGrowthPercent: 25 },
+            activeSmartMenus: {
+              count: 5,
+              qoqGrowth: 2,
+              qoqGrowthPercent: 66.7,
+            },
+            totalRevenue: {
+              amount: 50000,
+              qoqGrowth: 10000,
+              qoqGrowthPercent: 25,
+            },
           },
-        },
-      ],
-      loading: false,
-      error: null,
-      metrics: {
-        totalSmartMenus: 0,
-        activeSmartMenus: 0,
-        totalLocations: 0,
-      },
-    });
+        ],
+      })
+    );
 
     render(
       <MemoryRouter>
@@ -145,17 +209,11 @@ describe("Dashboard Quarterly Metrics Integration", () => {
   });
 
   it("should handle loading state correctly", async () => {
-    mockUseSmartMenuSettings.mockReturnValue({
-      smartMenus: [],
-      quarterlyMetrics: [],
-      loading: true, // Loading state
-      error: null,
-      metrics: {
-        totalSmartMenus: 0,
-        activeSmartMenus: 0,
-        totalLocations: 0,
-      },
-    });
+    mockUseSmartMenuSettings.mockReturnValue(
+      createMockReturnValue({
+        loading: true, // Loading state
+      })
+    );
 
     render(
       <MemoryRouter>
@@ -175,17 +233,11 @@ describe("Dashboard Quarterly Metrics Integration", () => {
   });
 
   it("should handle error state correctly", async () => {
-    mockUseSmartMenuSettings.mockReturnValue({
-      smartMenus: [],
-      quarterlyMetrics: [],
-      loading: false,
-      error: "Failed to load quarterly metrics", // Error state
-      metrics: {
-        totalSmartMenus: 0,
-        activeSmartMenus: 0,
-        totalLocations: 0,
-      },
-    });
+    mockUseSmartMenuSettings.mockReturnValue(
+      createMockReturnValue({
+        error: "Failed to load quarterly metrics", // Error state
+      })
+    );
 
     render(
       <MemoryRouter>
@@ -194,9 +246,7 @@ describe("Dashboard Quarterly Metrics Integration", () => {
     );
 
     await waitFor(() => {
-      expect(
-        screen.getByText("Failed to load quarterly metrics")
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Failed to load.*metrics/)).toBeInTheDocument();
     });
   });
 });

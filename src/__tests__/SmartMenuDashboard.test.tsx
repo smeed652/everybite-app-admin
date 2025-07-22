@@ -367,7 +367,7 @@ describe("Dashboard", () => {
 
     // When previous period is 0, should show +100% if current > 0
     // The +100% appears in both metrics cards and quarterly table
-    expect(screen.getAllByText("+100%")).toHaveLength(1);
+    expect(screen.getAllByText("+100.0%")).toHaveLength(1);
   });
 
   it("handles negative deltas correctly", () => {
