@@ -45,11 +45,33 @@ vi.mock("zen-observable-ts", () => ({
   },
 }));
 
+// Mock api-graphql-apollo to prevent real Apollo Client creation
+vi.mock("../../lib/api-graphql-apollo", () => ({
+  apiGraphQLClient: {
+    query: vi.fn().mockResolvedValue({
+      data: { smartMenus: [] },
+      errors: undefined,
+    }),
+    mutate: vi.fn().mockResolvedValue({
+      data: null,
+      errors: undefined,
+    }),
+    clearStore: vi.fn(),
+    resetStore: vi.fn(),
+  },
+}));
+
 // Mock datawarehouse-lambda-apollo to prevent real Apollo Client creation
 vi.mock("../../lib/datawarehouse-lambda-apollo", () => ({
   lambdaClient: {
-    query: vi.fn(),
-    mutate: vi.fn(),
+    query: vi.fn().mockResolvedValue({
+      data: { quarterlyMetrics: [] },
+      errors: undefined,
+    }),
+    mutate: vi.fn().mockResolvedValue({
+      data: null,
+      errors: undefined,
+    }),
     clearStore: vi.fn(),
     resetStore: vi.fn(),
   },
